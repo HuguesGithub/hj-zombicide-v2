@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SpawnBean
  * @author Hugues
- * @version 1.02.00
  * @since 1.02.00
+ * @version 1.04.26
  */
 class SpawnBean extends LocalBean
 {
@@ -29,6 +29,6 @@ class SpawnBean extends LocalBean
       self::ATTR_ALT    => '#'.$this->Spawn->getSpawnNumber(),
     );
     $strImg = $this->getBalise(self::TAG_IMG, '', $attrImg);
-    return $this->getBalise(self::TAG_DIV, $strImg, array(self::ATTR_CLASS => 'card spawn set-'.$id));
+    return $this->getBalise(self::TAG_DIV, $strImg, array(self::ATTR_CLASS => 'card spawn set-'.$this->Spawn->getExpansionId()));
   }
 }

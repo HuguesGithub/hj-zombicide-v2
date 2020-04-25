@@ -59,7 +59,7 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
       if ($WpPost->getPostParent()!=0) {
         continue;
       }
-      $strPages .= $this->addWpPageToMenu();
+      $strPages .= $this->addWpPageToMenu($WpPost);
     }
 
     if ($this->showHeaderAndFooter) {

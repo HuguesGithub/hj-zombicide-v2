@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPostMissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.16
+ * @version 1.04.26
  */
 class WpPostMissionBean extends WpPostBean
 {
@@ -158,7 +158,6 @@ class WpPostMissionBean extends WpPostBean
       '',
     );
     return $this->getRender($this->urlTemplate, $args);
-    return 'wip';
   }
 
   public function getMission()
@@ -339,6 +338,5 @@ class WpPostMissionBean extends WpPostBean
     $str = file_get_contents(PLUGIN_PATH.'web/pages/public/fragments/mission-article.php');
     return vsprintf($str, $args);
     * */
-    return 'wip';
   }
 }

@@ -131,7 +131,7 @@ class WpPageMissionsBean extends WpPageBean
   }
   private function getOption($value, $name, $selection=array())
   {
-    $strOption .= '<option value="'.$value.'"';
+    $strOption = '<option value="'.$value.'"';
     if (in_array($value, $selection)) {
       $strOption .= ' selected';
     }
