@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe EquipmentBean
  * @author Hugues
- * @since 1.0.00
- * @version 1.0.00
+ * @since 1.04.26
+ * @version 1.04.26
  */
 class EquipmentBean extends LocalBean
 {
@@ -73,7 +73,7 @@ class EquipmentBean extends LocalBean
       // On montre le bouton Discard ou non - 6
       ($equipmentLiveDeckId!=-1?'':'hidden'),
       // On a besoin du KeyAccess - 7
-      ($equipmentLiveDeckId!=-1?$_SESSION[self::CST_DECKKEY]:''),
+      ($equipmentLiveDeckId!=-1?$_SESSION[self::SESSION_DECKKEY]:''),
       // On a besoin de l'id de l'EquipmentExpansion - 8
       ($equipmentLiveDeckId!=-1?$equipmentLiveDeckId:''),
     );

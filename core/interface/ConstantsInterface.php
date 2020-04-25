@@ -240,10 +240,6 @@ interface ConstantsInterface
    */
   const CST_DANGER          = 'danger';
   /**
-   * Chaîne Constante deckKey
-   */
-  const CST_DECKKEY         = 'deckKey';
-  /**
    * Chaîne Constante description
    */
   const CST_DESCRIPTION     = 'description';
@@ -319,10 +315,6 @@ interface ConstantsInterface
    * Chaîne Constante objective
    */
   const CST_OBJECTIVE       = 'objective';
-  /**
-   * Chaîne Constante orange
-   */
-  const CST_ORANGE          = 'orange';
   /**
    * Chaîne Constante order
    */
@@ -417,10 +409,6 @@ interface ConstantsInterface
    * Chaîne Constante texte
    */
   const CST_TEXTE           = 'texte';
-  /**
-   * Chaîne Constante title
-   */
-  const CST_TITLE           = 'title';
   /**
    * Chaîne Constante upload_files
    */

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionRuleServices
  * @author Hugues.
  * @since 1.04.08
- * @version 1.04.08
+ * @version 1.04.26
  */
 class MissionRuleServices extends LocalServices
 {
@@ -29,7 +29,7 @@ class MissionRuleServices extends LocalServices
     $arrParams = array();
     array_push($arrParams, (!empty($arrFilters[self::CST_MISSIONID]) ? $arrFilters[self::CST_MISSIONID] : '%'));
     array_push($arrParams, ($arrFilters['ruleId']!='' ? $arrFilters['ruleId'] : '%'));
-    array_push($arrParams, (!empty($arrFilters[self::CST_TITLE]) ? $arrFilters[self::CST_TITLE] : '%'));
+    array_push($arrParams, (!empty($arrFilters[self::FIELD_TITLE]) ? $arrFilters[self::FIELD_TITLE] : '%'));
     return $arrParams;
   }
   /**

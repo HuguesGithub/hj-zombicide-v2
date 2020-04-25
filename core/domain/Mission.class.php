@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Mission
  * @author Hugues.
  * @since 1.04.00
- * @version 1.04.08
+ * @version 1.04.26
  */
 class Mission extends LocalDomain
 {
@@ -319,7 +319,7 @@ class Mission extends LocalDomain
    */
   public function getStrRules()
   {
-    $MissionRules = $this->getMissionRules(self::CST_TITLE);
+    $MissionRules = $this->getMissionRules(self::FIELD_TITLE);
     $strList = '';
     if (!empty($MissionRules)) {
       foreach ($MissionRules as $MissionRule) {
@@ -336,7 +336,7 @@ class Mission extends LocalDomain
    */
   public function getStrObjectives()
   {
-    $MissionObjectives = $this->getMissionObjectives(self::CST_TITLE);
+    $MissionObjectives = $this->getMissionObjectives(self::FIELD_TITLE);
     $strList = '';
     if (!empty($MissionObjectives)) {
       foreach ($MissionObjectives as $MissionObjective) {
@@ -486,7 +486,7 @@ class Mission extends LocalDomain
   public function updateWithPost($post)
   {
     $doUpdate = false;
-    $arr = array(self::CST_TITLE, 'code', self::CST_LEVELID, self::CST_DURATIONID, self::CST_PLAYERID, self::CST_ORIGINEID);
+    $arr = array(self::FIELD_TITLE, self::FIELD_CODE, self::CST_LEVELID, self::CST_DURATIONID, self::CST_PLAYERID, self::CST_ORIGINEID);
     while (!empty($arr)) {
       $key = array_shift($arr);
       $value = stripslashes($post[$key]);
@@ -504,7 +504,7 @@ class Mission extends LocalDomain
   public function initWithPost($post)
   {
     $doInsert = true;
-    $arr = array(self::CST_TITLE, 'code', self::CST_LEVELID, self::CST_DURATIONID, self::CST_PLAYERID, self::CST_ORIGINEID);
+    $arr = array(self::FIELD_TITLE, self::FIELD_CODE, self::CST_LEVELID, self::CST_DURATIONID, self::CST_PLAYERID, self::CST_ORIGINEID);
     while (!empty($arr)) {
       $key = array_shift($arr);
       if ($post[$key] == '') {

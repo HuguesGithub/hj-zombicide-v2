@@ -74,7 +74,7 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
     $str = file_get_contents(PLUGIN_PATH.'web/pages/public/public-main-header.php');
     return vsprintf($str, $args);
   }
-  private function addWpPageToMenu()
+  private function addWpPageToMenu($WpPost)
   {
     $strMenu = '';
     $WpPage = new WpPage($WpPost->getID());
