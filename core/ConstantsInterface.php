@@ -1,0 +1,415 @@
+<?php
+/**
+ * @author Hugues
+ * @version 1.02.00
+ * @since 1.00.00
+ */
+interface ConstantsInterface
+{
+  /////////////////////////////////////////////////
+  // Icons : https://pngtree.com/free-icon/backpack-management_577946
+  // Action Ajax
+  const AJAX_CARDRIVE     = 'carDrive';
+  const AJAX_CARIN        = 'carIn';
+  const AJAX_CAROUT       = 'carOut';
+  const AJAX_CARSWAP      = 'carSwap';
+  const AJAX_ENDOFTURN    = 'endOfTurn';
+  const AJAX_GETMISSIONS  = 'getMissions';
+  const AJAX_GETSKILLS    = 'getSkills';
+  const AJAX_GETSURVIVORS = 'getSurvivants';
+  const AJAX_MAKENOISE    = 'makeNoise';
+  const AJAX_MELEEATTACK  = 'meleeAttack';
+  const AJAX_MOVE         = 'move';
+  const AJAX_OPENDOOR     = 'openDoor';
+  const AJAX_ORGANIZE     = 'organize';
+  const AJAX_PAGED        = 'paged';
+  const AJAX_POSTCHAT     = 'postChat';
+  const AJAX_RANGEDATTACK = 'rangedAttack';
+  const AJAX_REFRESHCHAT  = 'refreshChat';
+  const AJAX_SEARCH       = 'search';
+  const AJAX_STARTTURN    = 'startTurn';
+  const AJAX_TRADE        = 'trade';
+
+  /////////////////////////////////////////////////
+  // Attributs
+  const ATTR_ALT               = 'alt';
+  const ATTR_CLASS             = 'class';
+  const ATTR_HREF              = 'href';
+  const ATTR_SRC               = 'src';
+  const ATTR_TITLE             = 'title';
+  // Data
+  const ATTR_DATA_AJAXACTION   = 'data-ajaxaction';
+  const ATTR_DATA_DISPLAYNAME  = 'data-displayname';
+  const ATTR_DATA_ID           = 'data-id';
+  const ATTR_DATA_KEYDECK      = 'data-keydeck';
+  const ATTR_DATA_PAGED        = 'data-paged';
+  const ATTR_DATA_TIMESTAMP    = 'data-timestamp';
+  const ATTR_DATA_TYPE         = 'data-type';
+
+  /////////////////////////////////////////////////
+  // Chat
+  const CHAT_CLEAN           = '/clean';
+  const CHAT_EXIT            = '/exit';
+  const CHAT_GAMES           = '/games';
+  const CHAT_HELP            = '/help';
+  const CHAT_INVITE          = '/invite';
+  const CHAT_JOIN            = '/join';
+  const CHAT_USERS           = '/users';
+  const CHAT_ACTIVATEZOMBIES = '/activateZombies';
+
+  /////////////////////////////////////////////////
+  // Les niveaux de danger
+  const COLOR_BLUE           = 'blue';
+  const COLOR_ORANGE         = 'orange';
+  const COLOR_RED            = 'red';
+  const COLOR_YELLOW         = 'yellow';
+
+  /////////////////////////////////////////////////
+  // On conserve malgré tout quelques constantes
+  const CST_AJAXACTION       = 'ajaxAction';
+  const CST_CHANGEPROFILE    = 'changeProfile';
+  const CST_CLONE            = 'clone';
+  const CST_COLORDER         = 'colorder';
+  const CST_COLSORT          = 'colsort';
+  const CST_DISABLED         = 'disabled';
+  const CST_EDIT             = 'edit';
+  const CST_FILTERS          = 'filters';
+  const CST_HIDDEN           = 'hidden';
+  const CST_NBPERPAGE        = 'nbperpage';
+  const CST_MISSION          = 'mission';
+  const CST_ONGLET           = 'onglet';
+  const CST_SELECTED         = 'selected';
+  const CST_SKILL            = 'skill';
+  const CST_SURVIVOR         = 'survivor';
+  const CST_TRASH            = 'trash';
+
+  /////////////////////////////////////////////////
+  // Fields
+  const FIELD_ID               = 'id';
+  const FIELD_BACKGROUND       = 'background';
+  const FIELD_CODE             = 'code';
+  const FIELD_DATEUPDATE       = 'dateUpdate';
+  const FIELD_DECKKEY          = 'deckKey';
+  const FIELD_DESCRIPTION      = 'description';
+  const FIELD_DISPLAYRANK      = 'displayRank';
+  const FIELD_DURATIONID       = 'durationId';
+  const FIELD_EXPANSIONID      = 'expansionId';
+  const FIELD_LIVEABLE         = 'liveAble';
+  const FIELD_LIVEID           = 'liveId';
+  const FIELD_LEVELID          = 'levelId';
+  const FIELD_MISSIONID        = 'missionId';
+  const FIELD_NAME             = 'name';
+  const FIELD_ORIGINEID        = 'origineId';
+  const FIELD_PLAYERID         = 'playerId';
+  const FIELD_PUBLISHED        = 'published';
+  const FIELD_SENDERID         = 'senderId';
+  const FIELD_SENDTOID         = 'sendToId';
+  const FIELD_SKILLID          = 'skillId';
+  const FIELD_SURVIVORID       = 'survivorId';
+  const FIELD_SURVIVORTYPEID   = 'survivorTypeId';
+  const FIELD_TAGLEVELID       = 'tagLevelId';
+  const FIELD_TEXTE            = 'texte';
+  const FIELD_TIMESTAMP        = 'timestamp';
+  const FIELD_TITLE            = 'title';
+  const FIELD_ULTIMATE         = 'ultimate';
+  const FIELD_ZOMBIVOR         = 'zombivor';
+
+  /////////////////////////////////////////////////
+  // Formats
+  const FORMAT_DATE_YmdHis     = 'Y-m-d H:i:s';
+
+  /////////////////////////////////////////////////
+  // Identifiant DOM
+  const ID_HEADER_UL_CHAT_SAISIE = 'header-ul-chat-saisie';
+  const ID_ONLINE_CHAT_CONTENT   = 'online-chat-content';
+
+  /////////////////////////////////////////////////
+  // Niveau de Danger
+  const LVL_BLUE                 = 'blue';
+  const LVL_YELLOW               = 'yellow';
+  const LVL_ORANGE               = 'orange';
+  const LVL_RED                  = 'red';
+
+  /////////////////////////////////////////////////
+  // Messages
+  const MSG_CHAT_EMPTIED        = 'CHAT_EMPTIED';
+  const MSG_CHAT_USER_LEFT      = 'CHAT_USER_LEFT';
+  const MSG_CHAT_BACK_DEFAULT   = 'CHAT_BACK_DEFAULT';
+  const MSG_CHAT_HELP           = 'CHAT_HELP';
+  const MSG_CHAT_UNKNOWN_USER   = 'CHAT_UNKNOWN_USER';
+  const MSG_CHAT_JOIN_INVITE    = 'CHAT_JOIN_INVITE';
+  const MSG_CHAT_INVITE_SENT_TO = 'CHAT_INVITE_SENT_TO';
+  const MSG_CHAT_USER_JOINED    = 'CHAT_USER_JOINED';
+
+  /////////////////////////////////////////////////
+  // Allowed Pages :
+  const PAGE_ONLINE            = 'online';
+  const PAGE_MISSION           = 'page-missions';
+  const PAGE_SKILL             = 'page-competences';
+  const PAGE_SPAWN             = 'page-spawncards';
+  const PAGE_SURVIVOR          = 'page-survivants';
+
+  /////////////////////////////////////////////////
+  // Session
+  const SESSION_DECKKEY        = 'deckKey';
+
+  /////////////////////////////////////////////////
+  // Tags
+  const TAG_A                  = 'a';
+  const TAG_DIV                = 'div';
+  const TAG_I                  = 'i';
+  const TAG_IMG                = 'img';
+  const TAG_LI                 = 'li';
+  const TAG_SPAN               = 'span';
+  const TAG_UL                 = 'ul';
+
+  /////////////////////////////////////////////////
+  // Wordpress
+  const WP_FIELD               = 'field';
+  const WP_ORDERBY             = 'orderby';
+  const WP_POSTSPERPAGE        = 'posts_per_page';
+  const WP_POSTSTATUS          = 'post_status';
+  const WP_POSTTAG             = 'post_tag';
+  const WP_PUBLISH             = 'publish';
+  const WP_SLUG                = 'slug';
+  const WP_TAXONOMY            = 'taxonomy';
+  const WP_TAXQUERY            = 'tax_query';
+  const WP_TERMS               = 'terms';
+
+  /////////////////////////////////////////////////
+  // Divers
+  const IMG_PNG                = '.png';
+  const ORDER_ASC              = 'ASC';
+  const ORDER_DESC             = 'DESC';
+  const ORDER_RAND             = 'rand';
+
+
+
+  /////////////////////////////////////////////////
+  // Deprecated
+  const CST_TIMESTAMP          = 'timestamp';
+
+
+
+
+  /**
+   * Chaîne Constante actionId
+   */
+  const CST_ACTIONID        = 'actionId';
+  /**
+   * Chaîne Constante coordX
+   */
+  const CST_COORDX          = 'coordX';
+  /**
+   * Chaîne Constante coordY
+   */
+  const CST_COORDY          = 'coordY';
+  /**
+   * Chaîne Constante cur_page
+   */
+  const CST_CURPAGE         = 'cur_page';
+  /**
+   * Chaîne Constante current
+   */
+  const CST_CURRENT         = 'current';
+  /**
+   * Chaîne Constante danger
+   */
+  const CST_DANGER          = 'danger';
+  /**
+   * Chaîne Constante deckKey
+   */
+  const CST_DECKKEY         = 'deckKey';
+  /**
+   * Chaîne Constante description
+   */
+  const CST_DESCRIPTION     = 'description';
+  const CST_DISPLAYRANK      = 'displayRank';
+  /**
+   * Chaîne Constante durationId
+   */
+  const CST_DURATIONID      = 'durationId';
+  /**
+   * Chaîne Constante equipment
+   */
+  const CST_EQUIPMENT       = 'equipment';
+  /**
+   * Chaîne Constante equipmentCardId
+   */
+  const CST_EQUIPMENTCARDID = 'equipmentCardId';
+  /**
+   * Chaîne Constante Y-m-d H:i:s
+   */
+  const CST_FORMATDATE      = 'Y-m-d H:i:s';
+  /**
+   * Chaîne Constante form-control
+   */
+  const CST_FORMCONTROL     = 'form-control';
+  /**
+   * Chaîne Constante firstRow
+   */
+  const CST_FIRSTROW        = 'firstRow';
+  /**
+   * Chaîne Constante future
+   */
+  const CST_FUTURE          = 'future';
+  /**
+   * Chaîne Constante keyAccess
+   */
+  const CST_KEYACCESS       = 'keyAccess';
+  /**
+   * Chaîne Constante level
+   */
+  const CST_LEVEL           = 'level';
+  /**
+   * Chaîne Constante levelId
+   */
+  const CST_LEVELID         = 'levelId';
+  /**
+   * Chaîne Constante liveDeckId
+   */
+  const CST_LIVEDECKID      = 'liveDeckId';
+  /**
+   * Chaîne Constante liveId
+   */
+  const CST_LIVEID          = 'liveId';
+  /**
+   * Chaîne Constante liveSurvivorId
+   */
+  const CST_LIVESURVIVORID  = 'liveSurvivorId';
+  /**
+   * Chaîne Constante minDuration
+   */
+  const CST_MINDURATION     = 'minDuration';
+  /**
+   * Chaîne Constante missionId
+   */
+  const CST_MISSIONID       = 'missionId';
+  /**
+   * Chaîne Constante name
+   */
+  const CST_NAME            = 'name';
+  /**
+   * Chaîne Constante nbMissions
+   */
+  const CST_NBMISSIONS      = 'nbMissions';
+  /**
+   * Chaîne Constante objective
+   */
+  const CST_OBJECTIVE       = 'objective';
+  /**
+   * Chaîne Constante orange
+   */
+  const CST_ORANGE          = 'orange';
+  /**
+   * Chaîne Constante order
+   */
+  const CST_ORDER           = 'order';
+  /**
+   * Chaîne Constante orderby
+   */
+  const CST_ORDERBY         = 'orderby';
+  /**
+   * Chaîne Constante origineId
+   */
+  const CST_ORIGINEID       = 'origineId';
+  /**
+   * Chaîne Constante parametre
+   */
+  const CST_PARAMETRE       = 'parametre';
+  /**
+   * Chaîne Constante pending
+   */
+  const CST_PENDING         = 'pending';
+  /**
+   * Chaîne Constante playerId
+   */
+  const CST_PLAYERID        = 'playerId';
+  /**
+   * Chaîne Constante postAction
+   */
+  const CST_POSTACTION      = 'postAction';
+  /**
+   * Chaîne Constante post_status
+   */
+  const CST_POSTSTATUS      = 'post_status';
+  /**
+   * Chaîne Constante publish
+   */
+  const CST_PUBLISH         = 'publish';
+  /**
+   * Chaîne Constante published
+   */
+  const CST_PUBLISHED       = 'published';
+  /**
+   * Chaîne Constante rmvCol
+   */
+  const CST_RMVCOL          = 'rmvCol';
+  /**
+   * Chaîne Constante rmvRow
+   */
+  const CST_RMVROW          = 'rmvRow';
+  /**
+   * Chaîne Constante selected
+   */
+  /**
+   * Chaîne Constante sendToId
+   */
+  const CST_SENDTOID        = 'sendToId';
+  /**
+   * Chaîne Constante setting
+   */
+  const CST_SETTING         = 'setting';
+  /**
+   * Chaîne Constante spawn
+   */
+  const CST_SPAWN           = 'spawn';
+  /**
+   * Chaîne Constante spawnNumber
+   */
+  const CST_SPAWNNUMBER     = 'spawnNumber';
+  /**
+   * Chaîne Constante square pointer
+   */
+  const CST_SQUAREPOINTER   = 'square pointer';
+  /**
+   * Chaîne Constante status
+   */
+  const CST_STATUS          = 'status';
+  /**
+   * Chaîne Constante success
+   */
+  const CST_SUCCESS         = 'success';
+  /**
+   * Chaîne Constante survivorTypeId
+   */
+  const CST_SURVIVORTYPEID  = 'survivorTypeId';
+  /**
+   * Chaîne Constante table
+   */
+  const CST_TABLE           = 'table';
+  /**
+   * Chaîne Constante tagLevelId
+   */
+  const CST_TAGLEVELID      = 'tagLevelId';
+  /**
+   * Chaîne Constante </td><td>
+   */
+  const CST_TD_SEP          = '</td><td>';
+  /**
+   * Chaîne Constante texte
+   */
+  const CST_TEXTE           = 'texte';
+  /**
+   * Chaîne Constante title
+   */
+  const CST_TITLE           = 'title';
+  /**
+   * Chaîne Constante upload_files
+   */
+  const CST_UPLOADFILES     = 'upload_files';
+  /**
+   * Chaîne Constante window-close
+   */
+  const CST_WINDOWCLOSE     = 'window-close';
+}
