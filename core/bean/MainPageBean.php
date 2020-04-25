@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MainPageBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.16
+ * @version 1.04.26
  */
 class MainPageBean extends UtilitiesBean implements ConstantsInterface
 {
@@ -59,21 +59,7 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
       if ($WpPost->getPostParent()!=0) {
         continue;
       }
-      $WpPage = new WpPage($WpPost->getID());
-      $Children = $WpPage->hasChildren();
-      if (empty($Children)) {
-        $strPages .= '<a href="'.$WpPage->getPermalink().'"><span>'.$WpPage->getPostTitle().'</span></a>';
-      } else {
-        $strPages .= '<span class="hasDropDown"><a href="#"><span>'.$WpPage->getPostTitle().'</span></a><ul>';
-        while (!empty($Children)) {
-          $Child = array_shift($Children);
-          if ($Child->getMenuOrder()==0) {
-            continue;
-          }
-          $strPages .= '<li><a href="'.$Child->getPermalink().'"><span>'.$Child->getPostTitle().'</span></a></li>';
-        }
-        $strPages .= '</ul></span>';
-      }
+      $strPages .= $this->addWpPageToMenu();
     }
 
     if ($this->showHeaderAndFooter) {
@@ -87,6 +73,26 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
     }
     $str = file_get_contents(PLUGIN_PATH.'web/pages/public/public-main-header.php');
     return vsprintf($str, $args);
+  }
+  private function addWpPageToMenu()
+  {
+    $strMenu = '';
+    $WpPage = new WpPage($WpPost->getID());
+    $Children = $WpPage->hasChildren();
+    if (empty($Children)) {
+      $strMenu .= '<a href="'.$WpPage->getPermalink().'"><span>'.$WpPage->getPostTitle().'</span></a>';
+    } else {
+      $strMenu .= '<span class="hasDropDown"><a href="#"><span>'.$WpPage->getPostTitle().'</span></a><ul>';
+      while (!empty($Children)) {
+        $Child = array_shift($Children);
+        if ($Child->getMenuOrder()==0) {
+          continue;
+        }
+        $strMenu .= '<li><a href="'.$Child->getPermalink().'"><span>'.$Child->getPostTitle().'</span></a></li>';
+      }
+      $strMenu .= '</ul></span>';
+    }
+    return $strMenu;
   }
   /**
    * @return Bean

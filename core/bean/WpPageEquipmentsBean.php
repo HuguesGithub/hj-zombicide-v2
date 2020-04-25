@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageEquipmentsBean
  * @author Hugues
  * @since 1.04.15
- * @version 1.04.15
+ * @version 1.04.26
  */
 class WpPageEquipmentsBean extends WpPageBean
 {
@@ -40,7 +40,7 @@ class WpPageEquipmentsBean extends WpPageBean
         continue;
       }
       // On peut ajouter l'Extension au menu pour filtrer.
-      $strExpansions .= '<option value="set-'.$id.'">'.$Expansion->getName().'</option>';
+      $strExpansions .= $this->getBalise(self::TAG_OPTION, $Expansion->getName(), array(self::ATTR_VALUE=>'set-'.$id));
 
       /////////////////////////////////////////////////////////////////////////////
       // On récupère l'ensemble des cartes de l'extension.
@@ -79,7 +79,7 @@ class WpPageEquipmentsBean extends WpPageBean
     );
     $strCategories  = '';
     foreach ($arr as $key => $value) {
-      $strCategories .= '<option value="'.$key.'">'.$value.'</option>';
+      $strCategories .= $this->getBalise(self::TAG_OPTION, $value, array(self::ATTR_VALUE=>$key));
     }
 
 

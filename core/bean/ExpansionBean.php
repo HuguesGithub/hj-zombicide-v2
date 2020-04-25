@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.04.24
+ * @version 1.04.26
  */
 class ExpansionBean extends LocalBean
 {
@@ -57,7 +57,7 @@ class ExpansionBean extends LocalBean
   /**
    * @param string $tBodyButtons Template des Boutons de fin de ligne
    * @return string
-   */
+   *
   public function getRowForAdminPage($tBodyButtons)
   {
     $Expansion = $this->Expansion;
@@ -85,7 +85,7 @@ class ExpansionBean extends LocalBean
   /**
    * @param int $id
    * @return string
-   */
+   *
   public function getMenuButtonLive($id)
   {
     $Expansion = $this->Expansion;
@@ -96,11 +96,12 @@ class ExpansionBean extends LocalBean
    * @param string $id
    * @param string $spawnSpan
    * @return string
-   */
+   *
   public function getSpawnMenuButtonLive($id, $spawnSpan)
   {
     $Expansion = $this->Expansion;
     $str  = '<div type="button" class="btn btn-dark btn-expansion" data-expansion-id="'.$id.'"><span data-spawnspan="'.$spawnSpan;
     return $str.'"><i class="far fa-square"></i></span> '.$Expansion->getName().$spawnSpan.'</div>';
   }
+  * */
 }

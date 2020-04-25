@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageMissionsBean
  * @author Hugues
  * @since 1.04.01
- * @version 1.04.02
+ * @version 1.04.26
  */
 class WpPageMissionsBean extends WpPageBean
 {
@@ -50,13 +50,9 @@ class WpPageMissionsBean extends WpPageBean
    */
   public function getListContentPage()
   {
-    $prod = true;
     /////////////////////////////////////////////////////////////////////////////
     // On récupère la liste des Missions puis les éléments nécessaires à la pagination.
-    if ($prod)
-      $Missions = $this->MissionServices->getMissionsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
-    else
-      $Missions = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_MISSION_ID);
+    $Missions = $this->MissionServices->getMissionsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
 
     $this->nbElements = count($Missions);
     $this->nbPages = ceil($this->nbElements/$this->nbperpage);
@@ -66,15 +62,7 @@ class WpPageMissionsBean extends WpPageBean
     $strBody = '';
     if (!empty($displayedMissions)) {
       foreach ($displayedMissions as $Mission) {
-        if (!$prod) {
-          $missionId = $Mission->getPostMeta(self::FIELD_MISSIONID);
-          $Mission = $this->MissionServices->selectMission($missionId);
-        }
-        if ($Mission->getId()=='') {
-          $strBody .= 'WIP WpPost';
-        } else {
-          $strBody .= $Mission->getBean()->getRowForMissionsPage();
-        }
+        $strBody .= $Mission->getBean()->getRowForMissionsPage();
       }
     }
 
@@ -141,6 +129,14 @@ class WpPageMissionsBean extends WpPageBean
     );
     return $this->getRender($this->urlTemplateNavPagination, $args);
   }
+  private function getOption($value, $name, $selection=array())
+  {
+    $strOption .= '<option value="'.$value.'"';
+    if (in_array($value, $selection)) {
+      $strOption .= ' selected';
+    }
+    return $strOption.'>'.$name.'</option>';
+  }
   /**
    * @return string
    */
@@ -153,11 +149,7 @@ class WpPageMissionsBean extends WpPageBean
       $Expansion = array_shift($Expansions);
       if ($Expansion->getNbMissions()==0)
       { continue; }
-      $strReturned .= '<option value="'.$Expansion->getId().'"';
-      if (in_array($Expansion->getId(), $selExpansionsId)) {
-        $strReturned .= ' selected';
-      }
-      $strReturned .= '>'.$Expansion->getName().'</option>';
+      $strReturned .= $this->getOption($Expansion->getId(), $Expansion->getName(), $selExpansionsId);
     }
     return $strReturned;
   }
@@ -170,11 +162,7 @@ class WpPageMissionsBean extends WpPageBean
     $strReturned = '<option value="">Difficultés</option>';
     while (!empty($Levels)) {
       $Level = array_shift($Levels);
-      $strReturned .= '<option value="'.$Level->getId().'"';
-      if ($Level->getId()==$levelId) {
-        $strReturned .= ' selected';
-      }
-      $strReturned .= '>'.$Level->getName().'</option>';
+      $strReturned .= $this->getOption($Level->getId(), $Level->getName(), $levelId);
     }
     return $strReturned;
   }
@@ -187,11 +175,7 @@ class WpPageMissionsBean extends WpPageBean
     $strReturned = '<option value="">Survivants</option>';
     while (!empty($Players)) {
       $Player = array_shift($Players);
-      $strReturned .= '<option value="'.$Player->getId().'"';
-      if ($Player->getId()==$playerId) {
-        $strReturned .= ' selected';
-      }
-      $strReturned .= '>'.$Player->getNbJoueurs().'</option>';
+      $strReturned .= $this->getOption($Player->getId(), $Player->getNbJoueurs(), $playerId);
     }
     return $strReturned;
   }
@@ -204,11 +188,7 @@ class WpPageMissionsBean extends WpPageBean
     $strReturned = '<option value="">Durées</option>';
     while (!empty($Durations)) {
       $Duration = array_shift($Durations);
-      $strReturned .= '<option value="'.$Duration->getId().'"';
-      if ($Duration->getId()==$durationId) {
-        $strReturned .= ' selected';
-      }
-      $strReturned .= '>'.$Duration->getStrDuree().'</option>';
+      $strReturned .= $this->getOption($Duration->getId(), $Duration->getStrDuree(), $durationId);
     }
     return $strReturned;
   }
@@ -221,11 +201,7 @@ class WpPageMissionsBean extends WpPageBean
     $strReturned = '<option value="">Origine</option>';
     while (!empty($Origines)) {
       $Origine = array_shift($Origines);
-      $strReturned .= '<option value="'.$Origine->getId().'"';
-      if ($Origine->getId()==$origineId) {
-        $strReturned .= ' selected';
-      }
-      $strReturned .= '>'.$Origine->getName().'</option>';
+      $strReturned .= $this->getOption($Origine->getId(), $Origine->getName(), $origineId);
     }
     return $strReturned;
   }

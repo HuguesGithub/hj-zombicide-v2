@@ -1,3 +1,6 @@
+/*
+ * @version 1.04.26
+ */
 var $hj = jQuery;
 $hj(document).ready(function(){
   /***************
@@ -634,7 +637,6 @@ function addSelectionSurvivantActions() {
     if (nbSurv<nbSurvSel) {
       alert('Impossible');
     } else {
-      var obj;
       var data = {'action': 'dealWithAjax', 'ajaxAction': 'getRandomTeam', 'nbSurvSel': nbSurvSel, 'value': selection};
       resolveCallAjax(data, 'page-selection-survivants');
     }
@@ -666,7 +668,6 @@ function resolvePageCompetenceAjaxActions(clicked) {
     break;
   }
   if (callAjax) {
-    var obj;
     var data = {'action': 'dealWithAjax', 'ajaxAction': 'getSkills', 'colsort': colsort, 'colorder': colorder, 'nbperpage': nbPerPages, 'paged': paged, 'filters': filters};
     resolveCallAjax(data, 'page-competences');
   }
@@ -702,7 +703,6 @@ function resolvePageMissionAjaxActions(clicked) {
     break;
   }
   if (callAjax) {
-    var obj;
     var data = {'action': 'dealWithAjax', 'ajaxAction': 'getMissions', 'colsort': colsort, 'colorder': colorder, 'nbperpage': nbPerPages, 'paged': paged, 'filters': filters};
     resolveCallAjax(data, 'page-missions');
   }
@@ -734,7 +734,6 @@ function resolvePageSurvivantAjaxActions(clicked) {
     break;
   }
   if (callAjax) {
-    var obj;
     var data = {'action': 'dealWithAjax', 'ajaxAction': 'getSurvivants', 'colsort': colsort, 'colorder': colorder, 'nbperpage': nbPerPages, 'paged': paged, 'filters': filters};
     console.log(data);
     resolveCallAjax(data, 'page-survivants');
@@ -747,7 +746,7 @@ function resolveCallAjax(data, idPage) {
     data,
     function(response) {
       try {
-        obj = JSON.parse(response);
+        var obj = JSON.parse(response);
         if (obj[idPage] != '' ) {
           $hj('#'+idPage).replaceWith(obj[idPage]);
           switch (idPage) {

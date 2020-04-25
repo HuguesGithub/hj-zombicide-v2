@@ -1,10 +1,12 @@
 <?php
-if ( !defined( 'ABSPATH') ) die( 'Forbidden' );
+if (!defined('ABSPATH')) {
+  die('Forbidden');
+}
 /**
  * Classe WpTagServices
  * @author Hugues.
  * @since 1.04.16
- * @version 1.04.16
+ * @version 1.04.26
  */
 class WpTagServices extends GlobalServices {
 
