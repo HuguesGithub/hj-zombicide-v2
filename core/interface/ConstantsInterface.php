@@ -229,10 +229,6 @@ interface ConstantsInterface
 
 
   /**
-   * Chaîne Constante actionId
-   */
-  const CST_ACTIONID        = 'actionId';
-  /**
    * Chaîne Constante coordX
    */
   const CST_COORDX          = 'coordX';
