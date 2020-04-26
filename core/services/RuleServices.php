@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe RuleServices
  * @author Hugues.
  * @since 1.04.08
- * @version 1.04.08
+ * @version 1.04.27
  */
 class RuleServices extends LocalServices
 {
@@ -24,86 +24,60 @@ class RuleServices extends LocalServices
     $this->Dao = new RuleDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    $arrParams[] = (isset($arrFilters[self::CST_SETTING]) ? $arrFilters[self::CST_SETTING] : '%');
-    $arrParams[] = (isset($arrFilters['code']) ? $arrFilters['code'] : '%');
-    $arrParams[] = (isset($arrFilters[self::CST_DESCRIPTION]) ? $arrFilters[self::CST_DESCRIPTION] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_SETTING));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_CODE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_DESCRIPTION));
   }
   /**
-   * @param string $file
-   * @param string $line
    * @param array $arrFilters
    * @param string $orderby
    * @param string $order
    * @return array
    */
-  public function getRulesWithFilters($file, $line, $arrFilters=array(), $orderby='code', $order='asc')
+  public function getRulesWithFilters($arrFilters=array(), $orderby=self::FIELD_CODE, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters($file, $line, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
   /**
-   * @param string $file
-   * @param string $line
-   * @param string $value
-   * @param string $prefix
-   * @param string $classe
-   * @param bool $multiple
-   * @param string $defaultLabel
-   * @return string
-   */
-  public function getRuleSelect($file, $line, $value='', $prefix='id', $classe=self::CST_FORMCONTROL, $multiple=false, $defaultLabel='')
-  {
-    $Rules = $this->getRulesWithFilters($file, $line);
-    $arrSetLabels = array();
-    foreach ($Rules as $Rule) {
-      $arrSetLabels[$Rule->getId()] = $Rule->getCode();
-    }
-    $this->labelDefault = $defaultLabel;
-    $this->classe = $classe;
-    $this->multiple = $multiple;
-    return $this->getSetSelect($file, $line, $arrSetLabels, $prefix.'ruleId', $value);
-  }
-  /**
-   * @param string $file
-   * @param string $line
    * @param string $value
    * @param string $prefix
    * @param string $classe
    * @return string
    */
-  public function getRuleNoSettingSelect($file, $line, $value, $prefix='id', $classe=self::CST_FORMCONTROL)
+  public function getRuleNoSettingSelect($value, $prefix='id', $classe=self::CST_FORMCONTROL)
   {
-    $Rules = $this->getRulesWithFilters($file, $line, array(self::CST_SETTING=>0));
+    $Rules = $this->getRulesWithFilters(array(self::FIELD_SETTING=>0));
     $arrSetLabels = array();
     foreach ($Rules as $Rule) {
       $arrSetLabels[$Rule->getId()] = $Rule->getCode();
     }
     $this->labelDefault = '---';
     $this->classe = $classe;
-    return $this->getSetSelect($file, $line, $arrSetLabels, $prefix.'ruleId', $value);
+    return $this->getSetSelect(__FILE__, __LINE__, $arrSetLabels, $prefix.'ruleId', $value);
   }
   /**
-   * @param string $file
-   * @param string $line
    * @param string $value
    * @param string $prefix
    * @param string $classe
    * @return string
    */
-  public function getRuleSettingSelect($file, $line, $value, $prefix='id', $classe=self::CST_FORMCONTROL)
+  public function getRuleSettingSelect($value, $prefix='id', $classe=self::CST_FORMCONTROL)
   {
-    $Rules = $this->getRulesWithFilters($file, $line, array(self::CST_SETTING=>1));
+    $Rules = $this->getRulesWithFilters(array(self::FIELD_SETTING=>1));
     $arrSetLabels = array();
     foreach ($Rules as $Rule) {
       $arrSetLabels[$Rule->getId()] = $Rule->getCode();
     }
     $this->labelDefault = '---';
     $this->classe = $classe;
-    return $this->getSetSelect($file, $line, $arrSetLabels, $prefix.'settingId', $value);
+    return $this->getSetSelect(__FILE__, __LINE__, $arrSetLabels, $prefix.'settingId', $value);
   }
 }

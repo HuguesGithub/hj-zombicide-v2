@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SkillServices
  * @author Hugues.
- * @version 1.02.00
  * @since 1.00.00
+ * @version 1.04.27
  */
 class SkillServices extends LocalServices
 {
@@ -24,14 +24,16 @@ class SkillServices extends LocalServices
     $this->Dao = new SkillDaoImpl();
   }
 
-  private function buildFilters($arrF)
+  /**
+   * @param array $arrFilters
+   */
+  private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    array_push($arrParams, (!empty($arrF[self::FIELD_CODE]) && !is_array($arrF[self::FIELD_CODE])) ? $arrF[self::FIELD_CODE] : '%');
-    array_push($arrParams, (!empty($arrF[self::FIELD_NAME]) && !is_array($arrF[self::FIELD_NAME])) ? '%'.$arrF[self::FIELD_NAME].'%' : '%');
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrF, self::FIELD_DESCRIPTION) ? '%'.$arrF[self::FIELD_DESCRIPTION].'%' : '%'));
-    array_push($arrParams, (!empty($arrF[self::FIELD_OFFICIAL]) && !is_array($arrF[self::FIELD_OFFICIAL])) ? $arrF[self::FIELD_OFFICIAL] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_CODE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_NAME));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_DESCRIPTION));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_OFFICIAL));
   }
   /**
    * @param array $arrFilters
@@ -41,9 +43,9 @@ class SkillServices extends LocalServices
    */
   public function getSkillsWithFilters($arrFilters=array(), $orderby=self::FIELD_NAME, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
 
   public function insertSkill($Skill)

@@ -23,7 +23,7 @@
       <div class="tablenav-pages" style="height: 34px;">%5$s</div>
       <br class="clear">
     </div>
-    <table class="wp-list-table widefat fixed striped posts">
+    <table class="wp-list-table widefat fixed striped posts" aria-describedby="Listing des compétences">
       <thead>
         <tr>
           <td id="cb" class="manage-column column-cb check-column"><input id="cb-select-all-1" type="checkbox"></td>

@@ -10,6 +10,7 @@ if (!defined('ABSPATH')) {
  */
 class LocalServices extends GlobalServices implements ConstantsInterface
 {
+  protected $arrParams = array();
   /**
    * Texte par défaut du Select
    * @var string $labelDefault
@@ -32,6 +33,44 @@ class LocalServices extends GlobalServices implements ConstantsInterface
   public function __construct()
   {
   }
+
+  /**
+   * @param array $arrFilters
+   * @param string $field
+   * @return string
+   */
+  protected function addFilter($arrFilters, $field)
+  {
+    return (isset($arrFilters[$field]) && !empty($arrFilters[$field]) ? $arrFilters[$field] : '%');
+  }
+  /**
+   * @param array $arrFilters
+   * @param string $field
+   * @return string
+   */
+  protected function addNonArrayFilter($arrFilters, $field, $defaultSearch='%')
+  {
+    return (isset($arrFilters[$field]) && !empty($arrFilters[$field]) && !is_array($arrFilters[$field]) ? $arrFilters[$field] : $defaultSearch);
+  }
+  /**
+   * @param array $arrFilters
+   * @param string $field
+   * @return string
+   */
+  protected function addNonArrayWideFilter($arrFilters, $field, $defaultSearch='%')
+  {
+    return (isset($arrFilters[$field]) && !empty($arrFilters[$field]) && !is_array($arrFilters[$field]) ? '%'.$arrFilters[$field].'%' : $defaultSearch);
+  }
+
+
+
+
+
+
+
+
+
+
 
   /**
    * @param array $arrSetLabels
@@ -102,5 +141,8 @@ class LocalServices extends GlobalServices implements ConstantsInterface
    */
   public static function getWpUserId()
   { return get_current_user_id(); }
+
+
+
 
 }

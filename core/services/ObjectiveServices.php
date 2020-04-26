@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ObjectiveServices
  * @author Hugues.
  * @since 1.04.08
- * @version 1.04.08
+ * @version 1.04.27
  */
 class ObjectiveServices extends LocalServices
 {
@@ -24,30 +24,28 @@ class ObjectiveServices extends LocalServices
     $this->Dao = new ObjectiveDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    $arrParams[] = (isset($arrFilters['code']) ? $arrFilters['code'] : '%');
-    $arrParams[] = (isset($arrFilters['description']) ? $arrFilters['description'] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_CODE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_DESCRIPTION));
   }
   /**
-   * @param string $file
-   * @param string $line
    * @param array $arrFilters
    * @param string $orderby
    * @param string $order
    * @return array
    */
-  public function getObjectivesWithFilters($file, $line, $arrFilters=array(), $orderby='code', $order='asc')
+  public function getObjectivesWithFilters($arrFilters=array(), $orderby=self::FIELD_CODE, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters($file, $line, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
   /**
-   * @param string $file
-   * @param string $line
    * @param string $value
    * @param string $prefix
    * @param string $classe
@@ -55,9 +53,9 @@ class ObjectiveServices extends LocalServices
    * @param string $defaultLabel
    * @return string
    */
-  public function getObjectiveSelect($file, $line, $value='', $prefix='id', $classe='form-control', $multiple=false, $defaultLabel='---')
+  public function getObjectiveSelect($value='', $prefix='id', $classe='form-control', $multiple=false, $defaultLabel='---')
   {
-    $Objectives = $this->getObjectivesWithFilters($file, $line);
+    $Objectives = $this->getObjectivesWithFilters();
     $arrSetLabels = array();
     foreach ($Objectives as $Objective) {
       $arrSetLabels[$Objective->getId()] = $Objective->getCode();

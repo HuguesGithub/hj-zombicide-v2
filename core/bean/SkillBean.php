@@ -60,7 +60,7 @@ class SkillBean extends LocalBean
       $urlWpPost,
       $Skill->getDescription(),
       // Officiel ou non ? - 10
-      '<i class="far fa'.($Skill->isOfficial() ? '-check' : ''). '-square-o"></i>',
+      ($Skill->isOfficial() ? 'Oui' : 'Non'),
     );
     return $this->getRender($this->urlRowAdmin, $args);
   }

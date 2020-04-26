@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe Equipment
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.04.27
  */
 class Equipment extends LocalDomain
 {
@@ -84,8 +84,8 @@ class Equipment extends LocalDomain
   public function getEquipmentWeaponProfiles()
   {
     if ($this->EquipmentWeaponProfiles == null) {
-      $arrF = array(self::CST_EQUIPMENTCARDID=>$this->id);
-      $this->EquipmentWeaponProfiles = $this->EWProfileServices->getEquipmentWeaponProfilesWithFilters(__FILE__, __LINE__, $arrF);
+      $arrF = array(self::FIELD_EQUIPMENTCARDID=>$this->id);
+      $this->EquipmentWeaponProfiles = $this->EWProfileServices->getEquipmentWeaponProfilesWithFilters($arrF);
     }
     return $this->EquipmentWeaponProfiles;
   }
@@ -95,8 +95,8 @@ class Equipment extends LocalDomain
   public function getEquipmentKeywords()
   {
     if ($this->EquipmentKeywords == null) {
-      $arrFilters = array(self::CST_EQUIPMENTCARDID=>$this->id);
-      $this->EquipmentKeywords = $this->EquipmentKeywordServices->getEquipmentKeywordsWithFilters(__FILE__, __LINE__, $arrFilters);
+      $arrFilters = array(self::FIELD_EQUIPMENTCARDID=>$this->id);
+      $this->EquipmentKeywords = $this->EquipmentKeywordServices->getEquipmentKeywordsWithFilters($arrFilters);
     }
     return $this->EquipmentKeywords;
   }

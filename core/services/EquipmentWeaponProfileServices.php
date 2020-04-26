@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe EquipmentWeaponProfileServices
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.04.27
  */
 class EquipmentWeaponProfileServices extends LocalServices
 {
@@ -24,25 +24,25 @@ class EquipmentWeaponProfileServices extends LocalServices
     $this->Dao = new EquipmentWeaponProfileDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    $arrParams[] = (isset($arrFilters['equipmentCardId']) ? $arrFilters['equipmentCardId'] : '%');
-    $arrParams[] = (isset($arrFilters['weaponProfileId']) ? $arrFilters['weaponProfileId'] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_EQUIPMENTCARDID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_WEAPONPROFILEID));
   }
   /**
-   * @param string $file
-   * @param string $line
    * @param array $arrFilters
    * @param string $orderby
    * @param string $order
    * @return array
    */
-  public function getEquipmentWeaponProfilesWithFilters($file, $line, $arrFilters=array(), $orderby='id', $order='asc')
+  public function getEquipmentWeaponProfilesWithFilters($arrFilters=array(), $orderby='id', $order='asc')
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters($file, $line, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
 }

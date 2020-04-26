@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionRuleServices
  * @author Hugues.
  * @since 1.04.08
- * @version 1.04.26
+ * @version 1.04.27
  */
 class MissionRuleServices extends LocalServices
 {
@@ -24,26 +24,26 @@ class MissionRuleServices extends LocalServices
     $this->Dao = new MissionRuleDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    array_push($arrParams, (!empty($arrFilters[self::CST_MISSIONID]) ? $arrFilters[self::CST_MISSIONID] : '%'));
-    array_push($arrParams, ($arrFilters['ruleId']!='' ? $arrFilters['ruleId'] : '%'));
-    array_push($arrParams, (!empty($arrFilters[self::FIELD_TITLE]) ? $arrFilters[self::FIELD_TITLE] : '%'));
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_MISSIONID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_RULEID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_TITLE));
   }
   /**
-   * @param string $file
-   * @param string $line
    * @param array $arrFilters
    * @param string $orderby
    * @param string $order
    * @return array
    */
-  public function getMissionRulesWithFilters($file, $line, $arrFilters=array(), $orderby='id', $order='asc')
+  public function getMissionRulesWithFilters($file, $line, $arrFilters=array(), $orderby=self::FIELD_ID, $order=self::ORDER_ASC )
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters($file, $line, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
 }

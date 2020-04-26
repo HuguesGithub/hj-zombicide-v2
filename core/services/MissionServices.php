@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionServices
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.00
+ * @version 1.04.27
  */
 class MissionServices extends LocalServices
 {
@@ -24,24 +24,20 @@ class MissionServices extends LocalServices
     $this->Dao = new MissionDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrFilters, self::FIELD_TITLE) ? '%'.$arrFilters[self::FIELD_TITLE].'%' : '%'));
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrFilters, self::FIELD_LEVELID) ? $arrFilters[self::FIELD_LEVELID] : '%'));
-    if ($arrFilters[self::FIELD_DURATIONID]!='' && !is_array($arrFilters[self::FIELD_DURATIONID])) {
-      array_push($arrParams, $arrFilters[self::FIELD_DURATIONID]);
-    } else {
-      array_push($arrParams, '%');
-    }
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrFilters, self::FIELD_PLAYERID) ? $arrFilters[self::FIELD_PLAYERID] : '%'));
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrFilters, self::FIELD_ORIGINEID) ? $arrFilters[self::FIELD_ORIGINEID] : '%'));
-    $bPublished = isset($arrFilters[self::FIELD_PUBLISHED]) && !is_array($arrFilters[self::FIELD_PUBLISHED]);
-    array_push($arrParams, $bPublished ? $arrFilters[self::FIELD_PUBLISHED] : '%');
-    $bLiveAble = isset($arrFilters[self::FIELD_LIVEABLE]) && !is_array($arrFilters[self::FIELD_LIVEABLE]);
-    array_push($arrParams, $bLiveAble ? $arrFilters[self::FIELD_LIVEABLE] : '%');
-    array_push($arrParams, isset($arrFilters[self::FIELD_EXPANSIONID]) ? $arrFilters[self::FIELD_EXPANSIONID] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_TITLE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_LEVELID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_DURATIONID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_PLAYERID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_ORIGINEID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_PUBLISHED));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_LIVEABLE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_EXPANSIONID));
   }
   /**
    * @param array $arrFilters
@@ -51,12 +47,12 @@ class MissionServices extends LocalServices
    */
   public function getMissionsWithFilters($arrFilters=array(), $orderby=self::FIELD_TITLE, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
     if ($arrFilters[self::FIELD_EXPANSIONID]) {
-      return $this->Dao->selectEntriesWithFiltersIn(__FILE__, __LINE__, $arrParams, $arrFilters);
+      return $this->Dao->selectEntriesWithFiltersIn(__FILE__, __LINE__, $this->arrParams, $arrFilters);
     } else {
-      return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
+      return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
     }
   }
   /**
@@ -67,8 +63,8 @@ class MissionServices extends LocalServices
    */
   public function getMissionsWithFiltersIn($arrFilters=array(), $orderby=self::FIELD_TITLE, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    return $this->Dao->selectEntriesWithFiltersIn(__FILE__, __LINE__, $arrParams, $arrFilters);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    return $this->Dao->selectEntriesWithFiltersIn(__FILE__, __LINE__, $this->arrParams, $arrFilters);
   }
   /**
    * @param string $file

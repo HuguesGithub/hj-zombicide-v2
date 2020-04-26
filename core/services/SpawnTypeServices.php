@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SpawnTypeServices
  * @author Hugues.
- * @version 1.0.00
- * @since 1.0.00
+ * @since 1.04.27
+ * @version 1.04.27
  */
 class SpawnTypeServices extends LocalServices
 {
@@ -24,17 +24,4 @@ class SpawnTypeServices extends LocalServices
     $this->Dao = new SpawnTypeDaoImpl();
   }
 
-  /**
-   * @param string $file
-   * @param string $line
-   * @param array $arrFilters
-   * @param string $orderby
-   * @param string $order
-   * @return array
-   */
-  public function getSpawnTypesWithFilters($file, $line, $arrFilters=array(), $orderby='id', $order='asc')
-  {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    return $this->Dao->selectEntriesWithFilters($file, $line, $arrParams);
-  }
 }

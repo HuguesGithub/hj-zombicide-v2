@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SpawnServices
  * @author Hugues.
- * @version 1.0.00
- * @since 1.0.00
+ * @since 1.04.27
+ * @version 1.04.27
  */
 class SpawnServices extends LocalServices
 {
@@ -24,12 +24,14 @@ class SpawnServices extends LocalServices
     $this->Dao = new SpawnDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrFilters, self::FIELD_EXPANSIONID) ? $arrFilters[self::FIELD_EXPANSIONID] : '%'));
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrFilters, self::CST_SPAWNNUMBER) ? $arrFilters[self::CST_SPAWNNUMBER] : '%'));
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_EXPANSIONID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_SPAWNNUMBER));
   }
   /**
    * @param array $arrFilters
@@ -37,10 +39,10 @@ class SpawnServices extends LocalServices
    * @param string $order
    * @return array
    */
-  public function getSpawnsWithFilters($arrFilters=array(), $orderby=self::CST_SPAWNNUMBER, $order='asc')
+  public function getSpawnsWithFilters($arrFilters=array(), $orderby=self::FIELD_SPAWNNUMBER, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
 }

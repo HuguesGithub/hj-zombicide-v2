@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SurvivorSkillServices
  * @author Hugues.
- * @version 1.02.00
- * @since 1.0.00
+ * @since 1.04.27
+ * @version 1.04.27
  */
 class SurvivorSkillServices extends LocalServices
 {
@@ -24,14 +24,16 @@ class SurvivorSkillServices extends LocalServices
     $this->Dao = new SurvivorSkillDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    $arrParams[] = (isset($arrFilters[self::FIELD_SURVIVORID]) ? $arrFilters[self::FIELD_SURVIVORID] : '%');
-    $arrParams[] = (isset($arrFilters[self::FIELD_SKILLID]) ? $arrFilters[self::FIELD_SKILLID] : '%');
-    $arrParams[] = (isset($arrFilters[self::FIELD_SURVIVORTYPEID]) ? $arrFilters[self::FIELD_SURVIVORTYPEID] : '%');
-    $arrParams[] = (isset($arrFilters[self::FIELD_TAGLEVELID]) ? $arrFilters[self::FIELD_TAGLEVELID] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_SURVIVORID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_SKILLID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_SURVIVORTYPEID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_TAGLEVELID));
   }
   /**
    * @param string $file
@@ -46,8 +48,8 @@ class SurvivorSkillServices extends LocalServices
     if ($orderby==null) {
       $orderby = array(self::FIELD_SURVIVORTYPEID, self::FIELD_TAGLEVELID);
     }
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
 }

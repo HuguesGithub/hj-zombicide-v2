@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionTileServices
  * @author Hugues.
  * @since 1.04.07
- * @version 1.04.07
+ * @version 1.04.27
  */
 class MissionTileServices extends LocalServices
 {
@@ -24,13 +24,15 @@ class MissionTileServices extends LocalServices
     $this->Dao = new MissionTileDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    $arrParams[] = (isset($arrFilters[self::FIELD_MISSIONID]) ? $arrFilters[self::FIELD_MISSIONID] : '%');
-    $arrParams[] = (isset($arrFilters[self::FIELD_COORDX]) ? $arrFilters[self::FIELD_COORDX] : '%');
-    $arrParams[] = (isset($arrFilters[self::FIELD_COORDY]) ? $arrFilters[self::FIELD_COORDY] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_MISSIONID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_COORDX));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_COORDY));
   }
   /**
    * @param array $arrFilters
@@ -38,11 +40,11 @@ class MissionTileServices extends LocalServices
    * @param string $order
    * @return array
    */
-  public function getMissionTilesWithFilters($arrFilters=array(), $orderby='id', $order='asc')
+  public function getMissionTilesWithFilters($arrFilters=array(), $orderby=self::FIELD_ID, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
 
 }

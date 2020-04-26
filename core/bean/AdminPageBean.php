@@ -129,35 +129,9 @@ class AdminPageBean extends MainPageBean
     $this->WpPostMissions = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_MISSION_ID);
     $strMissions = 'Nombre de Missions avec un article : '.count($this->WpPostMissions).'.';
 
-
-    /*
-    $reset = $this->initVar('reset', '');
-    $doReset = !empty($reset);
-    if ($doReset) {
-      $ts = time();
-      list($N, $d, $m, $y) = explode(' ', date('N d m y', $ts));
-      $nd = $d + ($N==1 ? 1 : 9-$N);
-      $resetTs = mktime(1, 0, 0, $m, $nd, $y);
-    }
-    $request = "SELECT option_value FROM wp_11_options WHERE option_name='cron';";
-    $row = MySQL::wpdbSelect($request);
-    $Obj = array_shift($row);
-    $arrOptions = unserialize($Obj->option_value);
-    foreach ($arrOptions as $key => $value) {
-      if (isset($value[WP_DB_BACKUP_CRON])) {
-        $nextTs = $key;
-        $arrOptions[$resetTs][WP_DB_BACKUP_CRON] = $value[WP_DB_BACKUP_CRON];
-        unset($arrOptions[$key]);
-      }
-    }
-    if ($doReset) {
-      $serialized = serialize($arrOptions);
-      $request = "UPDATE wp_11_options SET option_value='$serialized' WHERE option_name='cron';";
-    }
-    **/
     $args = array(
-    // Date de la prochaine sauvegarde - 1
-      date('d/m/Y h:i:00'/*, $nextTs*/),
+      // A supprimer - 1
+      '',
       // Bilan des mises à jours des Compétences - 2
       $strBilan,
       // Bilan des Missions - 3
@@ -242,7 +216,6 @@ class AdminPageBean extends MainPageBean
   {
     $this->nbUpdates = 0;
     $this->nbCreates = 0;
-    $nbWpPostSkills  = count($this->WpPostSkills);
     while (!empty($this->WpPostSkills)) {
       // On récupère le WpPost et ses données
       $this->WpPost = array_shift($this->WpPostSkills);

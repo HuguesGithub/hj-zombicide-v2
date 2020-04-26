@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe DurationServices
  * @author Hugues.
  * @since 1.04.16
- * @version 1.04.16
+ * @version 1.04.27
  */
 class DurationServices extends LocalServices
 {
@@ -24,12 +24,14 @@ class DurationServices extends LocalServices
     $this->Dao = new DurationDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    $arrParams[] = (isset($arrFilters[self::FIELD_MINDURATION]) ? $arrFilters[self::FIELD_MINDURATION] : '%');
-    $arrParams[] = (isset($arrFilters[self::FIELD_MAXDURATION]) ? $arrFilters[self::FIELD_MAXDURATION] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_MINDURATION));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_MAXDURATION));
   }
   /**
    * @param array $arrFilters
@@ -39,11 +41,14 @@ class DurationServices extends LocalServices
    */
   public function getDurationsWithFilters($arrFilters=array(), $orderby=self::FIELD_MINDURATION, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
-
+  /**
+   * @param int $id
+   * @return Duration
+   */
   public function selectDuration($id)
   { return $this->select(__FILE__, __LINE__, $id); }
 

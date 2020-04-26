@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Mission
  * @author Hugues.
  * @since 1.04.00
- * @version 1.04.26
+ * @version 1.04.27
  */
 class Mission extends LocalDomain
 {
@@ -245,8 +245,8 @@ class Mission extends LocalDomain
   public function getMissionRules($orderBy='id')
   {
     if ($this->MissionRules == null) {
-      $arrFilters = array(self::CST_MISSIONID=>$this->id);
-      $this->MissionRules = $this->MissionRuleServices->getMissionRulesWithFilters(__FILE__, __LINE__, $arrFilters, $orderBy);
+      $arrFilters = array(self::FIELD_MISSIONID=>$this->id);
+      $this->MissionRules = $this->MissionRuleServices->getMissionRulesWithFilters($arrFilters, $orderBy);
     }
     return $this->MissionRules;
   }
@@ -256,8 +256,8 @@ class Mission extends LocalDomain
   public function getMissionObjectives($oBy='id')
   {
     if ($this->MissionObjectives == null) {
-      $arrF = array(self::CST_MISSIONID=>$this->id);
-      $this->MissionObjectives = $this->MissionObjectiveServices->getMissionObjectivesWithFilters(__FILE__, __LINE__, $arrF, $oBy);
+      $arrF = array(self::FIELD_MISSIONID=>$this->id);
+      $this->MissionObjectives = $this->MissionObjectiveServices->getMissionObjectivesWithFilters($arrF, $oBy);
     }
     return $this->MissionObjectives;
   }
@@ -267,8 +267,8 @@ class Mission extends LocalDomain
   public function getMissionExpansions()
   {
     if ($this->MissionExpansions == null) {
-      $arrFilters = array(self::CST_MISSIONID=>$this->id);
-      $this->MissionExpansions = $this->MissionExpansionServices->getMissionExpansionsWithFilters(__FILE__, __LINE__, $arrFilters);
+      $arrFilters = array(self::FIELD_MISSIONID=>$this->id);
+      $this->MissionExpansions = $this->MissionExpansionServices->getMissionExpansionsWithFilters($arrFilters);
     }
     return $this->MissionExpansions;
   }

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.09
+ * @version 1.04.27
  */
 class MissionBean extends LocalBean
 {
@@ -410,7 +410,7 @@ class MissionBean extends LocalBean
     }
     $none = '<li>Aucune règle spéciale</li>';
     $type = 'rule';
-    $select = $this->RuleServices->getRuleNoSettingSelect(__FILE__, __LINE__, '', 'id', $this->classe);
+    $select = $this->RuleServices->getRuleNoSettingSelect('', 'id', $this->classe);
     return $this->getMissionObjAndRuleGenericBlock($displayMissionRules, $none, $type, $select);
   }
   /**
@@ -429,7 +429,7 @@ class MissionBean extends LocalBean
     }
     $none = '<li>Aucune mise en place particulière</li>';
     $type = 'setting';
-    $select = $this->RuleServices->getRuleSettingSelect(__FILE__, __LINE__, '', 'id', $this->classe);
+    $select = $this->RuleServices->getRuleSettingSelect('', 'id', $this->classe);
     return $this->getMissionObjAndRuleGenericBlock($displayMissionRules, $none, $type, $select);
   }
   /**
@@ -445,7 +445,7 @@ class MissionBean extends LocalBean
     }
     $none = '<li>Aucun objectif</li>';
     $type = 'objective';
-    $select = $this->ObjectiveServices->getObjectiveSelect(__FILE__, __LINE__, '', 'id', $this->classe);
+    $select = $this->ObjectiveServices->getObjectiveSelect('', 'id', $this->classe);
     return $this->getMissionObjAndRuleGenericBlock($displayMissionObjectives, $none, $type, $select);
   }
   /**

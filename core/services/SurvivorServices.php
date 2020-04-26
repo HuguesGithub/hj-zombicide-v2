@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SurvivorServices
  * @author Hugues.
- * @version 1.0.00
- * @since 1.0.00
+ * @since 1.04.27
+ * @version 1.04.27
  */
 class SurvivorServices extends LocalServices
 {
@@ -24,20 +24,17 @@ class SurvivorServices extends LocalServices
     $this->Dao = new SurvivorDaoImpl();
   }
   /**
-   * Construit le tableau des filtres pour la requête dédiée.
-   * @param array $arrF
-   * @return array
+   * @param array $arrFilters
    */
-  private function buildFilters($arrF)
+  private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    array_push($arrParams, (!empty($arrF[self::FIELD_NAME]) && !is_array($arrF[self::FIELD_NAME])) ? '%'.$arrF[self::FIELD_NAME].'%' : '%');
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrF, self::FIELD_ZOMBIVOR) ? $arrF[self::FIELD_ZOMBIVOR] : '%'));
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrF, self::FIELD_ULTIMATE) ? '%'.$arrF[self::FIELD_ULTIMATE].'%' : '%'));
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrF, self::FIELD_EXPANSIONID) ? $arrF[self::FIELD_EXPANSIONID] : '%'));
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrF, self::FIELD_BACKGROUND) ? $arrF[self::FIELD_BACKGROUND] : '%'));
-    array_push($arrParams, ($this->isNonEmptyAndNoArray($arrF, self::FIELD_LIVEABLE) ? $arrF[self::FIELD_LIVEABLE] : '%'));
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_NAME));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_ZOMBIVOR));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_ULTIMATE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_EXPANSIONID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_BACKGROUND));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_LIVEABLE));
   }
   /**
    * @param array $arrFilters

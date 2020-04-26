@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe EquipmentExpansionServices
  * @author Hugues.
  * @since 1.04.15
- * @version 1.04.15
+ * @version 1.04.27
  */
 class EquipmentExpansionServices extends LocalServices
 {
@@ -24,12 +24,14 @@ class EquipmentExpansionServices extends LocalServices
     $this->Dao = new EquipmentExpansionDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    $arrParams[] = (isset($arrFilters['equipmentCardId']) ? $arrFilters['equipmentCardId'] : '%');
-    $arrParams[] = (isset($arrFilters[self::FIELD_EXPANSIONID]) ? $arrFilters[self::FIELD_EXPANSIONID] : '%');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_EQUIPMENTCARDID));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_EXPANSIONID));
   }
   /**
    * @param array $arrFilters
@@ -39,8 +41,8 @@ class EquipmentExpansionServices extends LocalServices
    */
   public function getEquipmentExpansionsWithFilters($arrFilters=array(), $orderby=self::FIELD_ID, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters($file, $line, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
 }

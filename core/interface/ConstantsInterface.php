@@ -104,7 +104,9 @@ interface ConstantsInterface
   const FIELD_DESCRIPTION      = 'description';
   const FIELD_DISPLAYRANK      = 'displayRank';
   const FIELD_DURATIONID       = 'durationId';
+  const FIELD_EQUIPMENTCARDID  = 'equipmentCardId';
   const FIELD_EXPANSIONID      = 'expansionId';
+  const FIELD_KEYWORDID        = 'keywordId';
   const FIELD_LIVEABLE         = 'liveAble';
   const FIELD_LIVEID           = 'liveId';
   const FIELD_LEVELID          = 'levelId';
@@ -114,13 +116,17 @@ interface ConstantsInterface
   const FIELD_NAME             = 'name';
   const FIELD_NBMISSIONS       = 'nbMissions';
   const FIELD_NBSURVIVANTS     = 'nbSurvivants';
+  const FIELD_OBJECTIVEID      = 'objectiveId';
   const FIELD_OFFICIAL         = 'official';
   const FIELD_ORIGINEID        = 'origineId';
   const FIELD_PLAYERID         = 'playerId';
   const FIELD_PUBLISHED        = 'published';
+  const FIELD_RULEID           = 'ruleId';
   const FIELD_SENDERID         = 'senderId';
   const FIELD_SENDTOID         = 'sendToId';
+  const FIELD_SETTING          = 'setting';
   const FIELD_SKILLID          = 'skillId';
+  const FIELD_SPAWNNUMBER      = 'spawnNumber';
   const FIELD_SURVIVORID       = 'survivorId';
   const FIELD_SURVIVORTYPEID   = 'survivorTypeId';
   const FIELD_TAGLEVELID       = 'tagLevelId';
@@ -129,6 +135,7 @@ interface ConstantsInterface
   const FIELD_TIMESTAMP        = 'timestamp';
   const FIELD_TITLE            = 'title';
   const FIELD_ULTIMATE         = 'ultimate';
+  const FIELD_WEAPONPROFILEID  = 'weaponProfileId';
   const FIELD_ZOMBIVOR         = 'zombivor';
 
   /////////////////////////////////////////////////
@@ -171,6 +178,8 @@ interface ConstantsInterface
   /////////////////////////////////////////////////
   // Session
   const SESSION_DECKKEY        = 'deckKey';
+
+  const SQL_WHERE              = 'where';
 
   /////////////////////////////////////////////////
   // Tags

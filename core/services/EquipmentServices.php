@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe EquipmentServices
  * @author Hugues.
  * @since 1.04.15
- * @version 1.04.15
+ * @version 1.04.27
  */
 class EquipmentServices extends LocalServices
 {
@@ -23,19 +23,10 @@ class EquipmentServices extends LocalServices
     parent::__construct();
     $this->Dao = new EquipmentDaoImpl();
   }
-
   /**
-   * @param array $arrFilters
-   * @param string $orderby
-   * @param string $order
-   * @return array
+   * @param int $equipmentId
+   * @return Equipment
    */
-  public function getEquipmentsWithFilters($arrFilters=array(), $orderby=self::FIELD_NAME, $order=self::ORDER_ASC)
-  {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
-  }
-
   public function selectEquipment($equipmentId)
   { return $this->select(__FILE__, __LINE__, $equipmentId); }
 }

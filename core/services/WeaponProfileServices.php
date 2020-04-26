@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe WeaponProfileServices
  * @author Hugues.
- * @version 1.0.00
- * @since 1.0.00
+ * @since 1.04.27
+ * @version 1.04.27
  */
 class WeaponProfileServices extends LocalServices
 {
@@ -22,19 +22,5 @@ class WeaponProfileServices extends LocalServices
   {
     parent::__construct();
     $this->Dao = new WeaponProfileDaoImpl();
-  }
-
-  /**
-   * @param string $file
-   * @param string $line
-   * @param array $arrFilters
-   * @param string $orderby
-   * @param string $order
-   * @return array
-   */
-  public function getWeaponProfilesWithFilters($file, $line, $arrFilters=array(), $orderby='id', $order='asc')
-  {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    return $this->Dao->selectEntriesWithFilters($file, $line, $arrParams);
   }
 }

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * WpPageBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.24
+ * @version 1.04.26
  */
 class WpPageBean extends MainPageBean
 {
@@ -132,9 +132,7 @@ class WpPageBean extends MainPageBean
 
     //////////////////////////////////////////////////////////////////////////
     // On renseigne la page 12
-    $strPagination .= $this->buildPaginationElement($nbPages, $curPage);
-    //////////////////////////////////////////////////////////////////////////
-    return $strPagination;
+    return $strPagination.$this->buildPaginationElement($nbPages, $curPage);
   }
   private function buildPaginationElement($i, $curPage)
   {

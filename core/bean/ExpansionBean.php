@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.04.26
+ * @version 1.04.27
  */
 class ExpansionBean extends LocalBean
 {
@@ -60,8 +60,8 @@ class ExpansionBean extends LocalBean
   public function getRowForAdminPage($tBodyButtons)
   {
     $Expansion = $this->Expansion;
-    $arrF = array(self::CST_EXPANSIONID=>$Expansion->getId());
-    $MissionExpansions = $this->MissionExpansionServices->getMissionExpansionsWithFilters(__FILE__, __LINE__, $arrF);
+    $arrF = array(self::FIELD_EXPANSIONID=>$Expansion->getId());
+    $MissionExpansions = $this->MissionExpansionServices->getMissionExpansionsWithFilters($arrF);
     $nb = count($MissionExpansions);
     $queryArg = array(
       self::CST_ONGLET=>'parametre',

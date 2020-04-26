@@ -197,8 +197,10 @@ class WpPostMissionBean extends WpPostBean
   {
     $strTileIds = $this->WpPost->getPostMeta('tileIds');
     if ($strTileIds=='') {
+      /*
       $Mission = $this->getMission();
       $MissionTiles = $Mission->getMissionTiles();
+      */
       $strTileIds = (self::isAdmin() ? 'Wip Tiles' : '');
     }
     return $strTileIds;
@@ -206,7 +208,16 @@ class WpPostMissionBean extends WpPostBean
   private function getStrExpansions()
   {
     $expansionIds = unserialize($this->WpPost->getPostMeta('expansionIds'));
-    return ($expansionIds=='' ? (self::isAdmin() ? 'Wip Dalles' : '') : implode(', ', $expansionIds));
+    if ($expansionIds=='') {
+      if (self::isAdmin()) {
+        $strReturned = 'Wip Dalles';
+      } else {
+        $strReturned = '';
+      }
+    } else {
+      $strReturned = implode(', ', $expansionIds);
+    }
+    return $strReturned;
   }
   private function getThumbUrl()
   {
@@ -216,8 +227,6 @@ class WpPostMissionBean extends WpPostBean
   }
   private function getLinkedDifPlaDur()
   { return $this->getLinkedDifficulty().' / '.$this->getStrNbJoueurs().' / '.$this->getLinkedDuration(); }
-  private function getStrDifPlaDur()
-  { return $this->getStrDifficulty().' / '.$this->getStrNbJoueurs().' / '.$this->getStrDuree(); }
 
 
 

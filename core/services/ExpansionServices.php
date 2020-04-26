@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionServices
  * @author Hugues.
  * @since 1.04.00
- * @version 1.04.24
+ * @version 1.04.27
  */
 class ExpansionServices extends LocalServices
 {
@@ -24,15 +24,15 @@ class ExpansionServices extends LocalServices
     $this->Dao = new ExpansionDaoImpl();
   }
 
+  /**
+   * @param array $arrFilters
+   */
   private function buildFilters($arrFilters)
   {
-    $arrParams = array();
-    array_push($arrParams, (isset($arrFilters[self::FIELD_CODE]) && !is_array($arrFilters[self::FIELD_CODE])) ? $arrFilters[self::FIELD_CODE] : '%');
-    $bTest = isset($arrFilters[self::FIELD_NBMISSIONS]) && !is_array($arrFilters[self::FIELD_NBMISSIONS]);
-    array_push($arrParams, $bTest? $arrFilters[self::FIELD_NBMISSIONS] : '0');
-    $bTest = isset($arrFilters[self::FIELD_NBSURVIVANTS]) && !is_array($arrFilters[self::FIELD_NBSURVIVANTS]);
-    array_push($arrParams, $bTest? $arrFilters[self::FIELD_NBSURVIVANTS] : '0');
-    return $arrParams;
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_CODE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_NBMISSIONS, 0));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_NBSURVIVANTS, 0));
   }
   /**
    * @param array $arrFilters
@@ -42,12 +42,14 @@ class ExpansionServices extends LocalServices
    */
   public function getExpansionsWithFilters($arrFilters=array(), $orderby=self::FIELD_NAME, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
-    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
-
-
+  /**
+   * @param int $id
+   * @return Expansion
+   */
   public function selectExpansion($id)
   { return $this->select(__FILE__, __LINE__, $id); }
 

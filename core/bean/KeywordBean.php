@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe KeywordBean
  * @author Hugues
  * @since 1.0.00
- * @version 1.0.00
+ * @version 1.04.27
  */
 class KeywordBean extends LocalBean
 {
@@ -27,8 +27,8 @@ class KeywordBean extends LocalBean
   public function getRowForAdminPage($tBodyButtons)
   {
     $Keyword = $this->Keyword;
-    $arrF = array('keywordId'=>$Keyword->getId());
-    $Equipments = $this->EquipmentKeywordServices->getEquipmentKeywordsWithFilters(__FILE__, __LINE__, $arrF);
+    $arrF = array(self::FIELD_KEYWORDID=>$Keyword->getId());
+    $Equipments = $this->EquipmentKeywordServices->getEquipmentKeywordsWithFilters($arrF);
     $nb = count($Equipments);
     $queryArg = array(
       self::CST_ONGLET=>'parametre',
