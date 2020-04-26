@@ -133,29 +133,6 @@ class MissionBean extends LocalBean
     } else {
       return '';
     }
-
-    /*
-    $contentRules = '';
-    $MissionRules = $this->Mission->getMissionRules();
-    if (!empty($MissionRules)) {
-      $strMep = '';
-      $strRs = '';
-      foreach ($MissionRules as $MissionRule) {
-        if ($MissionRule->getRule()->getSetting()==1) {
-          $strMep .= vsprintf($this->strModelObjRules, array($MissionRule->getTitle(), $MissionRule->getRule()->getDescription()));
-        } else {
-          $strRs .= vsprintf($this->strModelObjRules, array($MissionRule->getTitle(), $MissionRule->getRule()->getDescription()));
-        }
-      }
-      if ($strMep!='') {
-        $contentRules .= vsprintf($this->h5Ul, array('Mise en place', $strMep));
-      }
-      if ($strRs!='') {
-        $contentRules .= vsprintf($this->h5Ul, array('Regles speciales', $strRs));
-      }
-    }
-    return $contentRules;
-    */
   }
   /**
    * @return string

@@ -5,11 +5,13 @@ if (!defined('ABSPATH')) {
 /**
  * Classe AdminPageBean
  * @author Hugues
- * @version 1.03.00
  * @since 1.00.00
+ * @version 1.04.26
  */
 class AdminPageBean extends MainPageBean
 {
+  protected $urlFragmentPagination = 'web/pages/admin/fragments/fragment-pagination.php';
+
   /**
    * Backup Cron Table
    */
@@ -24,6 +26,8 @@ class AdminPageBean extends MainPageBean
     $this->tableName = 'wp_11_zombicide_'.$tag;
     $this->tplAdminerUrl  = 'http://zombicide.jhugues.fr/wp-content/plugins/adminer/inc/adminer/loader.php';
     $this->tplAdminerUrl .= '?username=dbo507551204&db=db507551204&table='.$this->tableName;
+    $this->SkillServices  = new SkillServices();
+    $this->WpPostServices = new WpPostServices();
   }
 
   /**
@@ -88,6 +92,45 @@ class AdminPageBean extends MainPageBean
    */
   public function getHomeContentPage()
   {
+    /////////////////////////////////////////////////
+    // Gestion des Compétences.
+    // On récupère la liste des Compétences qui ont un Article. Puis les données dans la base. On compare et on effectue un diagnostic.
+    $this->WpPostSkills = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_SKILL_ID);
+    $nbWpPostSkills = count($this->WpPostSkills);
+    $this->Skills = $this->SkillServices->getSkillsWithFilters();
+    $nbSkills = count($this->Skills);
+    if ($nbWpPostSkills!=$nbSkills || $_GET['getAction']=='controlSkill') {
+      $this->checkSkills();
+      $strBilan = '';
+      if ($nbWpPostSkills!=$nbSkills) {
+        $strBilan .= "Le nombre d'articles ($nbWpPostSkills) ne correspond pas au nombre de compétences en base ($nbSkills).<br>";
+      }
+      if ($this->nbUpdates == 0 && $this->nbCreates == 0) {
+        $strBilan .= "Un contrôle a été effectué, et aucune modification n'a été faite.";
+      } else {
+        $strBilan .= "Un contrôle a été effectué, ";
+        if ($this->nbUpdates == 0) {
+          $strBilan .= "aucune mise à jour n'a été faite, ";
+        } else {
+          $strBilan .= $this->nbUpdates." mises à jour ont été faites, ";
+        }
+        if ($this->nbCreates == 0) {
+          $strBilan .= "aucune création n'a été faite.";
+        } else {
+          $strBilan .= $this->nbCreates." créations ont été faites.";
+        }
+      }
+    }
+
+    /////////////////////////////////////////////////
+    // Gestion des Missions.
+    // On récupère la liste des Missions qui ont un Article. Puis les données dans la base. On compare et on effectue un diagnostic.
+    // Enfin, pour le moment, on ne gère pas les données en base.
+    $this->WpPostMissions = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_MISSION_ID);
+    $strMissions = 'Nombre de Missions avec un article : '.count($this->WpPostMissions).'.';
+
+
+    /*
     $reset = $this->initVar('reset', '');
     $doReset = !empty($reset);
     if ($doReset) {
@@ -111,77 +154,19 @@ class AdminPageBean extends MainPageBean
       $serialized = serialize($arrOptions);
       $request = "UPDATE wp_11_options SET option_value='$serialized' WHERE option_name='cron';";
     }
+    **/
     $args = array(
     // Date de la prochaine sauvegarde - 1
-      date('d/m/Y h:i:00', $nextTs),
+      date('d/m/Y h:i:00'/*, $nextTs*/),
+      // Bilan des mises à jours des Compétences - 2
+      $strBilan,
+      // Bilan des Missions - 3
+      $strMissions,
    );
     $str = file_get_contents(PLUGIN_PATH.'web/pages/admin/home-admin-board.php');
     return vsprintf($str, $args);
   }
-  /**
-   * @param unknown $queryArg
-   * @param unknown $post_status
-   * @param unknown $curPage
-   * @param unknown $nbPages
-   * @param unknown $nbElements
-   * @return string
-   */
-  protected function getPagination($queryArg, $post_status, $curPage, $nbPages, $nbElements)
-  {
-    ////////////////////////////////////////////////////////////////////////////
-    // Définition des status disabled et des url
-    // First Page
-    $firstPageDisabled = ($curPage==1);
-    $queryArg[self::CST_CURPAGE] = 1;
-    $hrefFirst = $this->getQueryArg($queryArg);
-    // Previous Page
-    $previousPageDisabled = ($curPage==1);
-    $queryArg[self::CST_CURPAGE] = $curPage-1;
-    $hrefPrev = $this->getQueryArg($queryArg);
-    // Next Page
-    $nextPageDisabled = ($curPage==$nbPages);
-    $queryArg[self::CST_CURPAGE] = $curPage+1;
-    $hrefNext = $this->getQueryArg($queryArg);
-    // Last Page
-    $lastPageDisabled = ($curPage==$nbPages);
-    $queryArg[self::CST_CURPAGE] = $nbPages;
-    $hrefLast = $this->getQueryArg($queryArg);
-    ////////////////////////////////////////////////////////////////////////////
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Construction de la liste des liens de la pagination.
-    $strPagination = '';
-    for ($i=1; $i<=$nbPages; $i++) {
-      $curPageDisabled = ($i==$curPage);
-      $queryArg[self::CST_CURPAGE] = $i;
-      $hrefCurrent = $this->getQueryArg($queryArg);
-      $strPagination .= '<li class="page-item'.($curPageDisabled ? ' disabled' : '').'"><a class="page-link" href="'.($curPageDisabled ? '#' : $hrefCurrent).'">'.$i.'</a></li>';
-    }
-    ////////////////////////////////////////////////////////////////////////////
-
-    $args = array(
-      // First page disabled or not ? - 1
-      $firstPageDisabled ? ' disabled' : '',
-      // Url First page - 2
-      $firstPageDisabled ? '#' : $hrefFirst,
-      // Previous page disabled or not ? - 3
-      $previousPageDisabled ? ' disabled' : '',
-      // Url Previous page - 4
-      $previousPageDisabled ? '#' : $hrefPrev,
-      // - 5
-      $strPagination,
-      // Next page disabled or not ? - 6
-      $nextPageDisabled ? ' disabled' : '',
-      // Url Next page - 7
-      $nextPageDisabled ? '#' : $hrefNext,
-      // Last page disabled or not ? - 8
-      $lastPageDisabled ? ' disabled' : '',
-      // Url Last page - 9
-      $lastPageDisabled ? '#' : $hrefLast,
-    );
-    $str = file_get_contents(PLUGIN_PATH.'web/pages/admin/fragments/fragment-pagination.php');
-    return vsprintf($str, $args);
-  }
   /**
    * @param unknown $urlParams
    */
@@ -244,4 +229,160 @@ class AdminPageBean extends MainPageBean
     $str = file_get_contents(PLUGIN_PATH.'web/pages/admin/delete-common-elements.php');
     return vsprintf($str, $args);
   }
+
+
+
+
+
+
+
+
+
+  private function checkSkills()
+  {
+    $this->nbUpdates = 0;
+    $this->nbCreates = 0;
+    $nbWpPostSkills  = count($this->WpPostSkills);
+    while (!empty($this->WpPostSkills)) {
+      // On récupère le WpPost et ses données
+      $this->WpPost = array_shift($this->WpPostSkills);
+      $name         = $this->WpPost->getPostTitle();
+      // On recherche un Skill dans la base de données qui correspond.
+      $Skills       = $this->SkillServices->getSkillsWithFilters(array(self::FIELD_NAME=>$name));
+      if (empty($Skills)) {
+        // Si on n'en a pas, on doit créer une entrée correspondante.
+        $Skill = new Skill();
+        $Skill->setName($name);
+        $this->checkSkill($Skill, true);
+      } elseif (count($Skills)>1) {
+        // Si on en a plus d'une, c'est sans doute que le filtre de recherche était trop large (notamment "+1 Action" avec "+1 Action gratuite...")
+        $doUpdate = false;
+        while (!empty($Skills) && !$doUpdate) {
+          $Skill = array_shift($Skills);
+          if ($name==$Skill->getName()) {
+            $this->checkSkill($Skill);
+            $doUpdate = true;
+          }
+        }
+        if (!$doUpdate) {
+          $Skill = new Skill();
+          $Skill->setName($name);
+          $this->checkSkill($Skill, true);
+        }
+      } else {
+        // Si on en a juste une, c'est tranquille.
+        $Skill = array_shift($Skills);
+        $this->checkSkill($Skill);
+      }
+    }
+  }
+
+  private function checkSkill($Skill, $doCreate=false)
+  {
+    // On initialise les données
+    $doUpdate = false;
+    $code         = $this->WpPost->getPostMeta(self::FIELD_CODE);
+    $name         = $this->WpPost->getPostTitle();
+    $description  = $this->WpPost->getPostContent();
+    $description  = substr($description, 25, -27);
+    $official     = $this->WpPost->getPostMeta(self::FIELD_OFFICIAL);
+    // On vérifie si la donnée en base correspond à l'article.
+    if ($Skill->getCode()!=$code) {
+      $Skill->setCode($code);
+      $doUpdate = true;
+    }
+    if ($Skill->getName()!=$name) {
+      $Skill->setName($name);
+      $doUpdate = true;
+    }
+    if ($Skill->getDescription()!=$description) {
+      $Skill->setDescription($description);
+      $doUpdate = true;
+    }
+    if ($Skill->isOfficial()!=$official) {
+      $Skill->setOfficial($official);
+      $doUpdate = true;
+    }
+    if ($doCreate) {
+    // Si on veut créer, on le fait.
+    $this->SkillServices->insertSkill($Skill);
+    $this->nbCreates++;
+    } elseif ($doUpdate) {
+      // Si nécessaire, on update en base.
+      $this->SkillServices->updateSkill($Skill);
+      $this->nbUpdates++;
+    }
+  }
+
+
+
+  /**
+   * @param unknown $queryArg
+   * @param unknown $post_status
+   * @param unknown $curPage
+   * @param unknown $nbPages
+   * @param unknown $nbElements
+   * @return string
+   */
+  protected function getPagination($queryArg, $post_status, $curPage, $nbPages, $nbElements)
+  {
+    ////////////////////////////////////////////////////////////////////////////
+    // Lien vers la première page. Seulement si on n'est ni sur la première, ni sur la deuxième page.
+    if ($curPage>=3) {
+      $queryArg[self::CST_CURPAGE] = 1;
+      $strToFirst = '<a class="first-page button" href="'.$this->getQueryArg($queryArg).'"><span aria-hidden="true">&laquo;</span></a>';
+    } else {
+      $strToFirst = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&laquo;</span>';
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    // Lien vers la page précédente. Seulement si on n'est pas sur la première.
+    if ($curPage>=2) {
+      $queryArg[self::CST_CURPAGE] = $curPage-1;
+      $strToPrevious = '<a class="prev-page button" href="'.$this->getQueryArg($queryArg).'"><span aria-hidden="true">&lsaquo;</span></a>';
+    } else {
+      $strToPrevious = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&lsaquo;</span>';
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    // Lien vers la page suivante. Seulement si on n'est pas sur la dernière.
+    if ($curPage<$nbPages) {
+      $queryArg[self::CST_CURPAGE] = $curPage+1;
+      $strToNext = '<a class="next-page button" href="'.$this->getQueryArg($queryArg).'"><span aria-hidden="true">&rsaquo;</span></a>';
+    } else {
+      $strToNext = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&rsaquo;</span>';
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    // Lien vers la dernière page. Seulement si on n'est pas sur la dernière, ni l'avant-dernière.
+    if ($curPage<$nbPages-1) {
+      $queryArg[self::CST_CURPAGE] = $nbPages;
+      $strToLast = '<a class="next-page button" href="'.$this->getQueryArg($queryArg).'"><span aria-hidden="true">&raquo;</span></a>';
+    } else {
+      $strToLast = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&raquo;</span>';
+    }
+
+    $args = array(
+      // Nombre d'éléments - 1
+      $nbElements,
+      // Lien vers la première page - 2
+      $strToFirst,
+      // Lien vers la page précédente - 3
+      $strToPrevious,
+      // Page courante - 4
+      $curPage,
+      // Nombre total de pages - 5
+      $nbPages,
+      // Lien vers la page suivante - 6
+      $strToNext,
+      // Lien vers la dernière page - 7
+      $strToLast,
+    );
+    return $this->getRender($this->urlFragmentPagination, $args);
+  }
+
+
+
+
+
+
+
+
 }

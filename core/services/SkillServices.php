@@ -30,6 +30,7 @@ class SkillServices extends LocalServices
     array_push($arrParams, (!empty($arrF[self::FIELD_CODE]) && !is_array($arrF[self::FIELD_CODE])) ? $arrF[self::FIELD_CODE] : '%');
     array_push($arrParams, (!empty($arrF[self::FIELD_NAME]) && !is_array($arrF[self::FIELD_NAME])) ? '%'.$arrF[self::FIELD_NAME].'%' : '%');
     array_push($arrParams, ($this->isNonEmptyAndNoArray($arrF, self::FIELD_DESCRIPTION) ? '%'.$arrF[self::FIELD_DESCRIPTION].'%' : '%'));
+    array_push($arrParams, (!empty($arrF[self::FIELD_OFFICIAL]) && !is_array($arrF[self::FIELD_OFFICIAL])) ? $arrF[self::FIELD_OFFICIAL] : '%');
     return $arrParams;
   }
   /**
@@ -45,6 +46,10 @@ class SkillServices extends LocalServices
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
   }
 
+  public function insertSkill($Skill)
+  { return $this->insert(__FILE__, __LINE__, $Skill); }
   public function selectSkill($id)
   { return $this->select(__FILE__, __LINE__, $id); }
+  public function updateSkill($Skill)
+  { return $this->update(__FILE__, __LINE__, $Skill); }
 }

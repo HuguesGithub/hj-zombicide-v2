@@ -10,4 +10,5 @@
     </td>
     <td><strong><a class="row-title" href="%3$s">%4$s</a></strong></td>
     <td>%9$s</td>
+    <td>%10$s</td>
 </tr>

@@ -26,8 +26,7 @@ class ExpansionBean extends LocalBean
   public function getButton()
   {
     $str  = '<div type="button" class="btn btn-dark btn-expansion" data-expansion-id="'.$this->Expansion->getId();
-    $str .= '"><span><i class="far fa-square"></i></span> '.$this->Expansion->getName().'</div>';
-    return $str;
+    return $str. '"><span><i class="far fa-square"></i></span> '.$this->Expansion->getName().'</div>';
   }
 
 

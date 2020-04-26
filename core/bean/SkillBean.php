@@ -29,9 +29,9 @@ class SkillBean extends LocalBean
   {
     $Skill = $this->Skill;
     $queryArgs = array(
-      self::CST_ONGLET => self::CST_SKILL,
+      self::CST_ONGLET     => self::CST_SKILL,
       self::CST_POSTACTION => self::CST_EDIT,
-      self::FIELD_ID =>$Skill->getId()
+      self::FIELD_ID       => $Skill->getId()
     );
     $hrefEdit = $this->getQueryArg($queryArgs);
     $queryArgs[self::CST_POSTACTION] = self::CST_TRASH;
@@ -59,6 +59,8 @@ class SkillBean extends LocalBean
       // Url Article
       $urlWpPost,
       $Skill->getDescription(),
+      // Officiel ou non ? - 10
+      '<i class="far fa'.($Skill->isOfficial() ? '-check' : ''). '-square-o"></i>',
     );
     return $this->getRender($this->urlRowAdmin, $args);
   }

@@ -1,9 +1,11 @@
-<nav>
-  <ul class="pagination justify-content-end pagination-sm">
-    <li class="page-item%1$s"><a class="page-link" href="%2$s">&laquo;</a></li>
-    <li class="page-item%3$s"><a class="page-link" href="%4$s">&lsaquo;</a></li>
-    %5$s
-    <li class="page-item%6$s"><a class="page-link" href="%7$s">&rsaquo;</a></li>
-    <li class="page-item%8$s"><a class="page-link" href="%9$s">&raquo;</a></li>
-  </ul>
-</nav>
+<span class="displaying-num">%1$s éléments</span>
+<span class="pagination-links">
+  %2$s
+  %3$s
+  <span class="paging-input">
+    <input class="current-page" id="current-page-selector" type="text" name="paged" value="%4$s" size="%4$s" aria-describedby="table-paging">
+    <span class="tablenav-paging-text"> sur <span class="total-pages">%5$s</span></span>
+  </span>
+  %6$s
+  %7$s
+</span>

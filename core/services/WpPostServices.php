@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPostServices
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.08
+ * @version 1.04.26
  */
 class WpPostServices extends GlobalServices implements ConstantsInterface
 {
@@ -112,6 +112,7 @@ class WpPostServices extends GlobalServices implements ConstantsInterface
   public function getWpPostByCategoryId($categoryId=-1)
   {
     $args = array(
+      self::WP_TAXQUERY     => array(),
       self::WP_CAT          => $categoryId,
     );
     return $this->getArticles($args);

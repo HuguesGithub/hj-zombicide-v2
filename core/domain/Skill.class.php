@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Skill
  * @author Hugues.
  * @since 1.00.00
- * @version 1.02.00
+ * @version 1.04.26
  */
 class Skill extends LocalDomain
 {
@@ -31,6 +31,11 @@ class Skill extends LocalDomain
    */
   protected $description;
   /**
+   * La donnée est-elle officielle ?
+   * @var int $official
+   */
+  protected $official;
+  /**
    * @return int
    */
   public function getId()
@@ -51,6 +56,11 @@ class Skill extends LocalDomain
   public function getDescription()
   { return $this->description; }
   /**
+   * @return int
+   */
+  public function isOfficial()
+  { return $this->official; }
+  /**
    * @param int $id
    */
   public function setId($id)
@@ -70,6 +80,11 @@ class Skill extends LocalDomain
    */
   public function setDescription($description)
   { $this->description=$description; }
+  /**
+   * @param int $official
+   */
+  public function setOfficial($official)
+  { $this->official = $official; }
   /**
    * @return array
    */

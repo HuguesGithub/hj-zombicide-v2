@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * AdminPageSkillsBean
  * @author Hugues
- * @version 1.03.00
  * @since 1.00.00
+ * @version 1.04.26
  */
 class AdminPageSkillsBean extends AdminPageBean
 {
@@ -38,9 +38,9 @@ class AdminPageSkillsBean extends AdminPageBean
   {
     $strRows = '';
     $nbPerPage = 15;
-    $curPage = $this->initVar(self::CST_CURPAGE, 1);
-    $orderby = $this->initVar(self::CST_ORDERBY, self::CST_NAME);
-    $order = $this->initVar(self::CST_ORDER, 'ASC');
+    $curPage = $this->initVar(self::WP_CURPAGE, 1);
+    $orderby = $this->initVar(self::WP_ORDERBY, self::FIELD_NAME);
+    $order = $this->initVar(self::WP_ORDER, self::ORDER_ASC);
     $Skills = $this->SkillServices->getSkillsWithFilters(array(), $orderby, $order);
     $nbElements = count($Skills);
     $nbPages = ceil($nbElements/$nbPerPage);
@@ -52,18 +52,19 @@ class AdminPageSkillsBean extends AdminPageBean
         $strRows .= $SkillBean->getRowForAdminPage();
       }
     }
-    $queryArg = array(self::CST_ONGLET=>self::CST_SKILL,
-      self::CST_ORDERBY=>$orderby,
-      self::CST_ORDER=>$order
+    $queryArg = array(
+      self::CST_ONGLET => self::CST_SKILL,
+      self::WP_ORDERBY => $orderby,
+      self::WP_ORDER   => $order
     );
     // Pagination
     $strPagination = $this->getPagination($queryArg, $post_status, $curPage, $nbPages, $nbElements);
     // Sorts
-    $queryArg[self::CST_ORDERBY] = 'code';
-    $queryArg[self::CST_ORDER] = ($orderby=='code' && $order=='asc' ? 'desc' : 'asc');
+    $queryArg[self::WP_ORDERBY] = self::FIELD_CODE;
+    $queryArg[self::WP_ORDER] = ($orderby==self::FIELD_CODE && $order==self::ORDER_ASC ? self::ORDER_DESC : self::ORDER_ASC);
     $urlSortCode = $this->getQueryArg($queryArg);
-    $queryArg[self::CST_ORDERBY] = self::CST_NAME;
-    $queryArg[self::CST_ORDER] = ($orderby==self::CST_NAME && $order=='asc' ? 'desc' : 'asc');
+    $queryArg[self::WP_ORDERBY] = self::FIELD_NAME;
+    $queryArg[self::WP_ORDER] = ($orderby==self::FIELD_NAME && $order==self::ORDER_ASC ? self::ORDER_DESC : self::ORDER_ASC);
     $urlSortTitle = $this->getQueryArg($queryArg);
     $args = array(
       // Liste des compétences affichées - 1
@@ -77,11 +78,11 @@ class AdminPageSkillsBean extends AdminPageBean
       // Pagination - 5
       $strPagination,
       // class pour le tri sur code - 6
-      ($orderby=='code' ? $order : 'desc'),
+      ($orderby==self::FIELD_CODE ? $order : self::ORDER_DESC),
       // url pour le tri sur code - 7
       $urlSortCode,
       // class pour le tri sur title - 8
-      ($orderby==self::CST_NAME ? $order : 'desc'),
+      ($orderby==self::FIELD_NAME ? $order : self::ORDER_DESC),
       // url pour le tri sur title - 9
       $urlSortTitle,
       '','','','','','','','','','','','','');

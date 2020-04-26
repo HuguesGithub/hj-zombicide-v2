@@ -23,8 +23,8 @@
         </div>
       </div>
         <div class="mission_material col-12">
-          Matériel requis : <b>%3$s </b><br>
-          Dalles requises : <b>%4$s </b>
+          Matériel requis : <em>%3$s </em><br>
+          Dalles requises : <em>%4$s </em>
         </div>
       <div class="col-12">
         <hr>

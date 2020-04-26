@@ -85,6 +85,7 @@ interface ConstantsInterface
   const CST_MISSION          = 'mission';
   const CST_ONGLET           = 'onglet';
   const CST_PARAMETRE        = 'parametre';
+  const CST_POSTACTION       = 'postAction';
   const CST_SELECTED         = 'selected';
   const CST_SKILL            = 'skill';
   const CST_SURVIVOR         = 'survivor';
@@ -113,6 +114,7 @@ interface ConstantsInterface
   const FIELD_NAME             = 'name';
   const FIELD_NBMISSIONS       = 'nbMissions';
   const FIELD_NBSURVIVANTS     = 'nbSurvivants';
+  const FIELD_OFFICIAL         = 'official';
   const FIELD_ORIGINEID        = 'origineId';
   const FIELD_PLAYERID         = 'playerId';
   const FIELD_PUBLISHED        = 'published';
@@ -185,6 +187,8 @@ interface ConstantsInterface
   // Wordpress
   const WP_CAT                 = 'cat';
   const WP_CAT_MISSION_ID      = 2;
+  const WP_CAT_SKILL_ID        = 75;
+  const WP_CURPAGE             = 'cur_page';
   const WP_FIELD               = 'field';
   const WP_ORDER               = 'order';
   const WP_ORDERBY             = 'orderby';
@@ -334,10 +338,6 @@ interface ConstantsInterface
    * Chaîne Constante playerId
    */
   const CST_PLAYERID        = 'playerId';
-  /**
-   * Chaîne Constante postAction
-   */
-  const CST_POSTACTION      = 'postAction';
   /**
    * Chaîne Constante post_status
    */

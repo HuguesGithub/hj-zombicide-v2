@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.24
+ * @version 1.04.26
  */
 class SurvivorBean extends LocalBean
 {
@@ -99,8 +99,7 @@ class SurvivorBean extends LocalBean
   public function getButton()
   {
     $str  = '<button type="button" class="btn btn-light btn-survivor hidden" data-expansion-id="'.$this->Survivor->getExpansionId();
-    $str .= '" data-survivor-id="'.$this->Survivor->getId().'"><i class="far fa-square"></i> '.$this->Survivor->getName().'</button>';
-    return $str;
+    return $str.'" data-survivor-id="'.$this->Survivor->getId().'"><i class="far fa-square"></i> '.$this->Survivor->getName().'</button>';
   }
 
 

@@ -63,7 +63,7 @@ class WpPageEquipmentsBean extends WpPageBean
       foreach ($EquipmentCardsToDisplay as $name => $EquipmentCard) {
         list(, , $id) = explode('-', $name);
         $EquipmentBean = new EquipmentBean($EquipmentCard);
-        $strCartes .= $EquipmentBean->displayCard();
+        $strCartes .= $EquipmentBean->displayCard($id);
       }
     }
 
@@ -82,29 +82,6 @@ class WpPageEquipmentsBean extends WpPageBean
       $strCategories .= $this->getBalise(self::TAG_OPTION, $value, array(self::ATTR_VALUE=>$key));
     }
 
-
-    /////////////////////////////////////////////////////////////////////////////
-    // On récupère la liste des Survivants puis les éléments nécessaires à la pagination.
-    /*
-    $Survivors = $this->SurvivorServices->getSurvivorsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
-    $nbElements = count($Survivors);
-    $nbPages = ceil($nbElements/$this->nbperpage);
-    // On slice la liste pour n'avoir que ceux à afficher
-    $displayedSurvivors = array_slice($Survivors, $this->nbperpage*($this->paged-1), $this->nbperpage);
-    // On construit le corps du tableau
-    $strBody = '';
-    if (!empty($displayedSurvivors)) {
-      foreach ($displayedSurvivors as $Survivor) {
-        $strBody .= $Survivor->getBean()->getRowForSurvivorsPage();
-      }
-    }
-
-    // On construit les liens de la pagination.
-    $strPagination = $this->getPaginateLis($this->paged, $nbPages);
-
-    // Affiche-t-on le filtre ?
-    $showFilters = isset($this->arrFilters[self::FIELD_NAME])&&$this->arrFilters[self::FIELD_NAME]!='' || isset($this->arrFilters[self::FIELD_EXPANSIONID])&&$this->arrFilters[self::FIELD_EXPANSIONID]!='';
-    */
     //////////////////////////////////////////////////////////////////
     // On enrichi le template puis on le restitue.
     $args = array(
