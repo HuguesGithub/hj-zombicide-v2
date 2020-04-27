@@ -229,10 +229,6 @@ interface ConstantsInterface
 
 
   /**
-   * Chaîne Constante coordX
-   */
-  const CST_COORDX          = 'coordX';
-  /**
    * Chaîne Constante coordY
    */
   const CST_COORDY          = 'coordY';
