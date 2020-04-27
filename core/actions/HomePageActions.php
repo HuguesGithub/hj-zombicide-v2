@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * HomePageActions
  * @author Hugues
  * @since 1.04.07
- * @version 1.04.07
+ * @version 1.04.27
  */
 class HomePageActions extends LocalActions
 {
@@ -27,13 +27,10 @@ class HomePageActions extends LocalActions
   {
     $returned = '';
     $Act = new HomePageActions($post);
-    switch ($post[self::CST_AJAXACTION]) {
-      case self::AJAX_ADDMORENEWS  :
-        $returned = $Act->dealWithGetMoreNews();
-      break;
-      default :
-        $returned = '';
-      break;
+    if ($post[self::CST_AJAXACTION]==self::AJAX_ADDMORENEWS) {
+      $returned = $Act->dealWithGetMoreNews();
+    } else {
+      $returned = '';
     }
     return $returned;
   }

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe LocalDomain
  * @author Hugues.
  * @since 1.00.00
- * @version 1.02.00
+ * @version 1.04.27
  */
 class LocalDomain extends GlobalDomain implements ConstantsInterface
 {
@@ -132,4 +132,18 @@ class LocalDomain extends GlobalDomain implements ConstantsInterface
    */
   public static function getWpUserId()
   { return get_current_user_id(); }
+
+  /**
+   * @version 1.04.27
+   * @param array $addArg
+   * @param array $remArg
+   * @return string
+   */
+  public function getQueryArg($addArg, $remArg=array())
+  {
+    $addArg['page'] = 'hj-zombicide/admin_manage.php';
+    $remArg[] = 'form';
+    $remArg[] = 'id';
+    return add_query_arg($addArg, remove_query_arg($remArg, 'http://zombicidev2.jhugues.fr/wp-admin/admin.php'));
+  }
 }

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * SkillActions
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.00
+ * @version 1.04.27
  */
 class SkillActions extends LocalActions
 {
@@ -27,13 +27,10 @@ class SkillActions extends LocalActions
   {
     $returned = '';
     $Act = new SkillActions($post);
-    switch ($post[self::CST_AJAXACTION]) {
-      case self::AJAX_GETSKILLS    :
-        $returned = $Act->dealWithGetSkills();
-      break;
-      default :
-        $returned = '';
-      break;
+    if ($post[self::CST_AJAXACTION]==self::AJAX_GETSKILLS) {
+      $returned = $Act->dealWithGetSkills();
+    } else {
+      $returned = '';
     }
     return $returned;
   }

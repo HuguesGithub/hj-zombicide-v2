@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * MissionActions
  * @author Hugues
- * @version 1.02.00
  * @since 1.02.00
+ * @version 1.04.27
  */
 class MissionActions extends LocalActions
 {
@@ -27,13 +27,10 @@ class MissionActions extends LocalActions
   {
     $returned = '';
     $Act = new MissionActions($post);
-    switch ($post[self::CST_AJAXACTION]) {
-      case self::AJAX_GETMISSIONS    :
-        $returned = $Act->dealWithGetMissions();
-      break;
-      default :
-        $returned = '';
-      break;
+    if ($post[self::CST_AJAXACTION]==self::AJAX_GETMISSIONS) {
+      $returned = $Act->dealWithGetMissions();
+    } else {
+      $returned = '';
     }
     return $returned;
   }

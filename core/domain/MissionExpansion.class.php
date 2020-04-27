@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe MissionExpansion
  * @author Hugues.
- * @version 1.0.00
- * @since 1.0.00
+ * @since 1.04.27
+ * @version 1.04.27
  */
 class MissionExpansion extends LocalDomain
 {
@@ -31,7 +31,6 @@ class MissionExpansion extends LocalDomain
   public function __construct($attributes=array())
   {
     parent::__construct($attributes);
-    //$this->EquipmentExpansionServices = new EquipmentExpansionServices();
     $this->ExpansionServices          = new ExpansionServices();
     $this->MissionServices            = new MissionServices();
   }

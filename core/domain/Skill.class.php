@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Skill
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.26
+ * @version 1.04.27
  */
 class Skill extends LocalDomain
 {
@@ -35,6 +35,13 @@ class Skill extends LocalDomain
    * @var int $official
    */
   protected $official;
+  /**
+   * Class Constructor
+   */
+  public function __construct()
+  {
+    $this->WpPostServices = new WpPostServices();
+  }
   /**
    * @return int
    */
@@ -108,4 +115,34 @@ class Skill extends LocalDomain
    */
   public function getBean()
   { return new SkillBean($this); }
+
+  /**
+   * @version 1.04.27
+   * @return WpPost
+   */
+  public function getArticle()
+  {
+    $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_CODE, $this->getCode());
+    return (empty($WpPosts) ? new WpPost() : array_shift($WpPosts));
+  }
+
+  /**
+   * @version 1.04.27
+   * @return string
+   */
+  public function getEditUrl()
+  {
+    $WpPost = $this->getArticle();
+    if ($WpPost->getID()=='') {
+      $queryArgs = array(
+        self::CST_ONGLET     => self::CST_SKILL,
+        self::CST_POSTACTION => self::CST_EDIT,
+        self::FIELD_ID       => $this->getId()
+      );
+      $hrefEdit = $this->getQueryArg($queryArgs);
+    } else {
+      $hrefEdit = 'http://zombicidev2.jhugues.fr/wp-admin/post.php?post='.$WpPost->getID().'&action=edit';
+    }
+    return $hrefEdit;
+  }
 }

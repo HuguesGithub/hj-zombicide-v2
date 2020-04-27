@@ -73,10 +73,6 @@ class Mission extends LocalDomain
   {
     parent::__construct($attributes, $services);
     $this->DurationServices          = new DurationServices();
-    /*
-    $this->EquipmentLiveDeckServices = new EquipmentLiveDeckServices();
-    $this->MissionZoneServices       = new MissionZoneServices();
-    * */
     $this->LevelServices             = new LevelServices();
     $this->MissionExpansionServices  = new MissionExpansionServices();
     $this->MissionObjectiveServices  = new MissionObjectiveServices();

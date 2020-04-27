@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SkillBean
  * @author Hugues
- * @version 1.02.00
  * @since 1.00.00
+ * @version 1.04.27
  */
 class SkillBean extends LocalBean
 {
@@ -27,29 +27,25 @@ class SkillBean extends LocalBean
    */
   public function getRowForAdminPage()
   {
-    $Skill = $this->Skill;
     $queryArgs = array(
       self::CST_ONGLET     => self::CST_SKILL,
-      self::CST_POSTACTION => self::CST_EDIT,
-      self::FIELD_ID       => $Skill->getId()
+      self::FIELD_ID       => $this->Skill->getId()
     );
-    $hrefEdit = $this->getQueryArg($queryArgs);
     $queryArgs[self::CST_POSTACTION] = self::CST_TRASH;
     $hrefTrash = $this->getQueryArg($queryArgs);
     $queryArgs[self::CST_POSTACTION] = self::CST_CLONE;
     $hrefClone = $this->getQueryArg($queryArgs);
-    $urlWpPost = $Skill->getWpPostUrl();
     ///////////////////////////////////////////////////////////////
     // On enrichi le template et on le retourne.
     $args = array(
       // Identifiant de la Competence
-      $Skill->getId(),
+      $this->Skill->getId(),
       // Code de la Compétence
-      $Skill->getCode(),
+      $this->Skill->getCode(),
       // Url d'édition
-      $hrefEdit,
+      $this->Skill->getEditUrl(),
       // Nom de la Compétence
-      $Skill->getName(),
+      $this->Skill->getName(),
       // Url de suppression
       $hrefTrash,
       // Url de Duplication
@@ -57,10 +53,11 @@ class SkillBean extends LocalBean
       // Article publié ?
       '#',
       // Url Article
-      $urlWpPost,
-      $Skill->getDescription(),
+      $this->Skill->getWpPostUrl(),
+      // Description du Skill - 9
+      $this->Skill->getDescription(),
       // Officiel ou non ? - 10
-      ($Skill->isOfficial() ? 'Oui' : 'Non'),
+      ($this->Skill->isOfficial() ? 'Oui' : 'Non'),
     );
     return $this->getRender($this->urlRowAdmin, $args);
   }

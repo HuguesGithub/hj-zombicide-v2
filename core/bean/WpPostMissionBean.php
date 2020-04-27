@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPostMissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.26
+ * @version 1.04.27
  */
 class WpPostMissionBean extends WpPostBean
 {
@@ -102,53 +102,6 @@ class WpPostMissionBean extends WpPostBean
    */
   public function getContentPage()
   {
-    /*
-    //////////////////////////////////////////////////////////////////
-    // On requête pour obtenir le contenu additionnel
-    $arrFilters = array(
-      self::WP_ORDERBY      => self::ORDER_RAND,
-      self::WP_POSTSPERPAGE => 6,
-      self::WP_POSTSTATUS   => self::WP_PUBLISH,
-      self::WP_TAXQUERY     => array(
-        array(
-          self::WP_TAXONOMY => self::WP_POSTTAG,
-          self::WP_FIELD    => self::WP_SLUG,
-          self::WP_TERMS    => array(self::CST_MISSION)
-        )
-      )
-    );
-    $WpPosts = $this->WpPostServices->getArticles(__FILE__, __LINE__, $arrFilters, 'WpPostMission');
-    // On construit le contenu additionnel
-    $strContent = '';
-    if (!empty($WpPosts)) {
-      foreach ($WpPosts as $WpPost) {
-        $WpBean = new WpPostMissionBean($WpPost);
-        $strContent .= $WpBean->displayThumbWpPost(true);
-      }
-    }
-
-    //////////////////////////////////////////////////////////////////
-    // On construit les liens de navigation
-    $navigationMissions = '';
-    $prevPost = get_previous_post();
-    if (!empty($prevPost)) {
-      $attributes = array(self::ATTR_HREF=>$prevPost->guid, self::ATTR_CLASS=>'mission-adjacent-link float-left');
-      $navigationMissions .= $this->getBalise(self::TAG_A, $prevPost->post_title, $attributes);
-    }
-    $nextPost = get_next_post();
-    if (!empty($nextPost)) {
-      $attributes = array(self::ATTR_HREF=>$nextPost->guid, self::ATTR_CLASS=>'mission-adjacent-link float-right');
-      $navigationMissions .= $this->getBalise(self::TAG_A, $nextPost->post_title, $attributes);
-    }
-
-    //////////////////////////////////////////////////////////////////
-    $args = array(
-      // Liens de navigation - 2
-      $navigationMissions,
-      // Contenu additionnel en bas de page - 3
-      $strContent,
-    );
-    */
     $args = array(
       // On affiche la Mission demandée - 1
       $this->getArticlePage(),
@@ -197,10 +150,6 @@ class WpPostMissionBean extends WpPostBean
   {
     $strTileIds = $this->WpPost->getPostMeta('tileIds');
     if ($strTileIds=='') {
-      /*
-      $Mission = $this->getMission();
-      $MissionTiles = $Mission->getMissionTiles();
-      */
       $strTileIds = (self::isAdmin() ? 'Wip Tiles' : '');
     }
     return $strTileIds;

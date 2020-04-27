@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * WpPageBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.26
+ * @version 1.04.27
  */
 class WpPageBean extends MainPageBean
 {
@@ -60,26 +60,6 @@ class WpPageBean extends MainPageBean
         $Bean = new WpPageSurvivorsBean($this->WpPage);
         $strReturned = $Bean->getContentPage();
       break;
-      /*
-      case self::PAGE_ONLINE            :
-        $strReturned = WpPageOnlineBean::getStaticPageContent($this->WpPage);
-      break;
-      case 'page-live-pioche-equipment' :
-        $strReturned = WpPageLiveEquipmentBean::getStaticPageContent($this->WpPage);
-      break;
-      case 'page-live-pioche-invasion' :
-        $strReturned = WpPageLiveSpawnBean::getStaticPageContent($this->WpPage);
-      break;
-      case 'page-market'               :
-        $strReturned = WpPageMarketBean::getStaticPageContent($this->WpPage);
-      break;
-      case 'page-partie-online'        :
-        $strReturned = new WpPageError404Bean();
-      break;
-      case 'page-piste-de-des'         :
-        $strReturned = WpPageToolsBean::getStaticPisteContent($this->WpPage);
-      break;
-      */
       default                          :
         if ($this->isAdmin()) {
           echo "[[".$this->WpPage->getPostName()."]]";
