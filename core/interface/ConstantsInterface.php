@@ -196,6 +196,8 @@ interface ConstantsInterface
   // Wordpress
   const WP_CAT                 = 'cat';
   const WP_CAT_MISSION_ID      = 2;
+  const WP_CAT_OBJECTIVE_ID    = 71;
+  const WP_CAT_RULE_ID         = 72;
   const WP_CAT_SKILL_ID        = 75;
   const WP_CURPAGE             = 'cur_page';
   const WP_FIELD               = 'field';

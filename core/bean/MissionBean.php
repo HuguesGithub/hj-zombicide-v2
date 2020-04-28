@@ -15,10 +15,6 @@ class MissionBean extends LocalBean
   protected $strModelObjRules   = '<li class="objRule">%1$s <span class="tooltip"><header>%1$s</header><content>%2$s</content></span></li>';
   protected $h5Ul               = '<h5>%1$s</h5><ul>%2$s</ul>';
   protected $urlRowPublic       = 'web/pages/public/fragments/mission-row.php';
-
-
-
-
   /**
    * Class par défaut du Select
    * @var $classe
@@ -79,58 +75,36 @@ class MissionBean extends LocalBean
     );
     return $this->getRender(($isHome ? $this->urlTemplateHome : $this->urlTemplateExtract), $args);
   }
+  private function getMissionContentObjRules($categId, $label)
+  {
+    $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_MISSIONID, $this->Mission->getWpPost()->getID());
+    $strObj = array();
+    while (!empty($WpPosts)) {
+      $WpPost = array_shift($WpPosts);
+      $WpCategories = $WpPost->getCategories();
+      $isObj = false;
+      while (!empty($WpCategories)) {
+        $WpCategory = array_shift($WpCategories);
+        if ($WpCategory->getCatId()==$categId) {
+          $isObj = true;
+        }
+      }
+      if ($isObj) {
+        $rank = $WpPost->getPostMeta('rang');
+        $strObj[$rank] = vsprintf($this->strModelObjRules, array($WpPost->getPostTitle(), $WpPost->getPostContent()));
+      }
+    }
+    if (count($strObj)!=0) {
+      ksort($strObj);
+      return vsprintf($this->h5Ul, array($label, implode('', $strObj)));
+    } else {
+      return '';
+    }
+  }
   public function getMissionContentObjectives()
-  {
-    $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_MISSIONID, $this->Mission->getWpPost()->getID());
-    $strObj = array();
-    while (!empty($WpPosts)) {
-      $WpPost = array_shift($WpPosts);
-      $WpCategories = $WpPost->getCategories();
-      $isObj = false;
-      while (!empty($WpCategories)) {
-        $WpCategory = array_shift($WpCategories);
-        if ($WpCategory->getCatId()==71) {
-          $isObj = true;
-        }
-      }
-      if ($isObj) {
-        $rank = $WpPost->getPostMeta('rang');
-        $strObj[$rank] = vsprintf($this->strModelObjRules, array($WpPost->getPostTitle(), $WpPost->getPostContent()));
-      }
-    }
-    if (count($strObj)!=0) {
-      ksort($strObj);
-      return vsprintf($this->h5Ul, array('Objectifs', implode('', $strObj)));
-    } else {
-      return '';
-    }
-  }
+  { return $this->getMissionContentObjRules(self::WP_CAT_OBJECTIVE_ID, 'Objectifs'); }
   public function getMissionContentRules()
-  {
-    $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_MISSIONID, $this->Mission->getWpPost()->getID());
-    $strObj = array();
-    while (!empty($WpPosts)) {
-      $WpPost = array_shift($WpPosts);
-      $WpCategories = $WpPost->getCategories();
-      $isObj = false;
-      while (!empty($WpCategories)) {
-        $WpCategory = array_shift($WpCategories);
-        if ($WpCategory->getCatId()==72) {
-          $isObj = true;
-        }
-      }
-      if ($isObj) {
-        $rank = $WpPost->getPostMeta('rang');
-        $strObj[$rank] = vsprintf($this->strModelObjRules, array($WpPost->getPostTitle(), $WpPost->getPostContent()));
-      }
-    }
-    if (count($strObj)!=0) {
-      ksort($strObj);
-      return vsprintf($this->h5Ul, array('Regles speciales', implode('', $strObj)));
-    } else {
-      return '';
-    }
-  }
+  { return $this->getMissionContentObjRules(self::WP_CAT_RULE_ID, 'Regles speciales'); }
   /**
    * @return string
    */
