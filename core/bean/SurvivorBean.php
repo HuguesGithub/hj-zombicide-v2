@@ -250,44 +250,6 @@ class SurvivorBean extends LocalBean
     }
     return $strType;
   }
-  /**
-   * @param string $isHome
-   * @return string
-   */
-  public function getExtract($isHome)
-  {
-    ///////////////////////////////////////////////////////////////
-    // On enrichi le template et on le retourne.
-    $args = array(
-      // Url du post dédié - 1
-      $this->Survivor->getWpPostUrl(),
-      // Le portrait du Survivant - 2
-      $this->Survivor->getPortraitUrl(),
-      // La page de recherche des survivants - 3
-      '/'.self::PAGE_SURVIVOR,
-      // Nom du Survivant - 4
-      $this->Survivor->getName(),
-      // Les Compétences du Survivant - 5
-      $this->Survivor->getUlSkills(),
-      // Le Survivant a-t-il une version Zombivant ? - 6
-      $this->Survivor->isZombivor() ? 'Oui' : 'Non',
-      // Le Survivant a-t-il une version Ultimate ?  - 7
-      $this->Survivor->isUltimate() ? 'Oui' : 'Non',
-      // Background du Survivant - 8
-      $this->Survivor->getBackground(),
-      // Classe additionnelle de l'article - 9
-      $this->Survivor->getStrClassFilters($isHome).' '.$this->Survivor->getExpansion()->getCode(),
-      // Le Nom de l'extension - 10
-      $this->Survivor->getExpansionName(),
-    );
-    return $this->getRender($this->urlTemplateExtract, $args);
-  }
-
-
-
-
-
-
 
 
 
