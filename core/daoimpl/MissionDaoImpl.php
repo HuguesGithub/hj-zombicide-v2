@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe MissionDaoImpl
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.04.28
  */
 class MissionDaoImpl extends LocalDaoImpl
 {
@@ -53,15 +53,14 @@ class MissionDaoImpl extends LocalDaoImpl
       $requete .= 'INNER JOIN wp_11_zombicide_mission_expansion me ON m.id=me.missionId ';
     }
     // On passe ensuite aux critères de sélection.
-    //$requete .= $this->whereFilters;
     $requete .= 'WHERE 1=1 ';
     // Contrainte sur la difficulté
     if (isset($filters[self::FIELD_LEVELID])) {
-      $requete .= 'AND levelId IN ('.$filters[self::FIELD_LEVELID].') ';//('.implode(',', $filters[self::FIELD_LEVELID]).') ';
+      $requete .= 'AND levelId IN ('.$filters[self::FIELD_LEVELID].') ';
     }
     // Contrainte sur la durée
     if (isset($filters[self::FIELD_DURATIONID])) {
-      $requete .= 'AND durationId IN ('.$filters[self::FIELD_DURATIONID].') ';//'.implode(',', $filters[self::FIELD_DURATIONID]).') ';
+      $requete .= 'AND durationId IN ('.$filters[self::FIELD_DURATIONID].') ';
     }
     // Contrainte sur le nombre de joueurs
     if (isset($filters[self::FIELD_PLAYERID])) {

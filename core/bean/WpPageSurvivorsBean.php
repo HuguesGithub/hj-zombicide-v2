@@ -65,6 +65,7 @@ class WpPageSurvivorsBean extends WpPageBean
    */
   public function getListContentPage()
   {
+
     /////////////////////////////////////////////////////////////////////////////
     // On récupère la liste des Survivants puis les éléments nécessaires à la pagination.
     $Survivors = $this->SurvivorServices->getSurvivorsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
@@ -115,7 +116,7 @@ class WpPageSurvivorsBean extends WpPageBean
       $this->arrFilters[self::FIELD_NAME],
       // Affiche ou non le bloc filtre - 15
       ($showFilters ? 'block' : 'none'),
-      '', '', '', '', '', '', '', '',
+      '', '', '', '', '', '', '', '','', '', '', '', '', '', '', '','', '', '', '', '', '', '', '','', '', '', '', '', '', '', '','', '', '', '', '', '', '', '',
     );
     return $this->getRender($this->urlTemplate, $args);
   }

@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe MissionTile
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.04.28
  */
 class MissionTile extends LocalDomain
 {
@@ -44,11 +44,7 @@ class MissionTile extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->MissionServices            = new MissionServices();
-    $this->TileServices               = new TileServices();
-  }
+  { parent::__construct($attributes); }
   /**
    * @return int
    */
@@ -128,7 +124,7 @@ class MissionTile extends LocalDomain
   public function getTile()
   {
     if ($this->Tile == null) {
-      $this->Tile = $this->TileServices->select(__FILE__, __LINE__, $this->tileId);
+      $this->Tile = $this->TileServices->selectTile($this->tileId);
     }
     return $this->Tile;
   }

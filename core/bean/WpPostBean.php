@@ -64,25 +64,12 @@ class WpPostBean extends MainPageBean
         $strReturned = $WpBean->getContentPage();
       }
     } elseif (isset($postMetas[self::FIELD_MISSIONID])) {
-      /*
-      $WpBean = new WpPostMissionBean($this->WpPost);
-      $Mission = $WpBean->getMission();
-      if ($Mission->getId()!='') {
-        $strReturned = $WpBean->getContentPage();
-      }
-      * */
+      $strReturned = 'WIP WpPostBean getContentPage.';
     }
     if ($strReturned=='') {
       $WpBean = new WpPageError404Bean();
       $strReturned = $WpBean->getContentPage();
     }
-    /*
-    $WpBean = new WpPostMissionBean($this->WpPost);
-    $Mission = $WpBean->getMission();
-    if ($Mission->getId()!='') {
-      $strReturned = $WpBean->getContentPage();
-    }
-    * */
     return $strReturned;
   }
   /**

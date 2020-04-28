@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe Survivor
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.04.28
  */
 class Survivor extends LocalDomain
 {
@@ -55,13 +55,7 @@ class Survivor extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->ExpansionServices     = new ExpansionServices();
-    $this->SkillServices         = new SkillServices();
-    $this->SurvivorSkillServices = new SurvivorSkillServices();
-    $this->WpPostServices        = new WpPostServices();
-  }
+  { parent::__construct($attributes); }
 
   /**
    * @return int
@@ -162,9 +156,9 @@ class Survivor extends LocalDomain
   public function getSurvivorSkills($survivorTypeId='')
   {
     if ($this->SurvivorSkills == null) {
-      $arrFilters = array('survivorId'=>$this->id);
+      $arrFilters = array(self::FIELD_SURVIVORID=>$this->id);
       if ($survivorTypeId!='') {
-        $arrFilters['survivorTypeId'] = $survivorTypeId;
+        $arrFilters[self::FIELD_SURVIVORTYPEID] = $survivorTypeId;
       }
       $this->SurvivorSkills = $this->SurvivorSkillServices->getSurvivorSkillsWithFilters($arrFilters);
     }

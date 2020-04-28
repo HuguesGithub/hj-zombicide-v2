@@ -39,9 +39,6 @@ class MissionBean extends LocalBean
     $this->ExpansionServices = new ExpansionServices();
     $this->MissionServices   = new MissionServices();
     $this->WpPostServices    = new WpPostServices();
-    //$this->ObjectiveServices = new ObjectiveServices();
-    //$this->RuleServices      = new RuleServices();
-    //$this->TileServices      = new TileServices();
     $this->tplRow = 'web/pages/admin/mission/row.php';
     $this->tplEdit = 'web/pages/admin/mission/edit.php';
   }

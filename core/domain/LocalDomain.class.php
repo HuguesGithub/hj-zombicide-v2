@@ -10,6 +10,42 @@ if (!defined('ABSPATH')) {
  */
 class LocalDomain extends GlobalDomain implements ConstantsInterface
 {
+  public function __construct($attributes=array())
+  {
+    parent::__construct($attributes);
+    $this->DurationServices          = new DurationServices();
+    $this->EquipmentKeywordServices  = new EquipmentKeywordServices();
+    $this->EWProfileServices         = new EquipmentWeaponProfileServices();
+    $this->ExpansionServices         = new ExpansionServices();
+    $this->KeywordServices           = new KeywordServices();
+    $this->LevelServices             = new LevelServices();
+    $this->MissionServices           = new MissionServices();
+    $this->MissionExpansionServices  = new MissionExpansionServices();
+    $this->MissionObjectiveServices  = new MissionObjectiveServices();
+    $this->MissionRuleServices       = new MissionRuleServices();
+    $this->MissionTileServices       = new MissionTileServices();
+    $this->ObjectiveServices = new ObjectiveServices();
+    $this->OrigineServices           = new OrigineServices();
+    $this->PlayerServices            = new PlayerServices();
+    $this->RuleServices      = new RuleServices();
+    $this->SkillServices         = new SkillServices();
+    $this->SurvivorSkillServices = new SurvivorSkillServices();
+    $this->TileServices               = new TileServices();
+    $this->WeaponProfileServices     = new WeaponProfileServices();
+    $this->WpPostServices            = new WpPostServices();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
   /**
    * @param int $expansionId
    * @return Expansion
@@ -64,7 +100,7 @@ class LocalDomain extends GlobalDomain implements ConstantsInterface
         }
       }
     }
-    $GlobalRule = $this->RuleServices->select(__FILE__, __LINE__, $ruleId);
+    $GlobalRule = $this->RuleServices->selectRule($ruleId);
     if ($GlobalRule != null) {
       $globalRules[] = $GlobalRule;
     }
@@ -84,7 +120,7 @@ class LocalDomain extends GlobalDomain implements ConstantsInterface
         }
       }
     }
-    $GlobalObjective = $this->ObjectiveServices->select(__FILE__, __LINE__, $objectiveId);
+    $GlobalObjective = $this->ObjectiveServices->selectObjective($objectiveId);
     if ($GlobalObjective != null) {
       $globalObjectives[] = $GlobalObjective;
     }

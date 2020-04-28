@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionRule
  * @author Hugues.
  * @since 1.04.08
- * @version 1.04.08
+ * @version 1.04.28
  */
 class MissionRule extends LocalDomain
 {
@@ -35,11 +35,7 @@ class MissionRule extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->MissionServices   = new MissionServices();
-    $this->RuleServices      = new RuleServices();
-  }
+  { parent::__construct($attributes); }
   /**
    * @return int
    */

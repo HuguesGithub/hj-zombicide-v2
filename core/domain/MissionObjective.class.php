@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionObjective
  * @author Hugues.
  * @since 1.04.08
- * @version 1.04.08
+ * @version 1.04.28
  */
 class MissionObjective extends LocalDomain
 {
@@ -34,11 +34,7 @@ class MissionObjective extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->MissionServices   = new MissionServices();
-    $this->ObjectiveServices = new ObjectiveServices();
-  }
+  { parent::__construct($attributes); }
   /**
    * @return int
    */

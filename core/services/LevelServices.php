@@ -44,5 +44,11 @@ class LevelServices extends LocalServices
     $this->buildFilters($arrFilters);
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
+  /**
+   * @param int $id
+   * @return Level
+   */
+  public function selectLevel($id)
+  { return $this->select(__FILE__, __LINE__, $id); }
 
 }

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Equipment
  * @author Hugues.
  * @since 1.0.00
- * @version 1.04.27
+ * @version 1.04.28
  */
 class Equipment extends LocalDomain
 {
@@ -29,12 +29,7 @@ class Equipment extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->EquipmentKeywordServices = new EquipmentKeywordServices();
-    $this->EWProfileServices        = new EquipmentWeaponProfileServices();
-    $this->WeaponProfileServices    = new WeaponProfileServices();
-  }
+  { parent::__construct($attributes); }
   /**
    * @return $id
    */
@@ -79,6 +74,40 @@ class Equipment extends LocalDomain
   public static function convertElement($row, $a='', $b='')
   { return parent::convertElement(new Equipment(), self::getClassVars(), $row); }
   /**
+   * @return string
+   */
+  public function getNiceName()
+  {
+    $cleanDigits = array(' ', '#', '-', '!', 'à', 'é', "'", '(', ')', 'ê', 'ç', '&', '.', 'è');
+    return str_replace($cleanDigits, '', strtolower($this->getName()));
+  }
+  /**
+   * @param $expansionId
+   * @return string
+   */
+  public function getImgUrl($expansionId='00')
+  {
+    $uniqueId = (str_pad($this->id, 3, '0', STR_PAD_LEFT)).(str_pad($expansionId, 2, '0', STR_PAD_LEFT));
+    $urlThumb = '/wp-content/plugins/zombicide/web/rsc/images/equipments/'.$uniqueId.'-thumb.jpg';
+    // Si l'image Thumb n'existe pas, on va la créer à partir de l'original. Puis on supprime l'original.
+    if (!is_file(getcwd().$urlThumb)) {
+      $urlOriginal = '/wp-content/plugins/zombicide/web/rsc/images/equipments/'.$uniqueId.'.png';
+      $adminUrl = getcwd().$urlOriginal;
+      $src = imagecreatefrompng($adminUrl);
+      $dst = imagecreatetruecolor(320, 440);
+      imagecopyresized($dst, $src, 0, 0, 0, 0, 320, 440, 597, 822);
+      imagejpeg($dst, getcwd().$urlThumb);
+      unlink($adminUrl);
+    }
+    return $urlThumb;
+  }
+
+
+
+
+
+
+  /**
    * @return array EquipmentWeaponProfile
    */
   public function getEquipmentWeaponProfiles()
@@ -106,7 +135,7 @@ class Equipment extends LocalDomain
   public function getKeyword()
   {
     if ($this->Keyword == null) {
-      $this->Keyword = $this->KeywordServices->select(__FILE__, __LINE__, $this->keywordId);
+      $this->Keyword = $this->KeywordServices->selectKeyword($this->keywordId);
     }
     return $this->Keyword;
   }
@@ -116,41 +145,13 @@ class Equipment extends LocalDomain
   public function getExpansionId()
   { return $this->expansionId; }
   /**
-   * @param $expansionId
-   * @return string
-   */
-  public function getImgUrl($expansionId='00')
-  {
-    $uniqueId = (str_pad($this->id, 3, '0', STR_PAD_LEFT)).(str_pad($expansionId, 2, '0', STR_PAD_LEFT));
-    $urlThumb = '/wp-content/plugins/zombicide/web/rsc/images/equipments/'.$uniqueId.'-thumb.jpg';
-    // Si l'image Thumb n'existe pas, on va la créer à partir de l'original. Puis on supprime l'original.
-    if (!is_file(getcwd().$urlThumb)) {
-      $urlOriginal = '/wp-content/plugins/zombicide/web/rsc/images/equipments/'.$uniqueId.'.png';
-      $adminUrl = getcwd().$urlOriginal;
-      $src = imagecreatefrompng($adminUrl);
-      $dst = imagecreatetruecolor(320, 440);
-      imagecopyresized($dst, $src, 0, 0, 0, 0, 320, 440, 597, 822);
-      imagejpeg($dst, getcwd().$urlThumb);
-      unlink($adminUrl);
-    }
-    return $urlThumb;
-  }
-  /**
-   * @return string
-   */
-  public function getNiceName()
-  {
-    $cleanDigits = array(' ', '#', '-', '!', 'à', 'é', "'", '(', ')', 'ê', 'ç', '&', '.', 'è');
-    return str_replace($cleanDigits, '', strtolower($this->getName()));
-  }
-  /**
    * @return boolean
    */
   public function isRanged()
   {
     if ($this->ranged == null) {
       if ($this->EquipmentWeaponProfiles == null) {
-        $this->EquipmentWeaponProfiles = $this->getEquipmentWeaponProfiles(__FILE__, __LINE__);
+        $this->EquipmentWeaponProfiles = $this->getEquipmentWeaponProfiles();
       }
       if (empty($this->EquipmentWeaponProfiles)) {
         $this->ranged = false;
@@ -176,7 +177,7 @@ class Equipment extends LocalDomain
   {
     if ($this->melee==null) {
       if ($this->EquipmentWeaponProfiles == null) {
-        $this->EquipmentWeaponProfiles = $this->getEquipmentWeaponProfiles(__FILE__, __LINE__);
+        $this->EquipmentWeaponProfiles = $this->getEquipmentWeaponProfiles();
       }
       if (empty($this->EquipmentWeaponProfiles)) {
         $this->melee = false;
@@ -232,7 +233,7 @@ class Equipment extends LocalDomain
   private function initKeywords()
   {
     if ($this->Keywords==null) {
-      $EquipmentKeywords = $this->getEquipmentKeywords(__FILE__, __LINE__);
+      $EquipmentKeywords = $this->getEquipmentKeywords();
       $ownKeyWords = array();
       if (!empty($EquipmentKeywords)) {
         foreach ($EquipmentKeywords as $EquipmentKeyword) {

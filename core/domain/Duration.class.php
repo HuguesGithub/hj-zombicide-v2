@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe Duration
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.04.28
  */
 class Duration extends LocalDomain
 {

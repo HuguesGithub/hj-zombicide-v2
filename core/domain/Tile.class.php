@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Tile
  * @author Hugues.
  * @since 1.04.07
- * @version 1.04.07
+ * @version 1.04.28
  */
 class Tile extends LocalDomain
 {
@@ -44,11 +44,7 @@ class Tile extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->ExpansionServices = new ExpansionServices();
-    $this->TileServices      = new TileServices();
-  }
+  { parent::__construct($attributes); }
   /**
    * @return int
    */

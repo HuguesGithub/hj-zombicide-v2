@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorServices
  * @author Hugues.
  * @since 1.04.27
- * @version 1.04.27
+ * @version 1.04.28
  */
 class SurvivorServices extends LocalServices
 {
@@ -42,14 +42,14 @@ class SurvivorServices extends LocalServices
    * @param string $order
    * @return array
    */
-  public function getSurvivorsWithFilters($arrFilters=array(), $orderby='name', $order='asc')
+  public function getSurvivorsWithFilters($arrFilters=array(), $orderby=self::FIELD_NAME, $order=self::ORDER_ASC)
   {
-    $arrParams = $this->buildOrderAndLimit($orderby, $order);
-    $arrParams[SQL_PARAMS_WHERE] = $this->buildFilters($arrFilters);
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
     if (isset($arrFilters[self::FIELD_EXPANSIONID]) && strpos($arrFilters[self::FIELD_EXPANSIONID], ',')!==false) {
-      return $this->Dao->selectEntriesInExpansions($arrParams);
+      return $this->Dao->selectEntriesInExpansions($this->arrParams);
     } else {
-      return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $arrParams);
+      return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
     }
   }
 

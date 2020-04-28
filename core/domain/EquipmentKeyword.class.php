@@ -29,10 +29,7 @@ class EquipmentKeyword extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->KeywordServices = new KeywordServices();
-  }
+  { parent::__construct($attributes); }
   /**
    * @return int
    */
@@ -82,7 +79,7 @@ class EquipmentKeyword extends LocalDomain
   public function getKeyword()
   {
     if ($this->Keyword == null) {
-      $this->Keyword = $this->KeywordServices->select(__FILE__, __LINE__, $this->keywordId);
+      $this->Keyword = $this->KeywordServices->selectKeyword($this->keywordId);
     }
     return $this->Keyword;
   }

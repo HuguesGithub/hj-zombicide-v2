@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Mission
  * @author Hugues.
  * @since 1.04.00
- * @version 1.04.27
+ * @version 1.04.28
  */
 class Mission extends LocalDomain
 {
@@ -70,18 +70,7 @@ class Mission extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes, $services);
-    $this->DurationServices          = new DurationServices();
-    $this->LevelServices             = new LevelServices();
-    $this->MissionExpansionServices  = new MissionExpansionServices();
-    $this->MissionObjectiveServices  = new MissionObjectiveServices();
-    $this->MissionRuleServices       = new MissionRuleServices();
-    $this->MissionTileServices       = new MissionTileServices();
-    $this->OrigineServices           = new OrigineServices();
-    $this->PlayerServices            = new PlayerServices();
-    $this->WpPostServices            = new WpPostServices();
-  }
+  { parent::__construct($attributes); }
 
   /**
    * @return int
@@ -284,7 +273,7 @@ class Mission extends LocalDomain
   public function getLevel()
   {
     if ($this->Level == null) {
-      $this->Level = $this->LevelServices->select(__FILE__, __LINE__, $this->levelId);
+      $this->Level = $this->LevelServices->selectLevel($this->levelId);
     }
     return $this->Level;
   }
@@ -294,7 +283,7 @@ class Mission extends LocalDomain
   public function getOrigine()
   {
     if ($this->Origine==null) {
-      $this->Origine = $this->OrigineServices->select(__FILE__, __LINE__, $this->origineId);
+      $this->Origine = $this->OrigineServices->selectOrigine($this->origineId);
     }
     return $this->Origine;
   }
@@ -304,7 +293,7 @@ class Mission extends LocalDomain
   public function getPlayer()
   {
     if ($this->Player == null) {
-      $this->Player = $this->PlayerServices->select(__FILE__, __LINE__, $this->playerId);
+      $this->Player = $this->PlayerServices->selectPlayer($this->playerId);
     }
     return $this->Player;
   }

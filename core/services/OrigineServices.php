@@ -44,4 +44,10 @@ class OrigineServices extends LocalServices
     $this->buildFilters($arrFilters);
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
+  /**
+   * @param int $id
+   * @return Origine
+   */
+  public function selectOrigine($id)
+  { return $this->select(__FILE__, __LINE__, $id); }
 }

@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe EquipmentWeaponProfile
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.04.28
  */
 class EquipmentWeaponProfile extends LocalDomain
 {
@@ -34,10 +34,7 @@ class EquipmentWeaponProfile extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes, $services);
-    $this->WeaponProfileServices = new WeaponProfileServices();
-  }
+  { parent::__construct($attributes); }
   /**
    * @return int
    */

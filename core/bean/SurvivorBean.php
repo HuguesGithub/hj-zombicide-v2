@@ -15,10 +15,6 @@ class SurvivorBean extends LocalBean
   protected $urlCardVisit = 'web/pages/public/fragments/survivor-cardvisit.php';
   protected $tplSkillBadge = '<a class="badge badge-%1$s-skill" href="%2$s">%3$s</a>';
   protected $tplDisabledSkillBadge = '<span class="badge badge-%1$s-skill">%3$s</span>';
-  /*
-  protected $urlRowAdmin  = 'web/pages/admin/fragments/survivor-row.php';
-  protected $urlTemplateExtract = 'web/pages/public/fragments/survivor-extract.php';
-  */
   private $strPortraitSurvivant = 'portrait-survivant';
   private $strPortraitZombivant = 'portrait-zombivant';
   private $strPortraitUltimate  = ' portrait-ultimate';

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionExpansion
  * @author Hugues.
  * @since 1.04.27
- * @version 1.04.27
+ * @version 1.04.28
  */
 class MissionExpansion extends LocalDomain
 {
@@ -29,11 +29,7 @@ class MissionExpansion extends LocalDomain
    * @param array $attributes
    */
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->ExpansionServices          = new ExpansionServices();
-    $this->MissionServices            = new MissionServices();
-  }
+  { parent::__construct($attributes); }
   /**
    * @return int
    */
@@ -83,11 +79,16 @@ class MissionExpansion extends LocalDomain
   public function getEquipmentExpansions()
   {
     if ($this->EquipmentExpansions == null) {
-      $arrFilters = array('expansionId'=>$this->expansionId);
-      $this->EquipmentExpansions = $this->EquipmentExpansionServices->getEquipmentExpansionsWithFilters(__FILE__, __LINE__, $arrFilters);
+      $arrFilters = array(self::FIELD_EXPANSIONID=>$this->expansionId);
+      $this->EquipmentExpansions = $this->EquipmentExpansionServices->getEquipmentExpansionsWithFilters($arrFilters);
     }
     return $this->EquipmentExpansions;
   }
+  /**
+   * @return string
+   */
+  public function getExpansionName()
+  { return $this->getExpansion()->getName(); }
   /**
    * @return Expansion
    */
@@ -98,21 +99,6 @@ class MissionExpansion extends LocalDomain
     }
     return $this->Expansion;
   }
-  /**
-   * @return string
-   */
-  public function getExpansionCode()
-  { return $this->getExpansion()->getCode(); }
-  /**
-   * @return string
-   */
-  public function getExpansionName()
-  { return $this->getExpansion()->getName(); }
-  /**
-   * @return string
-   */
-  public function getExpansionImageSuffixe()
-  { return $this->getExpansion()->getImageSuffixe(); }
   /**
    * @param Expansion $Expansion
    */

@@ -115,7 +115,7 @@ class SurvivorSkill extends LocalDomain
   public function getSkill()
   {
     if ($this->Skill == null) {
-      $this->Skill = $this->SkillServices->select(__FILE__, __LINE__, $this->skillId);
+      $this->Skill = $this->SkillServices->selectSkill($this->skillId);
     }
     return $this->Skill;
   }

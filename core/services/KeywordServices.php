@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe KeywordServices
  * @author Hugues.
  * @since 1.0.00
- * @version 1.04.27
+ * @version 1.04.28
  */
 class KeywordServices extends LocalServices
 {
@@ -23,5 +23,11 @@ class KeywordServices extends LocalServices
     parent::__construct();
     $this->Dao = new KeywordDaoImpl();
   }
+  /**
+   * @param int $id
+   * @return Keyword
+   */
+  public function selectKeyword($id)
+  { return $this->select(__FILE__, __LINE__, $id); }
 
 }

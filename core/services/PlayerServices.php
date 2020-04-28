@@ -35,4 +35,10 @@ class PlayerServices extends LocalServices
     $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
+  /**
+   * @param int $id
+   * @return Player
+   */
+  public function selectPlayer($id)
+  { return $this->select(__FILE__, __LINE__, $id); }
 }
