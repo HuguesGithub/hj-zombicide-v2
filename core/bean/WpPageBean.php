@@ -139,7 +139,7 @@ class WpPageBean extends MainPageBean
    * @param array $post
    * @param string $fieldNameTitle
    */
-  public function setFilters($post=null, $fieldNameTitle='')
+  public function setBeanFilters($post=null, $fieldNameTitle='')
   {
     $this->arrFilters = array();
     if (isset($post[self::CST_FILTERS])) {
@@ -156,5 +156,21 @@ class WpPageBean extends MainPageBean
     $this->colSort   = (isset($post[self::CST_COLSORT]) ? $post[self::CST_COLSORT] : $fieldNameTitle);
     $this->colOrder  = (isset($post[self::CST_COLORDER]) ? $post[self::CST_COLORDER] : self::ORDER_ASC);
     $this->nbperpage = (isset($post[self::CST_NBPERPAGE]) ? $post[self::CST_NBPERPAGE] : 10);
+  }
+  /**
+   * @return string
+   */
+  public function getBeanExpansionFilters($expansionId='', $fieldToCheck=0)
+  {
+    $selExpansionsId = explode(',', $expansionId);
+    $Expansions = $this->ExpansionServices->getExpansionsWithFilters();
+    $strReturned = '';
+    while (!empty($Expansions)) {
+      $Expansion = array_shift($Expansions);
+      if ($Expansion->getField($fieldToCheck)==0)
+      { continue; }
+      $strReturned .= $this->getOption($Expansion->getId(), $Expansion->getName(), $selExpansionsId);
+    }
+    return $strReturned;
   }
 }

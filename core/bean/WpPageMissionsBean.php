@@ -141,18 +141,7 @@ class WpPageMissionsBean extends WpPageBean
    * @return string
    */
   public function getExpansionFilters($expansionId='')
-  {
-    $selExpansionsId = explode(',', $expansionId);
-    $Expansions = $this->ExpansionServices->getExpansionsWithFilters();
-    $strReturned = '';
-    while (!empty($Expansions)) {
-      $Expansion = array_shift($Expansions);
-      if ($Expansion->getNbMissions()==0)
-      { continue; }
-      $strReturned .= $this->getOption($Expansion->getId(), $Expansion->getName(), $selExpansionsId);
-    }
-    return $strReturned;
-  }
+  { return parent::getBeanExpansionFilters($expansionId, self::FIELD_NBMISSIONS); }
   /**
    * @return string
    */

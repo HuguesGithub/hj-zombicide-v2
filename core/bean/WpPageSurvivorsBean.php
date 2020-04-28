@@ -124,22 +124,7 @@ class WpPageSurvivorsBean extends WpPageBean
    * @return string
    */
   public function getExpansionFilters($expansionId='')
-  {
-    $selExpansionsId = explode(',', $expansionId);
-    $Expansions = $this->ExpansionServices->getExpansionsWithFilters();
-    $strReturned = '';
-    while (!empty($Expansions)) {
-      $Expansion = array_shift($Expansions);
-      if ($Expansion->getNbSurvivants()==0)
-      { continue; }
-      $strReturned .= '<option value="'.$Expansion->getId().'"';
-      if (in_array($Expansion->getId(), $selExpansionsId)) {
-        $strReturned .= ' selected';
-      }
-      $strReturned .= '>'.$Expansion->getName().'</option>';
-    }
-    return $strReturned;
-  }
+  { return parent::getBeanExpansionFilters($expansionId, self::FIELD_NBSURVIVANTS); }
   /**
    * @param array $post
    */
