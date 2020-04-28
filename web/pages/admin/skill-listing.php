@@ -1,4 +1,6 @@
-<style>#wpwrap {background-color:#f1f1f1;}</style>
+<style>
+  #wpwrap {background-color:#f1f1f1;}
+</style>
 <div class="wrap">
   <h1 class="wp-heading-inline">Compétences</h1>
   <a href="%3$s" class="page-title-action">Ajouter</a>
@@ -13,10 +15,6 @@
         <select name="action" id="bulk-action-selector-top" class="custom-select custom-select-sm filters">
           <option value="-1">Actions groupées</option>
           <option value="trash">Déplacer dans la corbeille</option>
-      <!--
-          <option value="edit" class="hide-if-no-js">Modifier</option>
-          <option value="duplicate_post_clone">Dupliquer</option>
-      -->
         </select>
         <input id="doaction" class="button action" value="Appliquer" type="submit" name="postAction">
       </div>

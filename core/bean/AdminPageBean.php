@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe AdminPageBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.26
+ * @version 1.04.27
  */
 class AdminPageBean extends MainPageBean
 {
@@ -64,28 +64,20 @@ class AdminPageBean extends MainPageBean
   public function getContentPage()
   {
     if (self::isAdmin()) {
-      switch ($this->urlParams['onglet']) {
-        case 'mission'    :
-          $returned = AdminPageMissionsBean::getStaticContentPage($this->urlParams);
-        break;
-        case 'parametre'  :
-          $returned = AdminPageParametresBean::getStaticContentPage($this->urlParams);
-        break;
+      switch ($this->urlParams[self::CST_ONGLET]) {
         case 'skill'  :
-          $returned = AdminPageSkillsBean::getStaticContentPage($this->urlParams);
-        break;
-        case 'survivor'  :
-          $returned = AdminPageSurvivorsBean::getStaticContentPage($this->urlParams);
+          $Bean = new AdminPageSkillsBean($this->urlParams);
+          $strReturned = $Bean->getContentPage();
         break;
         case ''       :
           $returned = $this->getHomeContentPage();
         break;
         default       :
-          $returned = "Need to add <b>".$this->urlParams['onglet']."</b> to AdminPageBean > getContentPage().";
+          $strReturned = "Need to add <b>"..$this->urlParams[self::CST_ONGLET]."</b> to AdminPageBean > getContentPage().";
         break;
       }
     }
-    return $returned;
+    return $strReturned;
   }
   /**
    * @return string
@@ -140,74 +132,6 @@ class AdminPageBean extends MainPageBean
     $str = file_get_contents(PLUGIN_PATH.'web/pages/admin/home-admin-board.php');
     return vsprintf($str, $args);
   }
-
-  /**
-   * @param unknown $urlParams
-   */
-  public function returnPostActionPage($urlParams)
-  {
-    switch ($urlParams[self::CST_POSTACTION]) {
-      case 'add'   :
-        $returned = $this->getAddPage();
-      break;
-      case 'edit'  :
-        $returned = $this->getEditPage($urlParams['id']);
-      break;
-      case self::CST_TRASH :
-        $returned = $this->getTrashPage($urlParams['id']);
-      break;
-      case 'clone' :
-        $returned = $this->getClonePage($urlParams['id']);
-      break;
-      case 'Appliquer' :
-        // On est dans le cas du bulkAction. On doit donc vérifier l'action.
-        if ($urlParams['action']==self::CST_TRASH) {
-          $returned = $this->getBulkTrashPage();
-        } else {
-          $returned = $this->getListingPage();
-        }
-      break;
-      default      :
-        $returned = $this->getListingPage();
-      break;
-    }
-    return $returned;
-  }
-
-  /**
-   * Retourne l'interface commune de confirmation de suppression d'éléments
-   * @param string $title Titre de la page
-   * @param string $subTitle Libellé spécifique à la suppression
-   * @param string $strLis Liste des lis des éléments à supprimer
-   * @param string $urlCancel Url de rollback si on annule la suppression.
-   * @return string
-   */
-  public function getConfirmDeletePage($title, $subTitle, $strLis, $urlCancel)
-  {
-    // Les données de l'interface.
-    $args = array(
-      // Titre de l'opération - 1
-      $title,
-      // Url de l'action - 2
-      '#',
-      // - 3
-      $subTitle,
-      // Liste des éléments qui vont être supprimés - 4
-      $strLis,
-      // Url pour Annuler - 5
-      $urlCancel,
-      // Postaction - 6
-      self::CST_TRASH,
-      '','','','','','','','','','','','','','',
-    );
-    $str = file_get_contents(PLUGIN_PATH.'web/pages/admin/delete-common-elements.php');
-    return vsprintf($str, $args);
-  }
-
-
-
-
-
 
 
 
@@ -287,8 +211,6 @@ class AdminPageBean extends MainPageBean
     }
   }
 
-
-
   /**
    * @param unknown $queryArg
    * @param unknown $post_status
@@ -350,12 +272,6 @@ class AdminPageBean extends MainPageBean
     );
     return $this->getRender($this->urlFragmentPagination, $args);
   }
-
-
-
-
-
-
 
 
 }
