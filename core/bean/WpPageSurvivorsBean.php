@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageSurvivorsBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.24
+ * @version 1.04.28
  */
 class WpPageSurvivorsBean extends WpPageBean
 {
@@ -144,21 +144,6 @@ class WpPageSurvivorsBean extends WpPageBean
    * @param array $post
    */
   public function setFilters($post=null)
-  {
-    $this->arrFilters = array();
-    if (isset($post[self::CST_FILTERS])) {
-      $arrParams = explode('&', $post[self::CST_FILTERS]);
-      while (!empty($arrParams)) {
-        $arrParam = array_shift($arrParams);
-        list($key, $value) = explode('=', $arrParam);
-        if ($value!='') {
-          $this->arrFilters[$key]= $value;
-        }
-      }
-    }
-    $this->paged     = (isset($post[self::AJAX_PAGED]) ? $post[self::AJAX_PAGED] : 1);
-    $this->colSort   = (isset($post[self::CST_COLSORT]) ? $post[self::CST_COLSORT] : self::FIELD_NAME);
-    $this->colOrder  = (isset($post[self::CST_COLORDER]) ? $post[self::CST_COLORDER] : self::ORDER_ASC);
-    $this->nbperpage = (isset($post[self::CST_NBPERPAGE]) ? $post[self::CST_NBPERPAGE] : 10);
-  }
+  { parent::setBeanFilters($post, self::FIELD_NAME); }
+
 }

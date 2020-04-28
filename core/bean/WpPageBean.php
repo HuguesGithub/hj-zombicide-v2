@@ -133,4 +133,28 @@ class WpPageBean extends MainPageBean
     $argsBalise = array(self::ATTR_CLASS => 'page-item'.$attrClass);
     return $this->getBalise(self::TAG_LI, $label, $argsBalise);
   }
+
+
+  /**
+   * @param array $post
+   * @param string $fieldNameTitle
+   */
+  public function setFilters($post=null, $fieldNameTitle='')
+  {
+    $this->arrFilters = array();
+    if (isset($post[self::CST_FILTERS])) {
+      $arrParams = explode('&', $post[self::CST_FILTERS]);
+      while (!empty($arrParams)) {
+        $arrParam = array_shift($arrParams);
+        list($key, $value) = explode('=', $arrParam);
+        if ($value!='') {
+          $this->arrFilters[$key]= $value;
+        }
+      }
+    }
+    $this->paged     = (isset($post[self::AJAX_PAGED]) ? $post[self::AJAX_PAGED] : 1);
+    $this->colSort   = (isset($post[self::CST_COLSORT]) ? $post[self::CST_COLSORT] : $fieldNameTitle);
+    $this->colOrder  = (isset($post[self::CST_COLORDER]) ? $post[self::CST_COLORDER] : self::ORDER_ASC);
+    $this->nbperpage = (isset($post[self::CST_NBPERPAGE]) ? $post[self::CST_NBPERPAGE] : 10);
+  }
 }
