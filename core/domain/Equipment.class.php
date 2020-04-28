@@ -26,11 +26,6 @@ class Equipment extends LocalDomain
    */
   protected $textAbility;
   /**
-   * @param array $attributes
-   */
-  public function __construct($attributes=array())
-  { parent::__construct($attributes); }
-  /**
    * @return $id
    */
   public function getId()

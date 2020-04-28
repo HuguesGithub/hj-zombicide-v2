@@ -76,11 +76,6 @@ class Spawn extends LocalDomain
    */
   protected $redQuantity;
   /**
-   * @param array $attributes
-   */
-  public function __construct($attributes=array())
-  { parent::__construct($attributes); }
-  /**
    * @return $id
    */
   public function getId()

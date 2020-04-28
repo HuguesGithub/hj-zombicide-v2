@@ -52,12 +52,6 @@ class Survivor extends LocalDomain
   protected $liveAble;
 
   /**
-   * @param array $attributes
-   */
-  public function __construct($attributes=array())
-  { parent::__construct($attributes); }
-
-  /**
    * @return int
    */
   public function getId()
