@@ -65,35 +65,13 @@ class SkillActions extends LocalActions
       $this->checkSkills();
       $strBilan = $this->jsonString($this->strBilan, self::AJAX_SKILLVERIF, true);
     } elseif ($nbWpPostSkills!=$nbSkills) {
-      $strBilan  = "Le nombre d'articles ($nbWpPostSkills) ne correspond pas au nombre de compétences en base ($nbSkills).<br>";
-      $strBilan .= "Une vérification est vivement conseillée.";
+      $strBilan  = "Le nombre d'articles ($nbWpPostSkills) ne correspond pas au nombre de compétences en base ($nbSkills).";
+      $strBilan .= "<br>Une vérification est vivement conseillée.";
     } else {
       $strBilan = "Le nombre d'articles ($nbWpPostSkills) correspond au nombre de compétences en base.";
     }
     return $strBilan;
   }
-  /*
-      $strBilan = '';
-      if ($nbWpPostSkills!=$nbSkills) {
-        $strBilan .= "Le nombre d'articles ($nbWpPostSkills) ne correspond pas au nombre de compétences en base ($nbSkills).<br>";
-      }
-      if ($this->nbUpdates == 0 && $this->nbCreates == 0) {
-        $strBilan .= "Un contrôle a été effectué, et aucune modification n'a été faite.";
-      } else {
-        $strBilan .= "Un contrôle a été effectué, ";
-        if ($this->nbUpdates == 0) {
-          $strBilan .= "aucune mise à jour n'a été faite, ";
-        } else {
-          $strBilan .= $this->nbUpdates." mises à jour ont été faites, ";
-        }
-        if ($this->nbCreates == 0) {
-          $strBilan .= "aucune création n'a été faite.";
-        } else {
-          $strBilan .= $this->nbCreates." créations ont été faites.";
-        }
-      }
-      $strBilan = $this->jsonString($strBilan, self::AJAX_SKILLVERIF, true);
-      * */
   private function checkSkills()
   {
     // On regarde les articles créés et on vérifie les données en base, si elles existent et si elles sont cohérentes entre elles.
@@ -115,7 +93,7 @@ class SkillActions extends LocalActions
         $expansionId  = $this->getExpansionId();
         $Skill->setExpansionId($expansionId);
         $this->SkillServices->insertSkill($Skill);
-        $this->strBilan .= 'Compétence créée en base : '.$name.'.<br>';
+        $this->strBilan .= '<br>Compétence créée en base : '.$name.'.';
       } else {
         // Si on en a juste une, c'est tranquille.
         $Skill = array_shift($Skills);
@@ -129,7 +107,7 @@ class SkillActions extends LocalActions
       $Wp_post = get_page_by_title($Skill->getName(), OBJECT, self::WP_POST);
       $WpPost = WpPost::convertElement($Wp_post);
       if ($WpPost->getID()=='') {
-        $this->strBilan .= 'Article à créer pour une Compétence  : '.$Skill->getName().' ['.$Skill->toJson().'].<br>';
+        $this->strBilan .= '<br>Article à créer pour une Compétence  : '.$Skill->getName().' ['.$Skill->toJson().'].';
       }
     }
     if ($this->strBilan=='') {
@@ -146,7 +124,7 @@ class SkillActions extends LocalActions
     $Expansion = array_shift($Expansions);
     return $Expansion->getId();
   }
-  private function checkSkill($Skill, $doCreate=false)
+  private function checkSkill($Skill)
   {
     // On initialise les données
     $doUpdate = false;

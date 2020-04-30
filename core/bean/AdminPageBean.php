@@ -66,16 +66,11 @@ class AdminPageBean extends MainPageBean
     if (self::isAdmin()) {
       if (!isset($this->urlParams[self::CST_ONGLET])) {
         $strReturned = $this->getHomeContentPage();
+      } elseif ($this->urlParams[self::CST_ONGLET]==self::CST_SKILL) {
+        $Bean = new AdminPageSkillsBean($this->urlParams);
+        $strReturned = $Bean->getSpecificContentPage();
       } else {
-        switch ($this->urlParams[self::CST_ONGLET]) {
-          case 'skill'  :
-            $Bean = new AdminPageSkillsBean($this->urlParams);
-            $strReturned = $Bean->getSpecificContentPage();
-          break;
-          default       :
-            $strReturned = "Need to add <b>".$this->urlParams[self::CST_ONGLET]."</b> to AdminPageBean > getContentPage().";
-          break;
-        }
+        $strReturned = "Need to add <b>".$this->urlParams[self::CST_ONGLET]."</b> to AdminPageBean > getContentPage().";
       }
     }
     return $strReturned;

@@ -112,11 +112,10 @@ class ExpansionActions extends LocalActions
       $this->strBilan = 'Il semblerait que tout aille à la perfection. Aucune anomalie remontée.';
     }
   }
-  private function checkExpansion($Expansion, $doCreate=false)
+  private function checkExpansion($Expansion)
   {
     // On initialise les données
     $doUpdate = false;
-    $code         = $this->WpPost->getPostMeta(self::FIELD_CODE);
     $name         = $this->WpPost->getPostTitle();
     $displayRank  = $this->WpPost->getPostMeta(self::FIELD_DISPLAYRANK);
     $official     = $this->WpPost->getPostMeta(self::FIELD_OFFICIAL);
@@ -142,9 +141,6 @@ class ExpansionActions extends LocalActions
     $Missions = $Expansion->getMissions();
     if ($Expansion->getNbMissions()!=count($Missions)) {
       // TODO : Données à mettre à jour avant de perdre plein d'infos à la con.
-//      $this->strBilan .= $name.' a en base : '.$Expansion->getNbMissions().' et devrait avoir '.count($Missions).' Missions.<br>';
-//      $Expansion->setNbMissions(count($Missions));
-//      $doUpdate = true;
     }
     if ($doUpdate) {
       // Si nécessaire, on update en base.

@@ -15,7 +15,6 @@ $hj(document).ready(function(){
 
 function resolveHomeAdminBoardAjaxActions(clicked) {
   var ajaxaction = clicked.data('ajaxaction');
-  var callAjax = true;
   // On initialise les données de tri et de filtres.
   var data = {'action': 'dealWithAjax', 'ajaxAction': ajaxaction};
   resolveCallAjax(data, ajaxaction);
