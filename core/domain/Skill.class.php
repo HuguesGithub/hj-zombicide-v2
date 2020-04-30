@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Skill
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.27
+ * @version 1.04.30
  */
 class Skill extends LocalDomain
 {
@@ -31,17 +31,10 @@ class Skill extends LocalDomain
    */
   protected $description;
   /**
-   * La donnée est-elle officielle ?
-   * @var int $official
+   * Extension de la compétence (première apparition ou derni_ère modification)
+   * @var int $expansionId
    */
-  protected $official;
-  /**
-   * Class Constructor
-   */
-  public function __construct()
-  {
-    $this->WpPostServices = new WpPostServices();
-  }
+  protected $expansionId;
   /**
    * @return int
    */
@@ -65,8 +58,8 @@ class Skill extends LocalDomain
   /**
    * @return int
    */
-  public function isOfficial()
-  { return $this->official; }
+  public function getExpansionId()
+  { return $this->expansionId; }
   /**
    * @param int $id
    */
@@ -90,8 +83,8 @@ class Skill extends LocalDomain
   /**
    * @param int $official
    */
-  public function setOfficial($official)
-  { $this->official = $official; }
+  public function setExpansionId($expansionId)
+  { $this->expansionId = $expansionId; }
   /**
    * @return array
    */
@@ -124,6 +117,14 @@ class Skill extends LocalDomain
   {
     $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_CODE, $this->getCode());
     return (empty($WpPosts) ? new WpPost() : array_shift($WpPosts));
+  }
+
+  public function getExpansion()
+  {
+    if ($this->Expansion==null) {
+      $this->Expansion = $this->ExpansionServices->selectExpansion($this->getExpansionId());
+    }
+    return $this->Expansion;
   }
 
   /**

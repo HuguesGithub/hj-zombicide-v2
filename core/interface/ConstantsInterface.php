@@ -2,35 +2,37 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.24
+ * @version 1.04.30
  */
 interface ConstantsInterface
 {
   /////////////////////////////////////////////////
   // Icons : https://pngtree.com/free-icon/backpack-management_577946
   // Action Ajax
-  const AJAX_ADDMORENEWS   = 'addMoreNews';
-  const AJAX_CARDRIVE      = 'carDrive';
-  const AJAX_CARIN         = 'carIn';
-  const AJAX_CAROUT        = 'carOut';
-  const AJAX_CARSWAP       = 'carSwap';
-  const AJAX_ENDOFTURN     = 'endOfTurn';
-  const AJAX_GETMISSIONS   = 'getMissions';
-  const AJAX_GETRANDOMTEAM = 'getRandomTeam';
-  const AJAX_GETSKILLS     = 'getSkills';
-  const AJAX_GETSURVIVORS  = 'getSurvivants';
-  const AJAX_MAKENOISE     = 'makeNoise';
-  const AJAX_MELEEATTACK   = 'meleeAttack';
-  const AJAX_MOVE          = 'move';
-  const AJAX_OPENDOOR      = 'openDoor';
-  const AJAX_ORGANIZE      = 'organize';
-  const AJAX_PAGED         = 'paged';
-  const AJAX_POSTCHAT      = 'postChat';
-  const AJAX_RANGEDATTACK  = 'rangedAttack';
-  const AJAX_REFRESHCHAT   = 'refreshChat';
-  const AJAX_SEARCH        = 'search';
-  const AJAX_STARTTURN     = 'startTurn';
-  const AJAX_TRADE         = 'trade';
+  const AJAX_ADDMORENEWS    = 'addMoreNews';
+  const AJAX_CARDRIVE       = 'carDrive';
+  const AJAX_CARIN          = 'carIn';
+  const AJAX_CAROUT         = 'carOut';
+  const AJAX_CARSWAP        = 'carSwap';
+  const AJAX_ENDOFTURN      = 'endOfTurn';
+  const AJAX_EXPANSIONVERIF = 'expansion-verif';
+  const AJAX_GETMISSIONS    = 'getMissions';
+  const AJAX_GETRANDOMTEAM  = 'getRandomTeam';
+  const AJAX_GETSKILLS      = 'getSkills';
+  const AJAX_GETSURVIVORS   = 'getSurvivants';
+  const AJAX_MAKENOISE      = 'makeNoise';
+  const AJAX_MELEEATTACK    = 'meleeAttack';
+  const AJAX_MOVE           = 'move';
+  const AJAX_OPENDOOR       = 'openDoor';
+  const AJAX_ORGANIZE       = 'organize';
+  const AJAX_PAGED          = 'paged';
+  const AJAX_POSTCHAT       = 'postChat';
+  const AJAX_RANGEDATTACK   = 'rangedAttack';
+  const AJAX_REFRESHCHAT    = 'refreshChat';
+  const AJAX_SEARCH         = 'search';
+  const AJAX_SKILLVERIF     = 'skill-verif';
+  const AJAX_STARTTURN      = 'startTurn';
+  const AJAX_TRADE          = 'trade';
 
   /////////////////////////////////////////////////
   // Attributs
@@ -79,6 +81,7 @@ interface ConstantsInterface
   const CST_COLSORT          = 'colsort';
   const CST_DISABLED         = 'disabled';
   const CST_EDIT             = 'edit';
+  const CST_EXPANSION        = 'expansion';
   const CST_FILTERS          = 'filters';
   const CST_HIDDEN           = 'hidden';
   const CST_NBPERPAGE        = 'nbperpage';
@@ -195,18 +198,23 @@ interface ConstantsInterface
   /////////////////////////////////////////////////
   // Wordpress
   const WP_CAT                 = 'cat';
+  const WP_CAT_EXPANSION_ID    = 77;
   const WP_CAT_MISSION_ID      = 2;
   const WP_CAT_OBJECTIVE_ID    = 71;
   const WP_CAT_RULE_ID         = 72;
   const WP_CAT_SKILL_ID        = 75;
   const WP_CURPAGE             = 'cur_page';
   const WP_FIELD               = 'field';
+  const WP_METAKEY             = 'meta_key';
+  const WP_METAVALUE           = 'meta_value';
+  const WP_NUMBERPOSTS         = 'numberposts';
   const WP_ORDER               = 'order';
   const WP_ORDERBY             = 'orderby';
   const WP_POST                = 'post';
   const WP_POSTSPERPAGE        = 'posts_per_page';
   const WP_POSTSTATUS          = 'post_status';
   const WP_POSTTAG             = 'post_tag';
+  const WP_POSTTITLE           = 'post_title';
   const WP_POSTTYPE            = 'post_type';
   const WP_PUBLISH             = 'publish';
   const WP_SLUG                = 'slug';

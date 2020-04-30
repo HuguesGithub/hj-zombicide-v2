@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionServices
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.27
+ * @version 1.04.30
  */
 class MissionServices extends LocalServices
 {
@@ -66,6 +66,18 @@ class MissionServices extends LocalServices
     $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
     return $this->Dao->selectEntriesWithFiltersIn(__FILE__, __LINE__, $this->arrParams, $arrFilters);
   }
+
+  public function getMissionsByExpansionId($expansionId)
+  {
+    $Missions = array();
+    $Ids = $this->Dao->selectMissionsByExpansionId($expansionId);
+    while (!empty($Ids)) {
+      $Id = array_shift($Ids);
+      array_push($Missions, $this->selectMission($Id->missionId));
+    }
+    return $Missions;
+  }
+
   /**
    * @param string $file
    * @param string $line

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SkillBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.27
+ * @version 1.04.30
  */
 class SkillBean extends LocalBean
 {
@@ -57,7 +57,7 @@ class SkillBean extends LocalBean
       // Description du Skill - 9
       $this->Skill->getDescription(),
       // Officiel ou non ? - 10
-      ($this->Skill->isOfficial() ? 'Oui' : 'Non'),
+      ($this->Skill->getExpansion()->isOfficial() ? 'Oui' : 'Non'),
     );
     return $this->getRender($this->urlRowAdmin, $args);
   }

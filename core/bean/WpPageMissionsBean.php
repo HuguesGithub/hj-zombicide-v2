@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageMissionsBean
  * @author Hugues
  * @since 1.04.01
- * @version 1.04.28
+ * @version 1.04.30
  */
 class WpPageMissionsBean extends WpPageBean
 {
@@ -128,14 +128,6 @@ class WpPageMissionsBean extends WpPageBean
       ($this->nbPages<=1 ? ' '.self::CST_HIDDEN : ''),
     );
     return $this->getRender($this->urlTemplateNavPagination, $args);
-  }
-  private function getOption($value, $name, $selection=array())
-  {
-    $strOption = '<option value="'.$value.'"';
-    if (in_array($value, $selection)) {
-      $strOption .= ' selected';
-    }
-    return $strOption.'>'.$name.'</option>';
   }
   /**
    * @return string

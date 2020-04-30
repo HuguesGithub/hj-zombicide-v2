@@ -18,24 +18,28 @@ class AjaxActions extends LocalActions
 
   /**
    * Gère les actions Ajax
-   * @version 1.04.27
+   * @version 1.04.30
    */
   public static function dealWithAjax()
   {
     switch ($_POST[self::CST_AJAXACTION]) {
-      case self::AJAX_ADDMORENEWS   :
+      case self::AJAX_ADDMORENEWS    :
         $returned = HomePageActions::dealWithStatic($_POST);
       break;
-      case self::AJAX_GETMISSIONS   :
+      case self::AJAX_EXPANSIONVERIF :
+        $returned = ExpansionActions::dealWithStatic($_POST);
+      break;
+      case self::AJAX_GETMISSIONS    :
         $returned = MissionActions::dealWithStatic($_POST);
       break;
-      case self::AJAX_GETRANDOMTEAM :
+      case self::AJAX_GETRANDOMTEAM  :
         $returned = SurvivorActions::dealWithStatic($_POST);
       break;
-      case self::AJAX_GETSKILLS     :
+      case self::AJAX_GETSKILLS      :
+      case self::AJAX_SKILLVERIF     :
         $returned = SkillActions::dealWithStatic($_POST);
       break;
-      case self::AJAX_GETSURVIVORS  :
+      case self::AJAX_GETSURVIVORS   :
         $returned = SurvivorActions::dealWithStatic($_POST);
       break;
       default :

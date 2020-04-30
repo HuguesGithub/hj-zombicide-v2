@@ -6,11 +6,12 @@ if (!defined('ABSPATH')) {
  * Classe AdminPageBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.27
+ * @version 1.04.30
  */
 class AdminPageBean extends MainPageBean
 {
   protected $urlFragmentPagination = 'web/pages/admin/fragments/fragment-pagination.php';
+  protected $tplHomeAdminBoard = 'web/pages/admin/home-admin-board.php';
 
   /**
    * Backup Cron Table
@@ -22,12 +23,11 @@ class AdminPageBean extends MainPageBean
   public function __construct($tag='')
   {
     parent::__construct();
+    $this->urlParams = array();
     $this->analyzeUri();
     $this->tableName = 'wp_11_zombicide_'.$tag;
     $this->tplAdminerUrl  = 'http://zombicide.jhugues.fr/wp-content/plugins/adminer/inc/adminer/loader.php';
     $this->tplAdminerUrl .= '?username=dbo507551204&db=db507551204&table='.$this->tableName;
-    $this->SkillServices  = new SkillServices();
-    $this->WpPostServices = new WpPostServices();
   }
 
   /**
@@ -64,17 +64,18 @@ class AdminPageBean extends MainPageBean
   public function getContentPage()
   {
     if (self::isAdmin()) {
-      switch ($this->urlParams[self::CST_ONGLET]) {
-        case 'skill'  :
-          $Bean = new AdminPageSkillsBean($this->urlParams);
-          $strReturned = $Bean->getContentPage();
-        break;
-        case ''       :
-          $returned = $this->getHomeContentPage();
-        break;
-        default       :
-          $strReturned = "Need to add <b>"..$this->urlParams[self::CST_ONGLET]."</b> to AdminPageBean > getContentPage().";
-        break;
+      if (!isset($this->urlParams[self::CST_ONGLET])) {
+        $strReturned = $this->getHomeContentPage();
+      } else {
+        switch ($this->urlParams[self::CST_ONGLET]) {
+          case 'skill'  :
+            $Bean = new AdminPageSkillsBean($this->urlParams);
+            $strReturned = $Bean->getSpecificContentPage();
+          break;
+          default       :
+            $strReturned = "Need to add <b>".$this->urlParams[self::CST_ONGLET]."</b> to AdminPageBean > getContentPage().";
+          break;
+        }
       }
     }
     return $strReturned;
@@ -85,131 +86,22 @@ class AdminPageBean extends MainPageBean
   public function getHomeContentPage()
   {
     /////////////////////////////////////////////////
-    // Gestion des Compétences.
-    // On récupère la liste des Compétences qui ont un Article. Puis les données dans la base. On compare et on effectue un diagnostic.
-    $this->WpPostSkills = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_SKILL_ID);
-    $nbWpPostSkills = count($this->WpPostSkills);
-    $this->Skills = $this->SkillServices->getSkillsWithFilters();
-    $nbSkills = count($this->Skills);
-    if ($nbWpPostSkills!=$nbSkills || $_GET['getAction']=='controlSkill') {
-      $this->checkSkills();
-      $strBilan = '';
-      if ($nbWpPostSkills!=$nbSkills) {
-        $strBilan .= "Le nombre d'articles ($nbWpPostSkills) ne correspond pas au nombre de compétences en base ($nbSkills).<br>";
-      }
-      if ($this->nbUpdates == 0 && $this->nbCreates == 0) {
-        $strBilan .= "Un contrôle a été effectué, et aucune modification n'a été faite.";
-      } else {
-        $strBilan .= "Un contrôle a été effectué, ";
-        if ($this->nbUpdates == 0) {
-          $strBilan .= "aucune mise à jour n'a été faite, ";
-        } else {
-          $strBilan .= $this->nbUpdates." mises à jour ont été faites, ";
-        }
-        if ($this->nbCreates == 0) {
-          $strBilan .= "aucune création n'a été faite.";
-        } else {
-          $strBilan .= $this->nbCreates." créations ont été faites.";
-        }
-      }
-    }
-
-    /////////////////////////////////////////////////
-    // Gestion des Missions.
-    // On récupère la liste des Missions qui ont un Article. Puis les données dans la base. On compare et on effectue un diagnostic.
-    // Enfin, pour le moment, on ne gère pas les données en base.
-    $this->WpPostMissions = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_MISSION_ID);
-    $strMissions = 'Nombre de Missions avec un article : '.count($this->WpPostMissions).'.';
+    // Gestion des Cartes.
+    // On récupère les cartes qu'on souhaite afficher sur la Home
+    // La carte relatives aux compétences
+    $Bean = new AdminPageSkillsBean();
+    $lstCards  = $Bean->getCheckCard();
+    // La carte relatives aux extensions
+    $Bean = new AdminPageExpansionsBean();
+    $lstCards .= $Bean->getCheckCard();
 
     $args = array(
-      // A supprimer - 1
-      '',
-      // Bilan des mises à jours des Compétences - 2
-      $strBilan,
-      // Bilan des Missions - 3
-      $strMissions,
+      // La liste des Cartes affichées sur le panneau d'accueil de la Home - 1
+      $lstCards,
    );
-    $str = file_get_contents(PLUGIN_PATH.'web/pages/admin/home-admin-board.php');
-    return vsprintf($str, $args);
+    return $this->getRender($this->tplHomeAdminBoard, $args);
   }
 
-
-
-
-  private function checkSkills()
-  {
-    $this->nbUpdates = 0;
-    $this->nbCreates = 0;
-    while (!empty($this->WpPostSkills)) {
-      // On récupère le WpPost et ses données
-      $this->WpPost = array_shift($this->WpPostSkills);
-      $name         = $this->WpPost->getPostTitle();
-      // On recherche un Skill dans la base de données qui correspond.
-      $Skills       = $this->SkillServices->getSkillsWithFilters(array(self::FIELD_NAME=>$name));
-      if (empty($Skills)) {
-        // Si on n'en a pas, on doit créer une entrée correspondante.
-        $Skill = new Skill();
-        $Skill->setName($name);
-        $this->checkSkill($Skill, true);
-      } elseif (count($Skills)>1) {
-        // Si on en a plus d'une, c'est sans doute que le filtre de recherche était trop large (notamment "+1 Action" avec "+1 Action gratuite...")
-        $doUpdate = false;
-        while (!empty($Skills) && !$doUpdate) {
-          $Skill = array_shift($Skills);
-          if ($name==$Skill->getName()) {
-            $this->checkSkill($Skill);
-            $doUpdate = true;
-          }
-        }
-        if (!$doUpdate) {
-          $Skill = new Skill();
-          $Skill->setName($name);
-          $this->checkSkill($Skill, true);
-        }
-      } else {
-        // Si on en a juste une, c'est tranquille.
-        $Skill = array_shift($Skills);
-        $this->checkSkill($Skill);
-      }
-    }
-  }
-
-  private function checkSkill($Skill, $doCreate=false)
-  {
-    // On initialise les données
-    $doUpdate = false;
-    $code         = $this->WpPost->getPostMeta(self::FIELD_CODE);
-    $name         = $this->WpPost->getPostTitle();
-    $description  = $this->WpPost->getPostContent();
-    $description  = substr($description, 25, -27);
-    $official     = $this->WpPost->getPostMeta(self::FIELD_OFFICIAL);
-    // On vérifie si la donnée en base correspond à l'article.
-    if ($Skill->getCode()!=$code) {
-      $Skill->setCode($code);
-      $doUpdate = true;
-    }
-    if ($Skill->getName()!=$name) {
-      $Skill->setName($name);
-      $doUpdate = true;
-    }
-    if ($Skill->getDescription()!=$description) {
-      $Skill->setDescription($description);
-      $doUpdate = true;
-    }
-    if ($Skill->isOfficial()!=$official) {
-      $Skill->setOfficial($official);
-      $doUpdate = true;
-    }
-    if ($doCreate) {
-    // Si on veut créer, on le fait.
-    $this->SkillServices->insertSkill($Skill);
-    $this->nbCreates++;
-    } elseif ($doUpdate) {
-      // Si nécessaire, on update en base.
-      $this->SkillServices->updateSkill($Skill);
-      $this->nbUpdates++;
-    }
-  }
 
   /**
    * @param unknown $queryArg

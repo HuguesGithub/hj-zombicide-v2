@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionDaoImpl
  * @author Hugues.
  * @since 1.0.00
- * @version 1.04.28
+ * @version 1.04.30
  */
 class MissionDaoImpl extends LocalDaoImpl
 {
@@ -83,4 +83,16 @@ class MissionDaoImpl extends LocalDaoImpl
     // Et retourner le tableau de résultats.
     return $this->convertToArray($this->selectEntriesAndLogQuery($file, $line, $requete, $arrParams));
   }
+
+  public function selectMissionsByExpansionId($expansionId)
+  {
+    $request  = "SELECT DISTINCT missionId FROM wp_11_zombicide_mission_tile ";
+    $request .= "INNER JOIN wp_11_zombicide_mission zm ON missionId=zm.id ";
+    $request .= "INNER JOIN wp_11_zombicide_tile zt ON tileId=zt.id ";
+    $request .= "INNER JOIN wp_11_zombicide_expansion ze ON zt.expansionId=ze.id ";
+    $request .= "WHERE ze.id = '$expansionId' ";
+    $request .= "ORDER BY zm.title ASC;";
+    return MySQL::wpdbSelect($request);
+  }
+
 }

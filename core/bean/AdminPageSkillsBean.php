@@ -6,25 +6,28 @@ if (!defined('ABSPATH')) {
  * AdminPageSkillsBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.27
+ * @version 1.04.30
  */
 class AdminPageSkillsBean extends AdminPageBean
 {
+  protected $tplHomeCheckCard  = 'web/pages/admin/fragments/home-check-card.php';
   protected $urlSkillListing = 'web/pages/admin/skill-listing.php';
   /**
    * Class Constructor
    */
-  public function __construct()
+  public function __construct($urlParams='')
   {
+    $this->urlParams = $urlParams;
     parent::__construct(self::CST_SKILL);
     $this->title = 'Compétences';
-    $this->SkillServices = new SkillServices();
+    $this->SkillServices  = new SkillServices();
   }
   /**
    * @param array $urlParams
    * @return $Bean
    */
-  public function getContentPage($urlParams)
+  public function getSpecificContentPage()
+  {
     $strRows = '';
     $nbPerPage = 15;
     $curPage = $this->initVar(self::WP_CURPAGE, 1);
@@ -79,4 +82,25 @@ class AdminPageSkillsBean extends AdminPageBean
     return $this->getRender($this->urlSkillListing, $args);
   }
 
+  /**
+   * @return string
+   */
+  public function getCheckCard()
+  {
+    /////////////////////////////////////////////////
+    // Gestion des Compétences.
+    // On récupère la liste des Compétences qui ont un Article. Puis les données dans la base. On compare et on effectue un diagnostic.
+    $Act = new SkillActions();
+    $strBilan  = $Act->dealWithSkillVerif();
+
+    $args = array(
+      // Le titre de la carte - 1
+      $this->title,
+      // L'id du container de retour pour afficher les vérifications - 2
+      self::CST_SKILL.'-verif',
+      // Le contenu du container de vérification - 3
+      $strBilan,
+   );
+    return $this->getRender($this->tplHomeCheckCard, $args);
+  }
 }

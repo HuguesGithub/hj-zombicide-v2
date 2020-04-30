@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionServices
  * @author Hugues.
  * @since 1.04.00
- * @version 1.04.27
+ * @version 1.04.30
  */
 class ExpansionServices extends LocalServices
 {
@@ -52,7 +52,10 @@ class ExpansionServices extends LocalServices
    */
   public function selectExpansion($id)
   { return $this->select(__FILE__, __LINE__, $id); }
-
+  public function updateExpansion($Expansion)
+  { $this->update(__FILE__, __LINE__, $Expansion); }
+  public function insertExpansion($Expansion)
+  { return $this->insert(__FILE__, __LINE__, $Expansion); }
 
   /**
    * Met à jour les donnée de la table Expansion... Obsolète pour l'heure

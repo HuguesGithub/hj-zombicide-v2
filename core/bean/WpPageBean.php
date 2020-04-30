@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * WpPageBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.27
+ * @version 1.04.30
  */
 class WpPageBean extends MainPageBean
 {
@@ -172,5 +172,17 @@ class WpPageBean extends MainPageBean
       $strReturned .= $this->getOption($Expansion->getId(), $Expansion->getName(), $selExpansionsId);
     }
     return $strReturned;
+  }
+
+  protected function getOption($value, $name, $selection=array())
+  {
+    $strOption = '<option value="'.$value.'"';
+    if (!is_array($selection)) {
+      $selection = array($selection);
+    }
+    if (in_array($value, $selection)) {
+      $strOption .= ' selected';
+    }
+    return $strOption.'>'.$name.'</option>';
   }
 }

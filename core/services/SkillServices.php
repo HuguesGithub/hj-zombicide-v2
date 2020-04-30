@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SkillServices
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.27
+ * @version 1.04.30
  */
 class SkillServices extends LocalServices
 {
@@ -33,7 +33,7 @@ class SkillServices extends LocalServices
     array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_CODE));
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_NAME));
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_DESCRIPTION));
-    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_OFFICIAL));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_EXPANSIONID));
   }
   /**
    * @param array $arrFilters

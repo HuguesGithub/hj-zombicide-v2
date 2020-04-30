@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Expansion
  * @author Hugues.
  * @since 1.04.00
- * @version 1.04.00
+ * @version 1.04.30
  */
 class Expansion extends LocalDomain
 {
@@ -40,6 +40,11 @@ class Expansion extends LocalDomain
    * @var int $nbMissions
    */
   protected $nbMissions;
+  /**
+   * Est officielle ?
+   * @var boolean $official;
+   */
+  protected $official;
   /**
    * Getter Id
    * @return int
@@ -77,6 +82,12 @@ class Expansion extends LocalDomain
   public function getNbMissions()
   { return $this->nbMissions; }
   /**
+   * Getter official
+   * @return boolean
+   */
+  public function isOfficial()
+  { return ($this->official==1); }
+  /**
    * @param int $id
    */
   public function setId($id)
@@ -96,6 +107,21 @@ class Expansion extends LocalDomain
    */
   public function setDisplayRank($displayRank)
   { $this->displayRank=$displayRank; }
+  /**
+   * @param int $nbSurvivants
+   */
+  public function setNbSurvivants($nbSurvivants)
+  { $this->nbSurvivants = $nbSurvivants; }
+  /**
+   * @param int $nbMissions
+   */
+  public function setNbMissions($nbMissions)
+  { $this->nbMissions = $nbMissions; }
+  /**
+   * @param boolean $official
+   */
+  public function setOfficial($official)
+  { $this->official = $official; }
   /**
    * Retourne les attributs de la classe
    * @return array
@@ -135,4 +161,11 @@ class Expansion extends LocalDomain
   public function getBean()
   { return new ExpansionBean($this); }
 
+  public function getMissions()
+  {
+    if ($this->Missions==null) {
+      $this->Missions = $this->MissionServices->getMissionsByExpansionId($this->getId());
+    }
+    return $this->Missions;
+  }
 }
