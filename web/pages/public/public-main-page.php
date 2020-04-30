@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="fr">
   <head>
+    <title>Zombicide</title>
 <?php
 wp_head();
 $PageBean = MainPageBean::getPageBean();

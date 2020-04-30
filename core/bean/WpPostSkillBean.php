@@ -52,7 +52,7 @@ class WpPostSkillBean extends WpPostBean
             $Survivor = $SurvivorSkill->getSurvivor();
             $this->skills[$key][$k][$Survivor->getNiceName()] = $Survivor;
           }
-          if (!empty($skills[$key][$k])) {
+          if (!empty($this->skills[$key][$k])) {
             ksort($this->skills[$key][$k]);
           }
         }
