@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Survivor
  * @author Hugues.
  * @since 1.0.00
- * @version 1.04.28
+ * @version 1.05.01
  */
 class Survivor extends LocalDomain
 {
@@ -191,8 +191,12 @@ class Survivor extends LocalDomain
   public function getPortraitUrl($type='')
   {
     $nicename = $this->getNiceName($this->name);
-    $baseUrl = '/wp-content/plugins/zombicide/web/rsc/images/portraits/p';
-    return $baseUrl.$nicename.($type!=''?'-'.$type:'').'.jpg';
+    $baseUrl = 'http://www.jhugues.fr/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p';
+    $wholeUrl = $baseUrl.$nicename.($type!=''?'-'.$type:'').'.jpg';
+    if (self::isAdmin() && @getimagesize($wholeUrl)===false) {
+      $wholeUrl = $baseUrl.($type!='' ? '-'.$type : '').'.jpg';
+    }
+    return $wholeUrl;
   }
   /**
    * @param bool $isHome

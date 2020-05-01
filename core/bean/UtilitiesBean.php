@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe UtilitiesBean
  * @author Hugues
- * @version 1.02.00
  * @since 1.02.00
+ * @version 1.05.01
  */
 class UtilitiesBean implements ConstantsInterface
 {
@@ -38,6 +38,11 @@ class UtilitiesBean implements ConstantsInterface
    */
   protected function getIcon($attributes=array())
   { return $this->getBalise(self::TAG_I, '', $attributes); }
+  /**
+   * @return string
+   */
+  protected function getIconFarSquare()
+  { return $this->getIcon(array(self::ATTR_CLASS=>'far fa-square')); }
   /**
    * @return string
    */

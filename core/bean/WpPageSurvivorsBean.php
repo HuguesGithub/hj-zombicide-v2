@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageSurvivorsBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.28
+ * @version 1.05.01
  */
 class WpPageSurvivorsBean extends WpPageBean
 {
@@ -28,18 +28,56 @@ class WpPageSurvivorsBean extends WpPageBean
    */
   public function getContentPage()
   {
-    // On récupère l'éventuel paramètre FIELD_SURVIVORID
-    $survivorId = $this->initVar(self::FIELD_SURVIVORID, -1);
-    if ($survivorId==-1) {
-      // S'il n'est pas défini, on affiche la liste des Survivants
-      $this->setFilters();
-      return $this->getListContentPage();
-    } else {
-      // S'il est défini, on affiche le Survivant associé.
-      $Bean = new WpPostSurvivorBean($survivorId);
-      return $Bean->getContentPage();
-    }
+    $this->setFilters();
+    return $this->getListContentPage();
   }
+  /**
+   * @return string
+   */
+  public function getListContentPage()
+  {
+    /////////////////////////////////////////////////////////////////////////////
+    // On récupère la liste des Survivants puis les éléments nécessaires à la pagination.
+    $Survivors = $this->SurvivorServices->getSurvivorsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
+    $this->nbElements = count($Survivors);
+    $this->nbPages = ceil($this->nbElements/$this->nbperpage);
+    // On slice la liste pour n'avoir que ceux à afficher
+    $displayedSurvivors = array_slice($Survivors, $this->nbperpage*($this->paged-1), $this->nbperpage);
+    // On construit le corps du tableau
+    $strBody = '';
+    if (!empty($displayedSurvivors)) {
+      foreach ($displayedSurvivors as $Survivor) {
+        $strBody .= $Survivor->getBean()->getRowForSurvivorsPage();
+      }
+    }
+    /////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Affiche-t-on le filtre ?
+    $showFilters = isset($this->arrFilters[self::FIELD_NAME])&&$this->arrFilters[self::FIELD_NAME]!='' || isset($this->arrFilters[self::FIELD_EXPANSIONID])&&$this->arrFilters[self::FIELD_EXPANSIONID]!='';
+    /////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////
+    // On enrichi le template puis on le restitue.
+    $args = array(
+      // Les lignes du tableau - 1
+      $strBody,
+      // On affiche le dropdown par pages - 2
+      $this->getDropdownNbPerPages(),
+      // On affiche la pagination - 3
+      $this->getNavPagination(),
+      // Affiche ou non le bloc filtre - 4
+      $showFilters ? 'block' : 'none',
+      // Si le Nom est renseigné - 5
+      $this->arrFilters[self::FIELD_NAME],
+      // Liste des Extensions - 6
+      $this->getExpansionFilters($this->arrFilters[self::FIELD_EXPANSIONID]),
+    );
+    return $this->getRender($this->urlTemplate, $args);
+  }
+  private function getExpansionFilters($expansionId='')
+  { return parent::getBeanExpansionFilters($expansionId, self::FIELD_NBSURVIVANTS); }
+
   /**
    * @return string
    */
@@ -60,71 +98,6 @@ class WpPageSurvivorsBean extends WpPageBean
     }
     return '<div id="page-selection-survivants">'.$strReturned.'</div>';
   }
-  /**
-   * @return string
-   */
-  public function getListContentPage()
-  {
-
-    /////////////////////////////////////////////////////////////////////////////
-    // On récupère la liste des Survivants puis les éléments nécessaires à la pagination.
-    $Survivors = $this->SurvivorServices->getSurvivorsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
-    $nbElements = count($Survivors);
-    $nbPages = ceil($nbElements/$this->nbperpage);
-    // On slice la liste pour n'avoir que ceux à afficher
-    $displayedSurvivors = array_slice($Survivors, $this->nbperpage*($this->paged-1), $this->nbperpage);
-    // On construit le corps du tableau
-    $strBody = '';
-    if (!empty($displayedSurvivors)) {
-      foreach ($displayedSurvivors as $Survivor) {
-        $strBody .= $Survivor->getBean()->getRowForSurvivorsPage();
-      }
-    }
-
-    // On construit les liens de la pagination.
-    $strPagination = $this->getPaginateLis($this->paged, $nbPages);
-
-    // Affiche-t-on le filtre ?
-    $showFilters = isset($this->arrFilters[self::FIELD_NAME])&&$this->arrFilters[self::FIELD_NAME]!='' || isset($this->arrFilters[self::FIELD_EXPANSIONID])&&$this->arrFilters[self::FIELD_EXPANSIONID]!='';
-
-    //////////////////////////////////////////////////////////////////
-    // On enrichi le template puis on le restitue.
-    $args = array(
-      ($this->nbperpage==10 ? self::CST_SELECTED : ''),
-      ($this->nbperpage==25 ? self::CST_SELECTED : ''),
-      ($this->nbperpage==50 ? self::CST_SELECTED : ''),
-      // Les lignes du tableau - 4
-      $strBody,
-      // N° du premier élément - 5
-      $this->nbperpage*($this->paged-1)+1,
-      // Nb par page - 6
-      min($this->nbperpage*$this->paged, $nbElements),
-      // Nb Total - 7
-      $nbElements,
-      // Si page 1, on peut pas revenir à la première - 8
-      ($this->paged==1 ? ' '.self::CST_DISABLED : ''),
-      // Liste des éléments de la Pagination - 9
-      $strPagination,
-      // Si page $nbPages, on peut pas aller à la dernière - 10
-      ($this->paged==$this->nbperpage ? ' '.self::CST_DISABLED : ''),
-      // Nombre de pages - 11
-      $this->nbperpage,
-      // Liste des Extensions (TODO éventuellement sélectionnées) - 12
-      $this->getExpansionFilters($this->arrFilters[self::FIELD_EXPANSIONID]),
-      '', // - 13
-      // Si le Nom est renseigné - 14
-      $this->arrFilters[self::FIELD_NAME],
-      // Affiche ou non le bloc filtre - 15
-      ($showFilters ? 'block' : 'none'),
-      '', '', '', '', '', '', '', '','', '', '', '', '', '', '', '','', '', '', '', '', '', '', '','', '', '', '', '', '', '', '','', '', '', '', '', '', '', '',
-    );
-    return $this->getRender($this->urlTemplate, $args);
-  }
-  /**
-   * @return string
-   */
-  public function getExpansionFilters($expansionId='')
-  { return parent::getBeanExpansionFilters($expansionId, self::FIELD_NBSURVIVANTS); }
   /**
    * @param array $post
    */

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe AdminPageBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.30
+ * @version 1.05.01
  */
 class AdminPageBean extends MainPageBean
 {
@@ -69,6 +69,9 @@ class AdminPageBean extends MainPageBean
       } elseif ($this->urlParams[self::CST_ONGLET]==self::CST_SKILL) {
         $Bean = new AdminPageSkillsBean($this->urlParams);
         $strReturned = $Bean->getSpecificContentPage();
+      } elseif ($this->urlParams[self::CST_ONGLET]==self::CST_SURVIVOR) {
+        $Bean = new AdminPageSurvivorsBean($this->urlParams);
+        $strReturned = $Bean->getSpecificContentPage();
       } else {
         $strReturned = "Need to add <b>".$this->urlParams[self::CST_ONGLET]."</b> to AdminPageBean > getContentPage().";
       }
@@ -88,6 +91,9 @@ class AdminPageBean extends MainPageBean
     $lstCards  = $Bean->getCheckCard();
     // La carte relatives aux extensions
     $Bean = new AdminPageExpansionsBean();
+    $lstCards .= $Bean->getCheckCard();
+    // La carte relatives aux Survivants
+    $Bean = new AdminPageSurvivorsBean();
     $lstCards .= $Bean->getCheckCard();
 
     $args = array(

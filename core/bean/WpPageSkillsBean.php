@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageSkillsBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.28
+ * @version 1.05.01
  */
 class WpPageSkillsBean extends WpPageBean
 {
@@ -47,8 +47,8 @@ class WpPageSkillsBean extends WpPageBean
     /////////////////////////////////////////////////////////////////////////////
     // On récupère la liste de compétences puis les éléments nécessaires à la pagination.
     $Skills = $this->SkillServices->getSkillsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
-    $nbElements = count($Skills);
-    $nbPages = ceil($nbElements/$this->nbperpage);
+    $this->nbElements = count($Skills);
+    $this->nbPages = ceil($this->nbElements/$this->nbperpage);
     // On slice la liste pour n'avoir que celles à afficher
     $displayedSkills = array_slice($Skills, $this->nbperpage*($this->paged-1), $this->nbperpage);
     // On construit le corps du tableau
@@ -58,40 +58,26 @@ class WpPageSkillsBean extends WpPageBean
         $strBody .= $Skill->getBean()->getRowForSkillsPage();
       }
     }
+    /////////////////////////////////////////////////////////////////////////////
 
-    // On construit les liens de la pagination.
-    $strPagination = $this->getPaginateLis($this->paged, $nbPages);
+    /////////////////////////////////////////////////////////////////////////////
+    // Affiche-t-on le filtre ?
+    $showFilters = (isset($this->arrFilters[self::FIELD_DESCRIPTION])&&$this->arrFilters[self::FIELD_DESCRIPTION]!='');
+    /////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////
     // On enrichi le template puis on le restitue.
     $args = array(
-      ($this->nbperpage==10 ? self::CST_SELECTED : ''),
-      ($this->nbperpage==25 ? self::CST_SELECTED : ''),
-      ($this->nbperpage==50 ? self::CST_SELECTED : ''),
-      // Tri sur le Code - 4
-      ($this->colSort==self::FIELD_CODE ? $this->colOrder : ''),
-      // Tri sur le Nom - 5
-      ($this->colSort==self::FIELD_NAME && $this->colOrder==self::ORDER_ASC ? self::ORDER_ASC : self::ORDER_DESC),
-      // Les lignes du tableau - 6
+      // Les lignes du tableau - 1
       $strBody,
-      // N° du premier élément - 7
-      $this->nbperpage*($this->paged-1)+1,
-      // Nb par page - 8
-      min($this->nbperpage*$this->paged, $nbElements),
-      // Nb Total - 9
-      $nbElements,
-      // Liste des éléments de la Pagination - 10
-      $strPagination,
-      // Si page 1, on peut pas revenir à la première
-      ($this->paged==1 ? ' '.self::CST_DISABLED : ''),
-      // Si page $nbPages, on peut pas aller à la dernière
-      ($this->paged==$this->nbperpage ? ' '.self::CST_DISABLED : ''),
-      // Nombre de pages - 13
-      $nbPages,
-      // Filtre sur la Description - 14
+      // On affiche le dropdown par pages - 2
+      $this->getDropdownNbPerPages(),
+      // On affiche la pagination - 3
+      $this->getNavPagination(),
+      // Affiche ou non le bloc filtre - 4
+      $showFilters ? 'block' : 'none',
+      // Filtre sur la Description - 5
       $this->arrFilters[self::FIELD_DESCRIPTION],
-      // Affiche ou non le bloc filtre - 15
-      (isset($this->arrFilters[self::FIELD_DESCRIPTION])&&$this->arrFilters[self::FIELD_DESCRIPTION]!='' ? 'block' : 'none'),
     );
     return $this->getRender($this->urlTemplate, $args);
   }

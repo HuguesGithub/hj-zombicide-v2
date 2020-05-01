@@ -652,7 +652,10 @@ function resolvePageCompetenceAjaxActions(clicked) {
   var colorder = 'asc';
   var paged = 1;
   var nbPerPages = $hj('#displayedRows').val();
-  var filters = 'description='+$hj('#filter-description').val();
+  var filters = '';
+  if (hj('#filter-description').val()!=undefined) {
+    filters = 'description='+$hj('#filter-description').val();
+  }
 
   switch (ajaxaction) {
     // On change le nombre d'éléments affichés

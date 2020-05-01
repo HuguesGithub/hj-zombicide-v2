@@ -6,10 +6,12 @@ if (!defined('ABSPATH')) {
  * WpPageBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.30
+ * @version 1.05.01
  */
 class WpPageBean extends MainPageBean
 {
+  protected $urlTemplateDropdown = 'web/pages/public/fragments/dropdown-nbperpages.php';
+  protected $urlTemplateNavPagination = 'web/pages/public/fragments/nav-pagination.php';
   /**
    * WpPost affiché
    * @var WpPost $WpPage
@@ -77,13 +79,63 @@ class WpPageBean extends MainPageBean
   public function getShellClass()
   { return ''; }
 
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  protected function getDropdownNbPerPages()
+  {
+    //////////////////////////////////////////////////////////////////
+    // On enrichi le template puis on le restitue.
+    $args = array(
+      ($this->nbperpage==10 ? self::CST_SELECTED : ''),
+      ($this->nbperpage==25 ? self::CST_SELECTED : ''),
+      ($this->nbperpage==50 ? self::CST_SELECTED : ''),
+    );
+    return $this->getRender($this->urlTemplateDropdown, $args);
+  }
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Méthodes relatives à la pagination
+  /**
+   * Retourne le bloc de pagination complet
+   * @return string
+   */
+  protected function getNavPagination()
+  {
+    /////////////////////////////////////////////////////////////////////////////
+    // On construit les liens de la pagination.
+    $strPagination = $this->getPaginateLis($this->paged, $this->nbPages);
+    /////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////
+    // On enrichi le template puis on le restitue.
+    $args = array(
+      // N° du premier élément - 1
+      $this->nbperpage*($this->paged-1)+1,
+      // Nb par page - 2
+      min($this->nbperpage*$this->paged, $this->nbElements),
+      // Nb Total - 3
+      $this->nbElements,
+      // Si page 1, on peut pas revenir à la première - 4
+      ($this->paged==1 ? ' '.self::CST_DISABLED : ''),
+      // Liste des éléments de la Pagination - 5
+      $strPagination,
+      // Si page $nbPages, on peut pas aller à la dernière - 6
+      ($this->paged==$this->nbperpage ? ' '.self::CST_DISABLED : ''),
+      // Nombre de pages - 7
+      $this->nbperpage,
+      // S'il n'y a qu'une page, la pagination ne sert à rien - 8
+      ($this->nbPages<=1 ? ' '.self::CST_HIDDEN : ''),
+    );
+    return $this->getRender($this->urlTemplateNavPagination, $args);
+  }
   /**
    * Retourne la liste des liens numérotés d'une pagination
    * @param int $curPage Page courante
    * @param int $nbPages Nombre de pages
    * @return string
    */
-  protected function getPaginateLis($curPage, $nbPages)
+  private function getPaginateLis($curPage, $nbPages)
   {
     $strPagination = '';
     //////////////////////////////////////////////////////////////////////////
@@ -133,6 +185,8 @@ class WpPageBean extends MainPageBean
     $argsBalise = array(self::ATTR_CLASS => 'page-item'.$attrClass);
     return $this->getBalise(self::TAG_LI, $label, $argsBalise);
   }
+  // Fin des méthodes relatives à la pagination
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   /**

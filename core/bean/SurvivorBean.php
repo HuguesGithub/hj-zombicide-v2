@@ -6,10 +6,11 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.26
+ * @version 1.05.01
  */
 class SurvivorBean extends LocalBean
 {
+  protected $urlRowAdmin  = 'web/pages/admin/fragments/survivor-row.php';
   protected $urlRowPublic = 'web/pages/public/fragments/survivor-row.php';
   protected $urlArticle   = 'web/pages/public/fragments/survivor-article.php';
   protected $urlCardVisit = 'web/pages/public/fragments/survivor-cardvisit.php';
@@ -91,11 +92,19 @@ class SurvivorBean extends LocalBean
     );
     return $this->getRender($this->urlArticle, $args);
   }
-
+  /**
+   * @return string
+   */
   public function getButton()
   {
-    $str  = '<button type="button" class="btn btn-light btn-survivor hidden" data-expansion-id="'.$this->Survivor->getExpansionId();
-    return $str.'" data-survivor-id="'.$this->Survivor->getId().'"><i class="far fa-square"></i> '.$this->Survivor->getName().'</button>';
+    $label = $this->getIconFarSquare().' '.$this->Survivor->getName();
+    $attributes = array(
+      self::ATTR_TYPE             => self::TAG_BUTTON,
+      self::ATTR_CLASS            => 'btn btn-light btn-survivor hidden',
+      self::ATTR_DATA_EXPANSIONID => $this->Survivor->getExpansionId(),
+      self::ATTR_DATA_SURVIVORID  => $this->Survivor->getId(),
+    );
+    return $this->getBalise(self::TAG_BUTTON, $label, $attributes);
   }
 
 
@@ -149,7 +158,7 @@ class SurvivorBean extends LocalBean
       // Extension de provenance
       $Survivor->getExpansionName(),
       // Background du Survivant
-      $Survivor->getBackground(),
+      ($Survivor->getBackground()!='' ? substr($Survivor->getBackground(), 0, 50).'...' : 'Non renseigné'),
       // Nom de l'image alternative, si défini.
       $Survivor->getAltImgName(),
       // Portraits
@@ -252,24 +261,5 @@ class SurvivorBean extends LocalBean
   }
 
 
-
-
-  /**
-   * Utiliser dans la partie génération aléatoire d'une équipe.
-   * @param string $addClass
-   * @return string
-   */
-  public function getVisitCard($addClass='')
-  {
-    $Survivor = $this->Survivor;
-    $name = $Survivor->getName();
-    $args = array(
-      $this->getStrImgPortrait($Survivor->getPortraitUrl(), 'Portrait Survivant - '.$name, $this->strPortraitSurvivant),
-      $name,
-      $this->getSkillsBySurvivorType('skills-survivant', $Survivor->getUlSkills()),
-      ($addClass=='' ? '' : ' '.$addClass),
-    );
-    return $this->getRender($this->urlCardVisit, $args);
-  }
 
 }

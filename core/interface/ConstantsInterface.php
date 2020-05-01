@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.30
+ * @version 1.05.01
  */
 interface ConstantsInterface
 {
@@ -42,14 +42,17 @@ interface ConstantsInterface
   const ATTR_HREF              = 'href';
   const ATTR_SRC               = 'src';
   const ATTR_TITLE             = 'title';
+  const ATTR_TYPE              = 'type';
   const ATTR_VALUE             = 'value';
   const ATTR_WIDTH             = 'width';
   // Data
   const ATTR_DATA_AJAXACTION   = 'data-ajaxaction';
   const ATTR_DATA_DISPLAYNAME  = 'data-displayname';
+  const ATTR_DATA_EXPANSIONID  = 'data-expansion-id';
   const ATTR_DATA_ID           = 'data-id';
   const ATTR_DATA_KEYDECK      = 'data-keydeck';
   const ATTR_DATA_PAGED        = 'data-paged';
+  const ATTR_DATA_SURVIVORID   = 'data-survivor-id';
   const ATTR_DATA_TIMESTAMP    = 'data-timestamp';
   const ATTR_DATA_TYPE         = 'data-type';
 
@@ -187,6 +190,7 @@ interface ConstantsInterface
   /////////////////////////////////////////////////
   // Tags
   const TAG_A                  = 'a';
+  const TAG_BUTTON             = 'button';
   const TAG_DIV                = 'div';
   const TAG_I                  = 'i';
   const TAG_IMG                = 'img';
@@ -200,9 +204,11 @@ interface ConstantsInterface
   const WP_CAT                 = 'cat';
   const WP_CAT_EXPANSION_ID    = 77;
   const WP_CAT_MISSION_ID      = 2;
+  const WP_CAT_NEWS_ID         = 54;
   const WP_CAT_OBJECTIVE_ID    = 71;
   const WP_CAT_RULE_ID         = 72;
   const WP_CAT_SKILL_ID        = 75;
+  const WP_CAT_SURVIVOR_ID     = 58;
   const WP_CURPAGE             = 'cur_page';
   const WP_FIELD               = 'field';
   const WP_METAKEY             = 'meta_key';

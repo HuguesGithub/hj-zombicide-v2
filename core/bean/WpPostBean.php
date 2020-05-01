@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * WpPostBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.08
+ * @version 1.05.01
  */
 class WpPostBean extends MainPageBean
 {
@@ -31,47 +31,40 @@ class WpPostBean extends MainPageBean
     }
     parent::__construct($services);
   }
+  /**
+   * @return Bean
+   */
   public function getBean()
   {
-    $postMetas = $this->WpPost->getPostMetas();
-    if (isset($postMetas[self::FIELD_SURVIVORID])) {
-      $survivorId = $postMetas[self::FIELD_SURVIVORID];
-      if ($survivorId[0]!='') {
-        return new WpPostSurvivorBean($this->WpPost);
+    $this->WpCategs = $this->WpPost->getCategories();
+    if (!empty($this->WpCategs)) {
+      $this->WpCateg = array_shift($this->WpCategs);
+      switch ($this->WpCateg->getCatID()) {
+        case self::WP_CAT_EXPANSION_ID  :
+          $Bean = new WpPostExpansionBean($this->WpPost);
+        break;
+        case self::WP_CAT_MISSION_ID    :
+          $Bean = new WpPostMissionBean($this->WpPost);
+        break;
+        case self::WP_CAT_NEWS_ID       :
+          $Bean = new WpPostNewsBean($this->WpPost);
+        break;
+        case self::WP_CAT_SKILL_ID      :
+          $Bean = new WpPostSkillBean($this->WpPost);
+        break;
+        case self::WP_CAT_SURVIVOR_ID   :
+          $Bean = new WpPostSurvivorBean($this->WpPost);
+        break;
+        default :
+          $Bean = new WpPageError404Bean();
+        break;
       }
+    } else {
+      $Bean = new WpPageError404Bean();
     }
-
-    if (isset($postMetas[self::FIELD_MISSIONID])) {
-      $missionId = $postMetas[self::FIELD_MISSIONID];
-      if ($missionId[0]!='') {
-        return new WpPostMissionBean($this->WpPost);
-      }
-    }
-
-    return new WpPageError404Bean();
+    return $Bean;
   }
-  /**
-   * @return string|WpPageError404Bean
-   */
-  public function getContentPage()
-  {
-    $strReturned = '';
-    $postMetas = $this->WpPost->getPostMetas();
-    if (isset($postMetas[self::FIELD_SURVIVORID])) {
-      $WpBean = new WpPostSurvivorBean($this->WpPost);
-      $Survivor = $WpBean->getSurvivor();
-      if ($Survivor->getId()!='') {
-        $strReturned = $WpBean->getContentPage();
-      }
-    } elseif (isset($postMetas[self::FIELD_MISSIONID])) {
-      $strReturned = 'WIP WpPostBean getContentPage.';
-    }
-    if ($strReturned=='') {
-      $WpBean = new WpPageError404Bean();
-      $strReturned = $WpBean->getContentPage();
-    }
-    return $strReturned;
-  }
+
   /**
    * @return string
    */
