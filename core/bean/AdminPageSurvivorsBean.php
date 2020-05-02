@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * AdminPageSurvivorsBean
  * @author Hugues
  * @since 1.05.01
- * @version 1.05.01
+ * @version 1.05.02
  */
 class AdminPageSurvivorsBean extends AdminPageBean
 {
@@ -49,43 +49,28 @@ class AdminPageSurvivorsBean extends AdminPageBean
     );
     // Pagination
     $strPagination = $this->getPagination($queryArg, $post_status, $curPage, $nbPages, $nbElements);
-    /*
-    // Sorts
-    $queryArg[self::WP_ORDERBY] = self::FIELD_CODE;
-    $queryArg[self::WP_ORDER] = ($orderby==self::FIELD_CODE && $order==self::ORDER_ASC ? self::ORDER_DESC : self::ORDER_ASC);
-    $urlSortCode = $this->getQueryArg($queryArg);
+    // Tris
     $queryArg[self::WP_ORDERBY] = self::FIELD_NAME;
     $queryArg[self::WP_ORDER] = ($orderby==self::FIELD_NAME && $order==self::ORDER_ASC ? self::ORDER_DESC : self::ORDER_ASC);
     $urlSortTitle = $this->getQueryArg($queryArg);
+
     $args = array(
-      // Liste des compétences affichées - 1
+      // Liste des survivants affichés - 1
       $strRows,
-      // Filtres - 2
+      // 2
       '',
-      // Url pour créer une nouvelle Compétence - 3
-      $this->getQueryArg(array(self::CST_ONGLET=>self::CST_SKILL, self::CST_POSTACTION=>'add')),
-      // Subs - 4
+      // Lien pour ajouter un nouveau Survivant - 3
+      '/wp-admin/post-new.php',
+      // 4
       '',
       // Pagination - 5
       $strPagination,
-      // class pour le tri sur code - 6
-      ($orderby==self::FIELD_CODE ? $order : self::ORDER_DESC),
-      // url pour le tri sur code - 7
-      $urlSortCode,
+      // 6 & 7
+      '','',
       // class pour le tri sur title - 8
       ($orderby==self::FIELD_NAME ? $order : self::ORDER_DESC),
       // url pour le tri sur title - 9
       $urlSortTitle,
-      '','','','','','','','','','','','','',
-    );
-    * */
-    $args = array(
-      // Liste des survivants affichés - 1
-      $strRows,
-      // 2 à 4
-      '','','',
-      // Pagination - 5
-      $strPagination,
       '','','','','','','','','','','','','','','','','','','','','','',''
     );
     return $this->getRender($this->urlSurvivorListing, $args);
@@ -96,14 +81,12 @@ class AdminPageSurvivorsBean extends AdminPageBean
    */
   public function getCheckCard()
   {
-    /*
     /////////////////////////////////////////////////
     // Gestion des Survivants.
-    // On récupère la liste des Compétences qui ont un Article. Puis les données dans la base. On compare et on effectue un diagnostic.
-    $Act = new SkillActions();
-    $strBilan  = $Act->dealWithSkillVerif();
-    */
-    $strBilan  = 'Not yet implemented';
+    // On récupère la liste des Survivants qui ont un Article. Puis les données dans la base. On compare et on effectue un diagnostic.
+    $Act = new SurvivorActions();
+    $strBilan  = $Act->dealWithSurvivorVerif();
+
     $args = array(
       // Le titre de la carte - 1
       $this->title,

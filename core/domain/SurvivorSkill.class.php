@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SurvivorSkill
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.05.02
  */
 class SurvivorSkill extends LocalDomain
 {
@@ -45,6 +45,9 @@ class SurvivorSkill extends LocalDomain
     $this->SkillServices    = new SkillServices();
     $this->SurvivorServices = new SurvivorServices();
   }
+
+  public function getBean()
+  { return new SurvivorSkillBean($this); }
 
   /**
    * @return int

@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.01
+ * @version 1.05.02
  */
 interface ConstantsInterface
 {
@@ -32,6 +32,7 @@ interface ConstantsInterface
   const AJAX_SEARCH         = 'search';
   const AJAX_SKILLVERIF     = 'skill-verif';
   const AJAX_STARTTURN      = 'startTurn';
+  const AJAX_SURVIVORVERIF  = 'survivor-verif';
   const AJAX_TRADE          = 'trade';
 
   /////////////////////////////////////////////////
@@ -76,26 +77,30 @@ interface ConstantsInterface
 
   /////////////////////////////////////////////////
   // On conserve malgré tout quelques constantes
-  const CST_ACTIVE           = 'active';
-  const CST_AJAXACTION       = 'ajaxAction';
-  const CST_CHANGEPROFILE    = 'changeProfile';
-  const CST_CLONE            = 'clone';
-  const CST_COLORDER         = 'colorder';
-  const CST_COLSORT          = 'colsort';
-  const CST_DISABLED         = 'disabled';
-  const CST_EDIT             = 'edit';
-  const CST_EXPANSION        = 'expansion';
-  const CST_FILTERS          = 'filters';
-  const CST_HIDDEN           = 'hidden';
-  const CST_NBPERPAGE        = 'nbperpage';
-  const CST_MISSION          = 'mission';
-  const CST_ONGLET           = 'onglet';
-  const CST_PARAMETRE        = 'parametre';
-  const CST_POSTACTION       = 'postAction';
-  const CST_SELECTED         = 'selected';
-  const CST_SKILL            = 'skill';
-  const CST_SURVIVOR         = 'survivor';
-  const CST_TRASH            = 'trash';
+  const CST_ACTIVE            = 'active';
+  const CST_AJAXACTION        = 'ajaxAction';
+  const CST_CHANGEPROFILE     = 'changeProfile';
+  const CST_CLONE             = 'clone';
+  const CST_COLORDER          = 'colorder';
+  const CST_COLSORT           = 'colsort';
+  const CST_DISABLED          = 'disabled';
+  const CST_EDIT              = 'edit';
+  const CST_EXPANSION         = 'expansion';
+  const CST_FILTERS           = 'filters';
+  const CST_HIDDEN            = 'hidden';
+  const CST_NBPERPAGE         = 'nbperpage';
+  const CST_MISSION           = 'mission';
+  const CST_ONGLET            = 'onglet';
+  const CST_PARAMETRE         = 'parametre';
+  const CST_POSTACTION        = 'postAction';
+  const CST_SELECTED          = 'selected';
+  const CST_SKILL             = 'skill';
+  const CST_SURVIVOR          = 'survivor';
+  const CST_SURVIVORTYPEID_S  = 1;
+  const CST_SURVIVORTYPEID_Z  = 2;
+  const CST_SURVIVORTYPEID_U  = 3;
+  const CST_SURVIVORTYPEID_UZ = 4;
+  const CST_TRASH             = 'trash';
 
   /////////////////////////////////////////////////
   // Fields

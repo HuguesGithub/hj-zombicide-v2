@@ -29,8 +29,7 @@
           <th scope="col" id="name" class="manage-column column-primary sortable %8$s">
             <a href="%9$s" style="padding: 0;"><span>Nom</span><span class="sorting-indicator"></span></a>
           </th>
-          <th scope="col" id="zombivor" class="manage-column">Zombivant</th>
-          <th scope="col" id="ultimate" class="manage-column">Ultimate</th>
+          <th scope="col" id="profils" class="manage-column">Profils</th>
           <th scope="col" id="expansionId" class="manage-column">Extension</th>
           <th scope="col" id="background" class="manage-column">Background</th>
           <th scope="col" id="altImgName" class="manage-column">Nom&nbsp;Alt&nbsp;Img</th>
@@ -44,8 +43,7 @@
           <th scope="col" class="manage-column column-primary sortable %8$s">
             <a href="%9$s" style="padding: 0;"><span>Nom</span><span class="sorting-indicator"></span></a>
           </th>
-          <th scope="col" class="manage-column">Zombivant</th>
-          <th scope="col" class="manage-column">Ultimate</th>
+          <th scope="col" class="manage-column">Profils</th>
           <th scope="col" class="manage-column">Extension</th>
           <th scope="col" class="manage-column">Background</th>
           <th scope="col" class="manage-column">Nom Alt Img</th>

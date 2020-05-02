@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Survivor
  * @author Hugues.
  * @since 1.0.00
- * @version 1.05.01
+ * @version 1.05.02
  */
 class Survivor extends LocalDomain
 {
@@ -21,6 +21,11 @@ class Survivor extends LocalDomain
    */
   protected $name;
   /**
+   * A un profil Standard
+   * @var int $standard
+   */
+  protected $standard;
+  /**
    * A un profil Zombivor
    * @var int $zombivor
    */
@@ -30,6 +35,11 @@ class Survivor extends LocalDomain
    * @var int $ultimate
    */
   protected $ultimate;
+  /**
+   * A un profil Ultimate Zombivor
+   * @var int $ultimatez
+   */
+  protected $ultimatez;
   /**
    * Id de l'extension
    * @var int $expansionId
@@ -51,6 +61,12 @@ class Survivor extends LocalDomain
    */
   protected $liveAble;
 
+  public function __construct($attributes=array())
+  {
+    parent::__construct($attributes);
+    $this->imgBaseUrl = 'http://www.jhugues.fr/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p';
+    $this->SurvivorSkills = array();
+  }
   /**
    * @return int
    */
@@ -64,6 +80,11 @@ class Survivor extends LocalDomain
   /**
    * @return boolean
    */
+  public function isStandard()
+  { return ($this->standard==1); }
+  /**
+   * @return boolean
+   */
   public function isZombivor()
   { return ($this->zombivor==1); }
   /**
@@ -71,6 +92,11 @@ class Survivor extends LocalDomain
    */
   public function isUltimate()
   { return ($this->ultimate==1); }
+  /**
+   * @return boolean
+   */
+  public function isUltimatez()
+  { return ($this->ultimatez==1); }
   /**
    * @return int
    */
@@ -102,6 +128,11 @@ class Survivor extends LocalDomain
   public function setName($name)
   { $this->name=$name; }
   /**
+   * @param int $standard
+   */
+  public function setStandard($standard)
+  { $this->standard=$standard; }
+  /**
    * @param int $zombivor
    */
   public function setZombivor($zombivor)
@@ -111,6 +142,11 @@ class Survivor extends LocalDomain
    */
   public function setUltimate($ultimate)
   { $this->ultimate=$ultimate; }
+  /**
+   * @param int $ultimatez
+   */
+  public function setUltimatez($ultimatez)
+  { $this->ultimatez=$ultimatez; }
   /**
    * @param int $expansionId
    */
@@ -145,34 +181,38 @@ class Survivor extends LocalDomain
   public static function convertElement($row, $a='', $b='')
   { return parent::convertElement(new Survivor(), self::getClassVars(), $row); }
   /**
-   * @return array SurvivorSkill
+   * @return Bean
    */
-  public function getSurvivorSkills($survivorTypeId='')
-  {
-    if ($this->SurvivorSkills == null) {
-      $arrFilters = array(self::FIELD_SURVIVORID=>$this->id);
-      if ($survivorTypeId!='') {
-        $arrFilters[self::FIELD_SURVIVORTYPEID] = $survivorTypeId;
-      }
-      $this->SurvivorSkills = $this->SurvivorSkillServices->getSurvivorSkillsWithFilters($arrFilters);
-    }
-    return $this->SurvivorSkills;
-  }
+  public function getBean()
+  { return new SurvivorBean($this); }
+
+  ////////////////////////////////////////////////////////////////////////////
+  // Méthodes relatives à l'article WpPost
   /**
-   * @return Expansion
+   * @return WpPost
    */
-  public function getExpansion()
+  public function getWpPost()
   {
-    if ($this->Expansion == null) {
-      $this->Expansion = $this->getExpansionFromGlobal($this->expansionId);
+    $args = array(
+      self::WP_METAKEY   => self::FIELD_SURVIVORID,
+      self::WP_METAVALUE => $this->id,
+      self::WP_TAXQUERY  => array(),
+    );
+    if (MainPageBean::isAdmin()) {
+      $args[self::WP_POSTSTATUS] = self::WP_PUBLISH.', future';
     }
-    return $this->Expansion;
+    $WpPosts = $this->WpPostServices->getArticles($args);
+    return (!empty($WpPosts) ? array_shift($WpPosts) : new WpPost());
   }
   /**
    * @return string
    */
-  public function getExpansionName()
-  { return $this->getExpansion()->getName(); }
+  public function getWpPostUrl()
+  { return $this->getWpPost()->getPermalink(); }
+  ////////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////////////
+  // Méthodes relatives aux Portraits
   /**
    * @param string $str
    * @return string
@@ -190,14 +230,66 @@ class Survivor extends LocalDomain
    */
   public function getPortraitUrl($type='')
   {
-    $nicename = $this->getNiceName($this->name);
-    $baseUrl = 'http://www.jhugues.fr/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p';
-    $wholeUrl = $baseUrl.$nicename.($type!=''?'-'.$type:'').'.jpg';
+    $wholeUrl = $this->imgBaseUrl.$this->getNiceName($this->name).($type!='' ? '-'.$type : '').'.jpg';
     if (self::isAdmin() && @getimagesize($wholeUrl)===false) {
-      $wholeUrl = $baseUrl.($type!='' ? '-'.$type : '').'.jpg';
+      $wholeUrl = $this->imgBaseUrl.($type!='' ? '-'.$type : '').'.jpg';
     }
     return $wholeUrl;
   }
+  ////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * @param int $survivorTypeId
+   * @return boolean
+   */
+  public function areDataSkillsOkay($survivorTypeId=1)
+  {
+    // On récupère les Compétences associées au Survivant pour le profil passé en paramètre.
+    $SurvivorSkills = $this->getSurvivorSkills($survivorTypeId);
+    $nbSkills = count($SurvivorSkills);
+    // On doit avoir 7 (profils standards et zombivants) ou
+    // 8 (ultimate survivant et zombivant, ou standard avec Descente en Rappel ou Pilote d'Hélicoptère) compétences de retournées.
+    // Si on a ce nombre de compétences, on retourne true. Sinon false.
+    return ($nbSkills==7 || $nbSkills==8);
+  }
+  /**
+   * @return array SurvivorSkill
+   */
+  public function getSurvivorSkills($survivorTypeId='')
+  {
+    if ($this->SurvivorSkills == null) {
+      $arrFilters = array(self::FIELD_SURVIVORID=>$this->id);
+      if ($survivorTypeId!='') {
+        $arrFilters[self::FIELD_SURVIVORTYPEID] = $survivorTypeId;
+      }
+      $this->SurvivorSkills = $this->SurvivorSkillServices->getSurvivorSkillsWithFilters($arrFilters);
+    }
+    return $this->SurvivorSkills;
+  }
+
+  public function getAdminUlSkills($survivorTypeId=1)
+  {
+    $args = array(
+      self::FIELD_SURVIVORID     => $this->getId(),
+      self::FIELD_SURVIVORTYPEID => $survivorTypeId,
+    );
+    $SurvivorSkills = $this->SurvivorSkillServices->getSurvivorSkillsWithFilters($args);
+    $strReturned = '<ul class="col-12">';
+    while (!empty($SurvivorSkills)) {
+      $SurvivorSkill = array_shift($SurvivorSkills);
+      if ($SurvivorSkill->getSurvivorTypeId()!=$survivorTypeId) {
+        continue;
+      }
+      $strReturned .= '<li><span>'.$SurvivorSkill->getBean()->getBadge().'</span></li>';
+    }
+    $strReturned .= '</ul>';
+    return $strReturned;
+  }
+
+
+
+
+
   /**
    * @param bool $isHome
    * @return string
@@ -280,24 +372,4 @@ class Survivor extends LocalDomain
     }
     return $str.'</span></li>';
   }
-  /**
-   * @return string
-   */
-  public function getWpPostUrl()
-  {
-    $url = '#';
-    $args = array('meta_key'=>self::FIELD_SURVIVORID, 'meta_value'=>$this->id);
-    if (MainPageBean::isAdmin()) {
-      $args['post_status'] = 'publish, future';
-    }
-    $WpPosts = $this->WpPostServices->getArticles($args);
-    if (!empty($WpPosts)) {
-      $WpPost = array_shift($WpPosts);
-      $url = $WpPost->getPermalink();
-    }
-    return $url;
-  }
-
-  public function getBean()
-  { return new SurvivorBean($this); }
 }

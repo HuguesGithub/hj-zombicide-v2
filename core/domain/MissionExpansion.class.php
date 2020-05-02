@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionExpansion
  * @author Hugues.
  * @since 1.04.27
- * @version 1.04.28
+ * @version 1.05.02
  */
 class MissionExpansion extends LocalDomain
 {
@@ -78,21 +78,6 @@ class MissionExpansion extends LocalDomain
       $this->EquipmentExpansions = $this->EquipmentExpansionServices->getEquipmentExpansionsWithFilters($arrFilters);
     }
     return $this->EquipmentExpansions;
-  }
-  /**
-   * @return string
-   */
-  public function getExpansionName()
-  { return $this->getExpansion()->getName(); }
-  /**
-   * @return Expansion
-   */
-  public function getExpansion()
-  {
-    if ($this->Expansion == null) {
-      $this->Expansion = $this->getExpansionFromGlobal($this->expansionId);
-    }
-    return $this->Expansion;
   }
   /**
    * @param Expansion $Expansion

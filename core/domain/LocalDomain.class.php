@@ -6,12 +6,14 @@ if (!defined('ABSPATH')) {
  * Classe LocalDomain
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.27
+ * @version 1.05.02
  */
 class LocalDomain extends GlobalDomain implements ConstantsInterface
 {
   public function __construct($attributes=array())
   {
+    global $globalExpansions;
+    $globalExpansions = array();
     parent::__construct($attributes);
     $this->DurationServices          = new DurationServices();
     $this->EquipmentKeywordServices  = new EquipmentKeywordServices();
@@ -24,48 +26,43 @@ class LocalDomain extends GlobalDomain implements ConstantsInterface
     $this->MissionObjectiveServices  = new MissionObjectiveServices();
     $this->MissionRuleServices       = new MissionRuleServices();
     $this->MissionTileServices       = new MissionTileServices();
-    $this->ObjectiveServices = new ObjectiveServices();
+    $this->ObjectiveServices         = new ObjectiveServices();
     $this->OrigineServices           = new OrigineServices();
     $this->PlayerServices            = new PlayerServices();
-    $this->RuleServices      = new RuleServices();
-    $this->SkillServices         = new SkillServices();
-    $this->SurvivorSkillServices = new SurvivorSkillServices();
-    $this->TileServices               = new TileServices();
+    $this->RuleServices              = new RuleServices();
+    $this->SkillServices             = new SkillServices();
+    $this->SurvivorSkillServices     = new SurvivorSkillServices();
+    $this->TileServices              = new TileServices();
     $this->WeaponProfileServices     = new WeaponProfileServices();
     $this->WpPostServices            = new WpPostServices();
   }
-
-
-
-
-
-
-
-
-
-
-
-
   /**
-   * @param int $expansionId
    * @return Expansion
    */
-  public function getExpansionFromGlobal($expansionId)
+  public function getExpansion()
   {
     global $globalExpansions;
-    if (!empty($globalExpansions)) {
-      foreach ($globalExpansions as $Expansion) {
-        if ($Expansion->getId()==$expansionId) {
-          return $Expansion;
-        }
+    if ($this->Expansion==null) {
+      if (isset($globalExpansion[$this->expansionId])) {
+        $this->Expansion = $globalExpansion[$this->expansionId];
+      } else {
+        $this->Expansion = $this->ExpansionServices->selectExpansion($this->expansionId);
+        $globalExpansion[$this->expansionId] = $this->Expansion;
       }
     }
-    $GlobalExpansion = $this->ExpansionServices->select(__FILE__, __LINE__, $expansionId);
-    if ($GlobalExpansion != null) {
-      $globalExpansions[] = $GlobalExpansion;
-    }
-    return $GlobalExpansion;
+    return $this->Expansion;
   }
+
+
+
+
+
+
+
+
+
+
+
   /**
    * @param int $origineId
    * @return Origine

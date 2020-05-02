@@ -19,6 +19,7 @@ class AjaxActions extends LocalActions
   /**
    * Gère les actions Ajax
    * @version 1.04.30
+   * @version 1.05.02
    */
   public static function dealWithAjax()
   {
@@ -40,6 +41,7 @@ class AjaxActions extends LocalActions
         $returned = SkillActions::dealWithStatic($_POST);
       break;
       case self::AJAX_GETSURVIVORS   :
+      case self::AJAX_SURVIVORVERIF  :
         $returned = SurvivorActions::dealWithStatic($_POST);
       break;
       default :

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.01
+ * @version 1.05.02
  */
 class SurvivorBean extends LocalBean
 {
@@ -55,7 +55,7 @@ class SurvivorBean extends LocalBean
       // Si on a un profil d'Ultimate, on veut une case à cocher - 8
       ($this->Survivor->isUltimate()?self::CST_SQUAREPOINTER:self::CST_WINDOWCLOSE),
       // Extension à laquelle est rattaché le Survivant - 9
-      $this->Survivor->getExpansionName(),
+      $this->Survivor->getExpansion()->getName(),
       // Liste des Compétences du Survivant - 10
       $this->getAllSkills(),
       // Background du Survivant - 11
@@ -88,7 +88,7 @@ class SurvivorBean extends LocalBean
       // Classe additionnelle de l'article - 9
       $this->Survivor->getStrClassFilters($isHome).' '.$this->Survivor->getExpansion()->getCode(),
       // Le Nom de l'extension - 10
-      $this->Survivor->getExpansionName(),
+      $this->Survivor->getExpansion()->getName(),
     );
     return $this->getRender($this->urlArticle, $args);
   }
@@ -118,52 +118,57 @@ class SurvivorBean extends LocalBean
    */
   public function getRowForAdminPage()
   {
-    $Survivor = $this->Survivor;
+    $wpPostId = $this->Survivor->getWpPost()->getID();
+    if ($wpPostId=='') {
+      $hrefEditWpPost = '/wp-admin/post-new.php';
+      $labelEditWpPost = 'Créer';
+    } else {
+      $hrefEditWpPost = '/wp-admin/post.php?post='.$this->Survivor->getWpPost()->getID().'&action=edit';
+      $labelEditWpPost = 'Modifier';
+    }
     $queryArgs = array(
       self::CST_ONGLET => self::CST_SURVIVOR,
       self::CST_POSTACTION => self::CST_EDIT,
-      self::FIELD_ID =>$Survivor->getId()
+      self::FIELD_ID =>$this->Survivor->getId()
     );
-    $hrefEdit = $this->getQueryArg($queryArgs);
-    $queryArgs[self::CST_POSTACTION] = self::CST_TRASH;
-    $hrefTrash = $this->getQueryArg($queryArgs);
-    $queryArgs[self::CST_POSTACTION] = self::CST_CLONE;
-    $hrefClone = $this->getQueryArg($queryArgs);
-    $urlWpPost = $Survivor->getWpPostUrl();
+    $urlWpPost = $this->Survivor->getWpPostUrl();
     ///////////////////////////////////////////////////////////////
     // On enrichi le template et on le retourne.
     $args = array(
-      // Identifiant du Survivant
-      $Survivor->getId(),
-      // Url d'édition
-      $hrefEdit,
-      // Nom du Survivant
-      $Survivor->getName(),
-      // Url de suppression
-      $hrefTrash,
-      // Url de Duplication
-      $hrefClone,
-      // Article publié ?
-      $urlWpPost!='#' ? '' : ' hidden',
-      // Url Article
-      $urlWpPost,
-      //
-      ($Survivor->isZombivor()?self::CST_CHANGEPROFILE:''),
-      // Le Survivant a-t-il un profil Zombivant ?
-      '<i class="far fa-'.($Survivor->isZombivor()?self::CST_SQUAREPOINTER:self::CST_WINDOWCLOSE).'"></i>',
-      //
-      ($Survivor->isUltimate()?self::CST_CHANGEPROFILE:''),
-      // Le Survivant a-t-il un profil Ultimate ?
-      '<i class="far fa-'.($Survivor->isUltimate()?self::CST_SQUAREPOINTER:self::CST_WINDOWCLOSE).'"></i>',
-      // Extension de provenance
-      $Survivor->getExpansionName(),
-      // Background du Survivant
-      ($Survivor->getBackground()!='' ? substr($Survivor->getBackground(), 0, 50).'...' : 'Non renseigné'),
-      // Nom de l'image alternative, si défini.
-      $Survivor->getAltImgName(),
-      // Portraits
+      // Identifiant du Survivant - 1
+      $this->Survivor->getId(),
+      // Portraits - 2
       $this->getAllPortraits(),
-      '', '', '', '', '', '', '',
+      // Url d'édition - 3
+      $this->getQueryArg($queryArgs),
+      // Nom du Survivant - 4
+      $this->Survivor->getName(),
+      // Url d'édition du WpPost - 5
+      $hrefEditWpPost,
+     // Article publié ? - 6
+      $urlWpPost!='#' ? '' : ' hidden',
+      // Url de l'Article - 7
+      $urlWpPost,
+      // Libellé de l'action sur le WpPost - 8
+      $labelEditWpPost,
+      // Liste des profils existants - 9
+      $this->getListeProfils(),
+      /*
+      // - 8
+      ($this->Survivor->isZombivor() ? self::CST_CHANGEPROFILE : ''),
+      // Le Survivant a-t-il un profil Zombivant ? - 9
+      ($this->Survivor->isZombivor() ? $this->getIconFarSquarePointer() : $this->getIconFarWindowClose()),
+      // - 10
+      ($this->Survivor->isUltimate() ? self::CST_CHANGEPROFILE : ''),
+      // Le Survivant a-t-il un profil Zombivant ? - 11
+      ($this->Survivor->isUltimate() ? $this->getIconFarSquarePointer() : $this->getIconFarWindowClose()),
+      */
+      // Extension de provenance - 10
+      $this->Survivor->getExpansion()->getName(),
+      // Background du Survivant - 11
+      ($this->Survivor->getBackground()!='' ? substr($this->Survivor->getBackground(), 0, 50).'...' : 'Non renseigné'),
+      // Nom de l'image alternative, si défini. - 12
+      $this->Survivor->getAltImgName(),
     );
     return $this->getRender($this->urlRowAdmin, $args);
   }
@@ -200,6 +205,57 @@ class SurvivorBean extends LocalBean
       $str .= $this->getStrImgPortrait($Survivor->getPortraitUrl('uz'), 'Portrait ZUltimate - '.$name, $label);
     }
     return $str;
+  }
+  public function getListeProfils()
+  {
+    $strProfils  = '<ul>';
+    // A-t-il un profil Standard ?
+    if ($this->Survivor->isStandard()) {
+      $strProfils .= '<li data-id="'.$this->Survivor->getId().'" data-type="survivant" class="hasTooltip pointer"> ';
+      if ($this->Survivor->areDataSkillsOkay(self::CST_SURVIVORTYPEID_S)) {
+        $strProfils .= $this->getIconFarCheckSquare().' Standard <div class="tooltip">';
+        $strProfils .= $this->Survivor->getAdminUlSkills(self::CST_SURVIVORTYPEID_S).'</div>';
+      } else {
+        $strProfils .=  $this->getIconFarWindowClose().' Standard';
+      }
+      $strProfils .= '</li>';
+    }
+    // A-t-il un profil Zombivant ?
+    if ($this->Survivor->isZombivor()) {
+      $strProfils .= '<li data-id="'.$this->Survivor->getId().'" data-type="zombivant" class="hasTooltip pointer"> ';
+      if ($this->Survivor->areDataSkillsOkay(self::CST_SURVIVORTYPEID_Z)) {
+        $strProfils .= $this->getIconFarCheckSquare().' Zombivant <div class="tooltip">';
+        $strProfils .= $this->Survivor->getAdminUlSkills(self::CST_SURVIVORTYPEID_Z).'</div>';
+      } else {
+        $strProfils .=  $this->getIconFarWindowClose().' Zombivant';
+      }
+      $strProfils .= '</li>';
+    }
+    // A-t-il un profil Ultimate ?
+    if ($this->Survivor->isUltimate()) {
+      $strProfils .= '<li data-id="'.$this->Survivor->getId().'" data-type="ultimate survivant" class="hasTooltip pointer"> ';
+      if ($this->Survivor->areDataSkillsOkay(self::CST_SURVIVORTYPEID_U)) {
+        $strProfils .= $this->getIconFarCheckSquare().' Ultimate <div class="tooltip">';
+        $strProfils .= $this->Survivor->getAdminUlSkills(self::CST_SURVIVORTYPEID_U).'</div>';
+      } else {
+        $strProfils .=  $this->getIconFarWindowClose().' Ultimate';
+      }
+      $strProfils .= '</li>';
+    }
+    // A-t-il un profil UltimateZ ?
+    if ($this->Survivor->isUltimatez()) {
+      $strProfils .= '<li data-id="'.$this->Survivor->getId().'" data-type="ultimate zombivant" class="hasTooltip pointer"> ';
+      if ($this->Survivor->areDataSkillsOkay(self::CST_SURVIVORTYPEID_UZ)) {
+        $strProfils .= $this->getIconFarCheckSquare().' Ultimate Zombivant <div class="tooltip">';
+        $strProfils .= $this->Survivor->getAdminUlSkills(self::CST_SURVIVORTYPEID_UZ).'</div>';
+      } else {
+        $strProfils .=  $this->getIconFarWindowClose().' Ultimate Zombivant';
+      }
+      $strProfils .= '</li>';
+    }
+    $strProfils .= '</ul>';
+
+    return $strProfils;
   }
   /**
    * @param string $src

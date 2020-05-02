@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Tile
  * @author Hugues.
  * @since 1.04.07
- * @version 1.04.28
+ * @version 1.05.02
  */
 class Tile extends LocalDomain
 {
@@ -113,21 +113,6 @@ class Tile extends LocalDomain
    */
   public static function convertElement($row, $a='', $b='')
   { return parent::convertElement(new Tile(), self::getClassVars(), $row); }
-  /**
-   * @return Expansion
-   */
-  public function getExpansion()
-  {
-    if ($this->Expansion == null) {
-      $this->Expansion = $this->getExpansionFromGlobal($this->expansionId);
-    }
-    return $this->Expansion;
-  }
-  /**
-   * @return string
-   */
-  public function getExpansionName()
-  { return $this->getExpansion()->getName(); }
   /**
    * @return string
    */

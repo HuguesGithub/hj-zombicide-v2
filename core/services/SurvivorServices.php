@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorServices
  * @author Hugues.
  * @since 1.04.27
- * @version 1.04.28
+ * @version 1.05.02
  */
 class SurvivorServices extends LocalServices
 {
@@ -55,4 +55,6 @@ class SurvivorServices extends LocalServices
 
   public function selectSurvivor($id)
   { return $this->select(__FILE__, __LINE__, $id); }
+  public function updateSurvivor($Survivor)
+  { return $this->update(__FILE__, __LINE__, $Survivor); }
 }

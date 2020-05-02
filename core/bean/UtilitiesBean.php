@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe UtilitiesBean
  * @author Hugues
  * @since 1.02.00
- * @version 1.05.01
+ * @version 1.05.02
  */
 class UtilitiesBean implements ConstantsInterface
 {
@@ -41,6 +41,11 @@ class UtilitiesBean implements ConstantsInterface
   /**
    * @return string
    */
+  protected function getIconFarCheckSquare()
+  { return $this->getIcon(array(self::ATTR_CLASS=>'far fa-check-square')); }
+  /**
+   * @return string
+   */
   protected function getIconFarSquare()
   { return $this->getIcon(array(self::ATTR_CLASS=>'far fa-square')); }
   /**
@@ -49,10 +54,18 @@ class UtilitiesBean implements ConstantsInterface
   protected function getIconFarSquarePointer()
   { return $this->getIcon(array(self::ATTR_CLASS=>'far fa-square pointer')); }
   /**
+   * @return string
+   */
+  protected function getIconFarWindowClose()
+  { return $this->getIcon(array(self::ATTR_CLASS=>'far fa-window-close')); }
+  /**
    * @param string $urlTemplate
    * @param array $args
    * @return string
    */
   public function getRender($urlTemplate, $args)
-  { return vsprintf(file_get_contents(PLUGIN_PATH.$urlTemplate), $args); }
+  {
+    $pattern = "/web\/pages\/(admin|public)\/[fragments\/]?/";
+    return (preg_match($pattern, $urlTemplate) ? vsprintf(file_get_contents(PLUGIN_PATH.$urlTemplate), $args) : '');
+  }
 }

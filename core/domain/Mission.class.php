@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Mission
  * @author Hugues.
  * @since 1.04.00
- * @version 1.04.28
+ * @version 1.05.02
  */
 class Mission extends LocalDomain
 {
@@ -355,7 +355,7 @@ class Mission extends LocalDomain
         if ($strName!='') {
           $strName .= ', ';
         }
-        $strName .= $MissionExpansion->getExpansionName();
+        $strName .= $MissionExpansion->getExpansion()->getName();
       }
     }
     return $strName;
