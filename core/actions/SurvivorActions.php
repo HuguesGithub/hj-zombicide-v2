@@ -103,6 +103,7 @@ class SurvivorActions extends LocalActions
     while (!empty($this->WpPostSurvivors)) {
       // On récupère le WpPost et ses données
       $this->WpPost = array_shift($this->WpPostSurvivors);
+      $name = '';
       $survivorId = $this->WpPost->getPostMeta(self::FIELD_SURVIVORID);
       // On recherche un Survivant dans la base de données qui correspond.
       $Survivor = $this->SurvivorServices->selectSurvivor($survivorId);

@@ -282,8 +282,7 @@ class Survivor extends LocalDomain
       }
       $strReturned .= '<li><span>'.$SurvivorSkill->getBean()->getBadge().'</span></li>';
     }
-    $strReturned .= '</ul>';
-    return $strReturned;
+    return $strReturned.'</ul>';
   }
 
 

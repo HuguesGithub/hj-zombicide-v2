@@ -206,56 +206,37 @@ class SurvivorBean extends LocalBean
     }
     return $str;
   }
+  private function getProfileLi($type, $survivorTypeId, $label)
+  {
+    $strProfils = '<li data-id="'.$this->Survivor->getId().'" data-type=".'$type.'" class="hasTooltip pointer"> ';
+    if ($this->Survivor->areDataSkillsOkay(survivorTypeId)) {
+      $strProfils .= $this->getIconFarCheckSquare().' '.$label.' <div class="tooltip">';
+      $strProfils .= $this->Survivor->getAdminUlSkills(survivorTypeId).'</div>';
+    } else {
+      $strProfils .=  $this->getIconFarWindowClose().' '.$label;
+    }
+    return $strProfils.'</li>';
+  }
   public function getListeProfils()
   {
     $strProfils  = '<ul>';
     // A-t-il un profil Standard ?
     if ($this->Survivor->isStandard()) {
-      $strProfils .= '<li data-id="'.$this->Survivor->getId().'" data-type="survivant" class="hasTooltip pointer"> ';
-      if ($this->Survivor->areDataSkillsOkay(self::CST_SURVIVORTYPEID_S)) {
-        $strProfils .= $this->getIconFarCheckSquare().' Standard <div class="tooltip">';
-        $strProfils .= $this->Survivor->getAdminUlSkills(self::CST_SURVIVORTYPEID_S).'</div>';
-      } else {
-        $strProfils .=  $this->getIconFarWindowClose().' Standard';
-      }
-      $strProfils .= '</li>';
+      $strProfils .= $this>getProfileLi('survivant', self::CST_SURVIVORTYPEID_S, 'Standard');
     }
     // A-t-il un profil Zombivant ?
     if ($this->Survivor->isZombivor()) {
-      $strProfils .= '<li data-id="'.$this->Survivor->getId().'" data-type="zombivant" class="hasTooltip pointer"> ';
-      if ($this->Survivor->areDataSkillsOkay(self::CST_SURVIVORTYPEID_Z)) {
-        $strProfils .= $this->getIconFarCheckSquare().' Zombivant <div class="tooltip">';
-        $strProfils .= $this->Survivor->getAdminUlSkills(self::CST_SURVIVORTYPEID_Z).'</div>';
-      } else {
-        $strProfils .=  $this->getIconFarWindowClose().' Zombivant';
-      }
-      $strProfils .= '</li>';
+      $strProfils .= $this>getProfileLi('zombivant', self::CST_SURVIVORTYPEID_Z, 'Zombivant');
     }
     // A-t-il un profil Ultimate ?
     if ($this->Survivor->isUltimate()) {
-      $strProfils .= '<li data-id="'.$this->Survivor->getId().'" data-type="ultimate survivant" class="hasTooltip pointer"> ';
-      if ($this->Survivor->areDataSkillsOkay(self::CST_SURVIVORTYPEID_U)) {
-        $strProfils .= $this->getIconFarCheckSquare().' Ultimate <div class="tooltip">';
-        $strProfils .= $this->Survivor->getAdminUlSkills(self::CST_SURVIVORTYPEID_U).'</div>';
-      } else {
-        $strProfils .=  $this->getIconFarWindowClose().' Ultimate';
-      }
-      $strProfils .= '</li>';
+      $strProfils .= $this>getProfileLi('ultimate survivant', self::CST_SURVIVORTYPEID_U, 'Ultimate');
     }
     // A-t-il un profil UltimateZ ?
     if ($this->Survivor->isUltimatez()) {
-      $strProfils .= '<li data-id="'.$this->Survivor->getId().'" data-type="ultimate zombivant" class="hasTooltip pointer"> ';
-      if ($this->Survivor->areDataSkillsOkay(self::CST_SURVIVORTYPEID_UZ)) {
-        $strProfils .= $this->getIconFarCheckSquare().' Ultimate Zombivant <div class="tooltip">';
-        $strProfils .= $this->Survivor->getAdminUlSkills(self::CST_SURVIVORTYPEID_UZ).'</div>';
-      } else {
-        $strProfils .=  $this->getIconFarWindowClose().' Ultimate Zombivant';
-      }
-      $strProfils .= '</li>';
+      $strProfils .= $this>getProfileLi('ultimate zombivant', self::CST_SURVIVORTYPEID_UZ, 'Ultimate Zombivant');
     }
-    $strProfils .= '</ul>';
-
-    return $strProfils;
+    return $strProfils.'</ul>';
   }
   /**
    * @param string $src
