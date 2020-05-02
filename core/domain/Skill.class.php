@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Skill
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.30
+ * @version 1.05.01
  */
 class Skill extends LocalDomain
 {
@@ -102,7 +102,22 @@ class Skill extends LocalDomain
    * @return string
    */
   public function getWpPostUrl()
-  { return '/page-competences/?skillId='.$this->id; }
+  {
+    $args = array(
+      self::WP_METAKEY   => self::FIELD_CODE,
+      self::WP_METAVALUE => $this->getCode(),
+      self::WP_TAXQUERY  => array(),
+      self::WP_CAT       => self::WP_CAT_SKILL_ID,
+    );
+    $WpPosts = $this->WpPostServices->getArticles($args);
+    if (!empty($WpPosts)) {
+      $WpPost = array_shift($WpPosts);
+      $url = $WpPost->getPermalink();
+    } else {
+      $url = '/page-competences/?skillId='.$this->id;
+    }
+    return $url;
+  }
   /**
    * @return SkillBean
    */

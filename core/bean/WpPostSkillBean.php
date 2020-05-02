@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe WpPostSkillBean
  * @author Hugues
- * @version 1.02.00
  * @since 1.00.00
+ * @version 1.05.01
  */
 class WpPostSkillBean extends WpPostBean
 {
@@ -16,13 +16,21 @@ class WpPostSkillBean extends WpPostBean
   /**
    * Class Constructor
    */
-  public function __construct($skillId)
+  public function __construct($WpPost)
   {
     parent::__construct();
     $this->SkillServices         = new SkillServices();
     $this->SurvivorServices      = new SurvivorServices();
     $this->SurvivorSkillServices = new SurvivorSkillServices();
-    $this->Skill = $this->SkillServices->selectSkill($skillId);
+    // TODO : Quand toutes les compétences auront leur article, on peut virer ce test et l'exécution secondaire.
+    if ($WpPost instanceof WpPost) {
+      $this->WpPost = $WpPost;
+      $code = $this->WpPost->getPostMeta(self::FIELD_CODE);
+      $Skills = $this->SkillServices->getSkillsWithFilters(array(self::FIELD_CODE=>$code));
+      $this->Skill = (!empty($Skills) ? array_shift($Skills) : new Skill());
+    } else {
+      $this->Skill = $this->SkillServices->selectSkill($WpPost);
+    }
   }
   /**
    * On retourne la page dédiée à la compétence.

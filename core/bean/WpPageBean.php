@@ -110,21 +110,17 @@ class WpPageBean extends MainPageBean
     //////////////////////////////////////////////////////////////////
     // On enrichi le template puis on le restitue.
     $args = array(
-      // N° du premier élément - 1
-      $this->nbperpage*($this->paged-1)+1,
-      // Nb par page - 2
-      min($this->nbperpage*$this->paged, $this->nbElements),
-      // Nb Total - 3
+      // Nb Total - 1
       $this->nbElements,
-      // Si page 1, on peut pas revenir à la première - 4
+      // Si page 1, on peut pas revenir à la première - 2
       ($this->paged==1 ? ' '.self::CST_DISABLED : ''),
-      // Liste des éléments de la Pagination - 5
+      // Liste des éléments de la Pagination - 3
       $strPagination,
-      // Si page $nbPages, on peut pas aller à la dernière - 6
+      // Si page $nbPages, on peut pas aller à la dernière - 4
       ($this->paged==$this->nbperpage ? ' '.self::CST_DISABLED : ''),
-      // Nombre de pages - 7
+      // Nombre de pages - 5
       $this->nbperpage,
-      // S'il n'y a qu'une page, la pagination ne sert à rien - 8
+      // S'il n'y a qu'une page, la pagination ne sert à rien - 6
       ($this->nbPages<=1 ? ' '.self::CST_HIDDEN : ''),
     );
     return $this->getRender($this->urlTemplateNavPagination, $args);

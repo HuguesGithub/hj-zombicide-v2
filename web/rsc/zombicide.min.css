@@ -1,6 +1,10 @@
 /******************************
  *** CONSTANTES
  ******************************/
+html {
+  height: 100%;
+}
+
 img {
   max-width: 100%;
 }
@@ -36,6 +40,7 @@ header {
 .shell {
   background: url('img/background.jpg') no-repeat center 0 #000000;
   min-height: 100%;
+  padding-bottom: 80px;
   position: relative;
 }
 
@@ -147,10 +152,12 @@ header {
  ******************************/
 footer {
   background: url('img/footer-top.png') repeat-x scroll center top #000000;
+  bottom: 0;
   color: #ff9307;
   margin: 35px auto 0;
   padding: 35px 0 10px;
-  position: relative;
+  position: absolute;
+  width: 100%;
 }
 
 footer .copyright {
@@ -166,6 +173,12 @@ footer .copyright p {
 /******************************
  *** BLOC FILTRES
  ******************************/
+label.navigation-pagination {
+  background: #303030;
+  border-color: #303030;
+  color: #dddddd;
+}
+
 #filters {
   background-color: #303030;
   border-radius: 10px;
@@ -382,6 +395,14 @@ footer .copyright p {
   font-size: 16px;
 }
 
+.mission .synopsisMateriel a {
+  color: #ff9307;
+}
+
+.mission .synopsisMateriel a:hover {
+  color: #ff9307;
+}
+
 .mission .objectivesAndRules h5 {
   font-family: Crackhouse;
   font-size: 32px;
@@ -478,6 +499,14 @@ article.mission .slide-content .flex-attitude .mission_params span a {
   color: #ffffff;
 }
 
+article.mission .slide-content a {
+  color: #ff9307;
+}
+
+article.mission .slide-content a:hover {
+  color: #ff9307;
+}
+
 article.mission .mission_material {
   font-size: 12px;
   font-style: italic;
@@ -487,6 +516,14 @@ article.mission .mission_material {
 
 article.mission .slide-entry-excerpt {
   height: 94px !important;
+}
+
+.missionTitle a {
+  color: #ff9307;
+}
+
+.missionTitle a:hover {
+  color: #ff9307;
 }
 /******************************
  *** PAGE SURVIVORS
@@ -701,6 +738,14 @@ article.survivor.levelFan .topCornerBandeau {
   font-weight: bold;
   transform: rotate(-45deg) translate(-15px, 20px);
 }
+
+.survivorName a {
+  color: #ff9307;
+}
+
+.survivorName a:hover {
+  color: #ff9307;
+}
 /******************************
  *** PAGE SKILLS
  ******************************/
@@ -720,29 +765,25 @@ article.survivor.levelFan .topCornerBandeau {
  ******************************/
 .page-item .page-link {
   background-color: #303030;
-  border: 1px solid #303030;
+  border: 1px solid #777777;
   color: #ff9307;
 }
 
 .page-item .page-link:focus {
   background-color: #777777;
-  border: 1px solid #000000;
 }
 
 .page-item .page-link:hover {
   background-color: #777777;
-  border: 1px solid #000000;
 }
 
 .page-item.active .page-link {
   background-color: #ff9307;
-  border: 1px solid #303030;
   color: #303030;
 }
 
 .page-item.disabled .page-link {
   background-color: #ffffff;
-  border: 1px solid #303030;
   color: #303030;
 }
 /******************************

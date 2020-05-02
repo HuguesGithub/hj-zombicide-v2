@@ -25,7 +25,7 @@
       <thead>
         <tr>
           <td id="cb" class="manage-column column-cb check-column"><input id="cb-select-all-1" type="checkbox"></td>
-          <th>Portrait</th>
+          <th scope="col" >Portrait</th>
           <th scope="col" id="name" class="manage-column column-primary sortable %8$s">
             <a href="%9$s" style="padding: 0;"><span>Nom</span><span class="sorting-indicator"></span></a>
           </th>
@@ -40,7 +40,7 @@
       <tfoot>
         <tr>
           <td class="manage-column column-cb check-column"><input id="cb-select-all-2" type="checkbox"></td>
-          <th>Portrait</th>
+          <th scope="col" >Portrait</th>
           <th scope="col" class="manage-column column-primary sortable %8$s">
             <a href="%9$s" style="padding: 0;"><span>Nom</span><span class="sorting-indicator"></span></a>
           </th>

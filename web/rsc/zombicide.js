@@ -536,7 +536,7 @@ function addPageCardEquipmentAjaxActions() {
     console.log(set);
     console.log(cType);
     $hj('#card-container .card').each(function(){
-      if ((set=='' || set!=''&&$hj(this).hasClass(set)) && (cType=='' || cType!=''&&$hj(this).hasClass(cType))) {
+      if ((set=='' || set!=''&&$hj(this).hasClass(set)) && (cType==undefined || cType=='' || cType!=''&&$hj(this).hasClass(cType))) {
         $hj(this).css('display', 'inline-block');
       } else {
         $hj(this).css('display', 'none');
