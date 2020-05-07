@@ -101,7 +101,38 @@ class SurvivorActions extends LocalActions
     return $strBilan;
   }
 
-
+  private function insertSurvivor()
+  {
+    // Si on n'en a pas, on doit créer une entrée correspondante.
+    $Survivor = new Survivor();
+    $name = $this->WpPost->getPostTitle();
+    $Survivor->setName($name);
+    $description  = $this->WpPost->getPostContent();
+    $description  = substr($description, 25, -27);
+    $Survivor->setBackground($description);
+    $Survivor->setExpansionId($this->getExpansionId());
+    $arrProfiles = unserialize($this->WpPost->getPostMeta('profils'));
+    foreach ($arrProfiles as $key=>$value) {
+      switch ($value) {
+        case 'Standard' :
+          $Survivor->setStandard(1);
+        break;
+        case 'Zombivant' :
+          $Survivor->setZombivor(1);
+        break;
+        case 'Ultimate' :
+          $Survivor->setUltimate(1);
+        break;
+        case 'Ultimate Zombivant' :
+          $Survivor->setUltimatez(1);
+        break;
+        default :
+        break;
+      }
+    }
+    $this->SurvivorServices->insertSurvivor($Survivor);
+    $this->strBilan .= '<br>Survivant créé en base : '.$name.'.';
+  }
   private function checkSurvivors()
   {
     // On regarde les articles créés et on vérifie les données en base, si elles existent et si elles sont cohérentes entre elles.
@@ -111,45 +142,15 @@ class SurvivorActions extends LocalActions
       $survivorId = $this->WpPost->getPostMeta(self::FIELD_SURVIVORID);
       // On recherche un Survivant dans la base de données qui correspond.
       $Survivor = $this->SurvivorServices->selectSurvivor($survivorId);
-      $name = $Survivor->getName();
       if ($Survivor->getId()=='') {
-        // Si on n'en a pas, on doit créer une entrée correspondante.
-        $Survivor = new Survivor();
-        $name = $this->WpPost->getPostTitle();
-        $Survivor->setName($name);
-        $description  = $this->WpPost->getPostContent();
-        $description  = substr($description, 25, -27);
-        $Survivor->setBackground($description);
-        $Survivor->setExpansionId($this->getExpansionId());
-        $arrProfiles = unserialize($this->WpPost->getPostMeta('profils'));
-        foreach ($arrProfiles as $key=>$value) {
-          switch ($value) {
-            case 'Standard' :
-              $Survivor->setStandard(1);
-            break;
-            case 'Zombivant' :
-              $Survivor->setZombivor(1);
-            break;
-            case 'Ultimate' :
-              $Survivor->setUltimate(1);
-            break;
-            case 'Ultimate Zombivant' :
-              $Survivor->setUltimatez(1);
-            break;
-          }
-        }
-        $this->SurvivorServices->insertSurvivor($Survivor);
-        /*
-        $this->SkillServices->insertSkill($Skill);
-      */
-        $this->strBilan .= '<br>Survivant créé en base : '.$name.'.';
+        $this->insertSurvivor();
       } else {
         // Si on en a juste une, c'est tranquille.
         $this->checkSurvivor($Survivor);
       }
     }
     // Puis, on regarde les données en base et on vérifie que des articles ont été créés pour elles.
-    while (false && !empty($this->Survivors)) {
+    while (!empty($this->Survivors)) {
       // On récupère l'extension.
       $Survivor = array_shift($this->Survivors);
       $args = array(

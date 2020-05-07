@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.02
+ * @version 1.05.07
  */
 interface ConstantsInterface
 {
@@ -80,6 +80,7 @@ interface ConstantsInterface
   const CST_ACTIVE            = 'active';
   const CST_AJAXACTION        = 'ajaxAction';
   const CST_CHANGEPROFILE     = 'changeProfile';
+  const CST_CHECKED           = 'checked';
   const CST_CLONE             = 'clone';
   const CST_COLORDER          = 'colorder';
   const CST_COLSORT           = 'colsort';

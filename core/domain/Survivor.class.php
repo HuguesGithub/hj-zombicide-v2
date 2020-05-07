@@ -230,11 +230,7 @@ class Survivor extends LocalDomain
    */
   public function getPortraitUrl($type='')
   {
-    if ($this->getAltImgName()!='') {
-      $name = $this->getAltImgName();
-    } else {
-      $name = $this->name;
-    }
+    $name = ($this->getAltImgName()!='' ? $this->getAltImgName() : $this->name);
     $wholeUrl = $this->imgBaseUrl.$this->getNiceName($name).($type!='' ? '-'.$type : '').'.jpg';
     if (self::isAdmin() && @getimagesize($wholeUrl)===false) {
       $wholeUrl = $this->imgBaseUrl.($type!='' ? '-'.$type : '').'.jpg';
@@ -306,7 +302,7 @@ class Survivor extends LocalDomain
       self::FIELD_SURVIVORTYPEID => $survivorTypeId,
     );
     $SurvivorSkills = $this->SurvivorSkillServices->getSurvivorSkillsWithFilters($args);
-    $strReturned = '<ul class="col-12">';
+    $strReturned = '';
     while (!empty($SurvivorSkills)) {
       $SurvivorSkill = array_shift($SurvivorSkills);
       if ($SurvivorSkill->getSurvivorTypeId()!=$survivorTypeId) {
@@ -314,7 +310,7 @@ class Survivor extends LocalDomain
       }
       $strReturned .= '<li><span>'.$SurvivorSkill->getBean()->getBadge().'</span></li>';
     }
-    return $strReturned.'</ul>';
+    return $this->getBalise(self::TAG_UL, $strReturned, array(self::ATTR_CLASS=>'col-12'));
   }
 
 
@@ -362,7 +358,7 @@ class Survivor extends LocalDomain
           case 20 :
           case 30 :
           case 40 :
-            $str .= '<ul class="col-12 col-sm-6 col-lg-3">'.$strTmp.'</ul>';
+            $str .= $this->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS='col-12 col-sm-6 col-lg-3'));
             $strTmp = '';
           break;
           default :
@@ -370,40 +366,10 @@ class Survivor extends LocalDomain
         }
         $strTmp .= $this->getSkillLi($SurvivorSkill, $withLink);
       }
-      $str .= '<ul class="col-12 col-sm-6 col-lg-3">'.$strTmp.'</ul>';
+      $str .= $this->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS='col-12 col-sm-6 col-lg-3'));
     }
     return $str;
   }
   private function getSkillLi($SurvivorSkill, $withLink)
-  {
-    switch ($SurvivorSkill->getTagLevelId()) {
-      case 10 :
-      case 11 :
-        $strColor = 'blue';
-      break;
-      case 20 :
-        $strColor = 'yellow';
-      break;
-      case 30 :
-      case 31 :
-        $strColor = 'orange';
-      break;
-      case 40 :
-      case 41 :
-      case 42 :
-        $strColor = 'red';
-      break;
-      default :
-        $strColor = '';
-      break;
-    }
-    $str = '<li><span';
-    if ($withLink) {
-      $str .= '><a class="badge badge-'.$strColor.'-skill" href="/page-competences/?skillId=';
-      $str .= $SurvivorSkill->getSkillId().'">'.$SurvivorSkill->getSkillName().'</a>';
-    } else {
-      $str .= ' class="badge badge-'.$strColor.'-skill">'.$SurvivorSkill->getSkillName();
-    }
-    return $str.'</span></li>';
-  }
+  { return $this->getBadge(TAG_LI, $SurvivorSkill->getBean()->getBadge($withLink)); }
 }

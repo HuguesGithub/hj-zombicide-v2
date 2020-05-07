@@ -653,7 +653,7 @@ function resolvePageCompetenceAjaxActions(clicked) {
   var paged = 1;
   var nbPerPages = $hj('#displayedRows').val();
   var filters = '';
-  if (hj('#filter-description').val()!=undefined) {
+  if ($hj('#filter-description').val()!=undefined) {
     filters = 'description='+$hj('#filter-description').val();
   }
 

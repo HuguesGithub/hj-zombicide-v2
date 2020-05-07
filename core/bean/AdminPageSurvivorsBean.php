@@ -149,13 +149,13 @@ class AdminPageSurvivorsBean extends AdminPageBean
     // Le nom du Survivant - 6
     $this->Survivor->getName(),
     // A-t-il un profil Standard ? - 7
-    ($this->Survivor->isStandard() ? ' checked' : ''),
+    ($this->Survivor->isStandard() ? ' '.self::CST_CHECKED : ''),
     // A-t-il un profil Standard ? - 8
-    ($this->Survivor->isZombivor() ? ' checked' : ''),
+    ($this->Survivor->isZombivor() ? ' '.self::CST_CHECKED : ''),
     // A-t-il un profil Standard ? - 9
-    ($this->Survivor->isUltimate() ? ' checked' : ''),
+    ($this->Survivor->isUltimate() ? ' '.self::CST_CHECKED : ''),
     // A-t-il un profil Standard ? - 10
-    ($this->Survivor->isUltimatez() ? ' checked' : ''),
+    ($this->Survivor->isUltimatez() ? ' '.self::CST_CHECKED : ''),
     // Extension d'origine du Survivant - 11
     $this->Survivor->getExpansion()->getName(),
     );

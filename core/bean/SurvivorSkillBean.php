@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorSkillBean
  * @author Hugues.
  * @since 1.05.02
- * @version 1.05.02
+ * @version 1.05.07
  */
 class SurvivorSkillBean extends LocalBean
 {
@@ -26,7 +26,7 @@ class SurvivorSkillBean extends LocalBean
       $tag = self::TAG_A;
       $attributes = array(
         self::ATTR_CLASS => 'badge badge-'.$this->getColor().'-skill',
-        self::ATTR_HREF  => '/page-competences/?skillId=43',
+        self::ATTR_HREF  => '/page-competences/?skillId='.$this->SurvivorSkill->getSkill->getId(),
       );
     } else {
       $tag = self:: TAG_SPAN;
@@ -41,19 +41,19 @@ class SurvivorSkillBean extends LocalBean
   {
     switch ($this->SurvivorSkill->getTagLevelId()) {
       case 20 :
-        $color = 'yellow';
+        $color = self::COLOR_YELLOW;
       break;
       case 30 :
       case 31 :
-        $color = 'orange';
+        $color = self::COLOR_ORANGE;
       break;
       case 40 :
       case 41 :
       case 42 :
-        $color = 'red';
+        $color = self::COLOR_RED;
       break;
       default :
-        $color = 'blue';
+        $color = self::COLOR_BLUE;
       break;
     }
     return $color;
