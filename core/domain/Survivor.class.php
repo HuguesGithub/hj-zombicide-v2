@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Survivor
  * @author Hugues.
  * @since 1.0.00
- * @version 1.05.06
+ * @version 1.05.07
  */
 class Survivor extends LocalDomain
 {
@@ -230,7 +230,12 @@ class Survivor extends LocalDomain
    */
   public function getPortraitUrl($type='')
   {
-    $wholeUrl = $this->imgBaseUrl.$this->getNiceName($this->name).($type!='' ? '-'.$type : '').'.jpg';
+    if ($this->getAltImgName()!='') {
+      $name = $this->getAltImgName();
+    } else {
+      $name = $this->name;
+    }
+    $wholeUrl = $this->imgBaseUrl.$this->getNiceName($name).($type!='' ? '-'.$type : '').'.jpg';
     if (self::isAdmin() && @getimagesize($wholeUrl)===false) {
       $wholeUrl = $this->imgBaseUrl.($type!='' ? '-'.$type : '').'.jpg';
     }

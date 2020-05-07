@@ -6,14 +6,14 @@ if (!defined('ABSPATH')) {
  * AdminPageSurvivorsBean
  * @author Hugues
  * @since 1.05.01
- * @version 1.05.06
+ * @version 1.05.07
  */
 class AdminPageSurvivorsBean extends AdminPageBean
 {
+  protected $urlFragmentSurvSkillTabContent = 'web/pages/admin/fragments/fragment-survivor-skills-tabcontent.php';
   protected $tplHomeCheckCard  = 'web/pages/admin/fragments/home-check-card.php';
   protected $urlSurvivorListing = 'web/pages/admin/survivor-listing.php';
-  protected $urlSurvivorEdit = 'web/pages/admin/fragments/survivor-edit.php';
-  protected $urlFragmentSurvSkillTabContent = 'web/pages/admin/fragments/fragment-survivor-skills-tabcontent.php';
+  protected $urlSurvivorEdit = 'web/pages/admin/survivor-edit.php';
   /**
    * Class Constructor
    */
@@ -24,6 +24,7 @@ class AdminPageSurvivorsBean extends AdminPageBean
     $this->title = 'Survivants';
     $this->SkillServices = new SkillServices();
     $this->SurvivorServices  = new SurvivorServices();
+    $this->SurvivorSkillServices = new SurvivorSkillServices();
   }
   /**
    * @param array $urlParams
@@ -33,16 +34,37 @@ class AdminPageSurvivorsBean extends AdminPageBean
   {
     if (isset($this->urlParams[self::FIELD_ID])) {
       $this->Survivor = $this->SurvivorServices->selectSurvivor($this->urlParams[self::FIELD_ID]);
-      switch ($this->urlParams[self::CST_POSTACTION]) {
-        case self::CST_EDIT :
-          return $this->getEditContentPage();
-        break;
-        default :
-          return $this->getListContentPage();
-        break;
+    }
+    if (isset($_POST)&&!empty($_POST)) {
+      $this->dealWithPost();
+    }
+    switch ($this->urlParams[self::CST_POSTACTION]) {
+      case 'confirmEdit'  :
+      case self::CST_EDIT :
+        return $this->getEditContentPage();
+      break;
+      default :
+        return $this->getListContentPage();
+      break;
+    }
+  }
+  private function dealWithPost()
+  {
+    if ($this->urlParams[self::CST_POSTACTION]=='confirmEdit') {
+      // Faudrait supprimer les données existantes.
+      $SurvivorSkill = new SurvivorSkill();
+      $SurvivorSkill->setSurvivorId($this->Survivor->getId());
+      $this->SurvivorSkillServices->deleteBulkSurvivorSkill(array(self::FIELD_SURVIVORID=>$this->Survivor->getId()));
+      foreach ($_POST as $key=>$value) {
+        list($check, $survivorTypeId, $tagLevelId) = explode('_', $key);
+        if ($check!='ss' || $value=='') {
+          continue;
+        }
+        $SurvivorSkill->setSkillId($value);
+        $SurvivorSkill->setSurvivorTypeId($survivorTypeId);
+        $SurvivorSkill->setTagLevelId($tagLevelId);
+        $this->SurvivorSkillServices->insertSurvivorSkill($SurvivorSkill);
       }
-    } else {
-      return $this->getListContentPage();
     }
   }
   public function getListContentPage()
@@ -98,7 +120,7 @@ class AdminPageSurvivorsBean extends AdminPageBean
   private function getOption($value, $name, $selection='')
   { return '<option value="'.$value.'"'.($value==$selection ? ' selected' : '').'>'.$name.'</option>'; }
 
-  private function getSkillSelect($id='')
+  private function getSkillSelect($name, $id='')
   {
     $strReturned = $this->getOption('', 'Aucune', $id);
     $Skills = $this->Skills;
@@ -106,7 +128,7 @@ class AdminPageSurvivorsBean extends AdminPageBean
       $Skill = array_shift($Skills);
       $strReturned .= $this->getOption($Skill->getId(), $Skill->getName(), $id);
     }
-    return '<select>'.$strReturned.'</select>';
+    return '<select name="'.$name.'">'.$strReturned.'</select>';
   }
   public function getEditContentPage()
   {
@@ -146,7 +168,8 @@ class AdminPageSurvivorsBean extends AdminPageBean
     $args = array();
     while (!empty($tagLevelIds)) {
       $levelId = array_shift($tagLevelIds);
-      array_push($args, $this->getSkillSelect($this->Survivor->getSkill($survivorTypeId, $levelId)->getId()),);
+      $name = 'ss_'.$survivorTypeId.'_'.$levelId;
+      array_push($args, $this->getSkillSelect($name, $this->Survivor->getSkill($survivorTypeId, $levelId)->getId()));
     }
     return  $this->getRender($this->urlFragmentSurvSkillTabContent, $args);
   }

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * SurvivorActions
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.02
+ * @version 1.05.07
  */
 class SurvivorActions extends LocalActions
 {
@@ -79,7 +79,12 @@ class SurvivorActions extends LocalActions
   public function dealWithSurvivorVerif($isVerif=false)
   {
     // On récupère les articles de survivants
-    $this->WpPostSurvivors = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_SURVIVOR_ID);
+    $args = array(
+      self::WP_CAT         => self::WP_CAT_SURVIVOR_ID,
+      self::WP_TAXQUERY    => array(),
+      self::WP_POSTSTATUS  => self::WP_PUBLISH.', future',
+    );
+    $this->WpPostSurvivors = $this->WpPostServices->getArticles($args);
     $nbWpPostSurvivors = count($this->WpPostSurvivors);
     // Et les Survivants en base
     $this->Survivors = $this->SurvivorServices->getSurvivorsWithFilters();
@@ -103,20 +108,38 @@ class SurvivorActions extends LocalActions
     while (!empty($this->WpPostSurvivors)) {
       // On récupère le WpPost et ses données
       $this->WpPost = array_shift($this->WpPostSurvivors);
-      $name = '';
       $survivorId = $this->WpPost->getPostMeta(self::FIELD_SURVIVORID);
       // On recherche un Survivant dans la base de données qui correspond.
       $Survivor = $this->SurvivorServices->selectSurvivor($survivorId);
+      $name = $Survivor->getName();
       if ($Survivor->getId()=='') {
         // Si on n'en a pas, on doit créer une entrée correspondante.
         $Survivor = new Survivor();
-      /*
-        $Skill->setName($name);
+        $name = $this->WpPost->getPostTitle();
+        $Survivor->setName($name);
         $description  = $this->WpPost->getPostContent();
         $description  = substr($description, 25, -27);
-        $Skill->setDescription($description);
-        $expansionId  = $this->getExpansionId();
-        $Skill->setExpansionId($expansionId);
+        $Survivor->setBackground($description);
+        $Survivor->setExpansionId($this->getExpansionId());
+        $arrProfiles = unserialize($this->WpPost->getPostMeta('profils'));
+        foreach ($arrProfiles as $key=>$value) {
+          switch ($value) {
+            case 'Standard' :
+              $Survivor->setStandard(1);
+            break;
+            case 'Zombivant' :
+              $Survivor->setZombivor(1);
+            break;
+            case 'Ultimate' :
+              $Survivor->setUltimate(1);
+            break;
+            case 'Ultimate Zombivant' :
+              $Survivor->setUltimatez(1);
+            break;
+          }
+        }
+        $this->SurvivorServices->insertSurvivor($Survivor);
+        /*
         $this->SkillServices->insertSkill($Skill);
       */
         $this->strBilan .= '<br>Survivant créé en base : '.$name.'.';
@@ -126,7 +149,7 @@ class SurvivorActions extends LocalActions
       }
     }
     // Puis, on regarde les données en base et on vérifie que des articles ont été créés pour elles.
-    while (!empty($this->Survivors)) {
+    while (false && !empty($this->Survivors)) {
       // On récupère l'extension.
       $Survivor = array_shift($this->Survivors);
       $args = array(

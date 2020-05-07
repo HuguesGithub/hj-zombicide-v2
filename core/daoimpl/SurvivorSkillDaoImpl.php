@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 /**
  * Classe SurvivorSkillDaoImpl
  * @author Hugues.
- * @version 1.0.00
  * @since 1.0.00
+ * @version 1.05.07
  */
 class SurvivorSkillDaoImpl extends LocalDaoImpl
 {
@@ -29,6 +29,10 @@ class SurvivorSkillDaoImpl extends LocalDaoImpl
     }
     return $Items;
   }
+
+  public function deleteBulkEntriesWithFilters($arrParams)
+  { $this->deleteWithFilters(__FILE__, __LINE__, $arrParams[self::SQL_WHERE]); }
+
   /**
    * @param string $file
    * @param int $line

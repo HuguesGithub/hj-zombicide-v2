@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorSkillServices
  * @author Hugues.
  * @since 1.04.27
- * @version 1.04.27
+ * @version 1.05.07
  */
 class SurvivorSkillServices extends LocalServices
 {
@@ -52,4 +52,13 @@ class SurvivorSkillServices extends LocalServices
     $this->buildFilters($arrFilters);
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
+
+  public function deleteBulkSurvivorSkill($arrFilters)
+  {
+    $this->buildFilters($arrFilters);
+    return $this->Dao->deleteBulkEntriesWithFilters($this->arrParams);
+  }
+
+  public function insertSurvivorSkill($SurvivorSkill)
+  { $this->insert(__FILE__, __LINE__, $SurvivorSkill); }
 }
