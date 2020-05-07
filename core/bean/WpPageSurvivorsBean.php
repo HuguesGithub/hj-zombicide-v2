@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageSurvivorsBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.01
+ * @version 1.05.06
  */
 class WpPageSurvivorsBean extends WpPageBean
 {
@@ -18,6 +18,7 @@ class WpPageSurvivorsBean extends WpPageBean
   public function __construct($WpPage='')
   {
     parent::__construct($WpPage);
+    $this->SkillServices = new SkillServices();
     $this->SurvivorServices = new SurvivorServices();
     $this->ExpansionServices = new ExpansionServices();
   }
@@ -38,7 +39,11 @@ class WpPageSurvivorsBean extends WpPageBean
   {
     /////////////////////////////////////////////////////////////////////////////
     // On récupère la liste des Survivants puis les éléments nécessaires à la pagination.
-    $Survivors = $this->SurvivorServices->getSurvivorsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
+    if (!$this->isSkillSearched()) {
+      $Survivors = $this->SurvivorServices->getSurvivorsWithFilters($this->arrFilters, $this->colSort, $this->colOrder);
+    } else {
+      $Survivors = $this->SurvivorServices->getSurvivorsWithFiltersIn($this->arrFilters, $this->colSort, $this->colOrder);
+    }
     $this->nbElements = count($Survivors);
     $this->nbPages = ceil($this->nbElements/$this->nbperpage);
     // On slice la liste pour n'avoir que ceux à afficher
@@ -54,7 +59,9 @@ class WpPageSurvivorsBean extends WpPageBean
 
     /////////////////////////////////////////////////////////////////////////////
     // Affiche-t-on le filtre ?
-    $showFilters = isset($this->arrFilters[self::FIELD_NAME])&&$this->arrFilters[self::FIELD_NAME]!='' || isset($this->arrFilters[self::FIELD_EXPANSIONID])&&$this->arrFilters[self::FIELD_EXPANSIONID]!='';
+    $showFilters = isset($this->arrFilters[self::FIELD_NAME])&&$this->arrFilters[self::FIELD_NAME]!=''
+      || isset($this->arrFilters[self::FIELD_EXPANSIONID])&&$this->arrFilters[self::FIELD_EXPANSIONID]!=''
+      || $this->isSkillSearched();
     /////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////
@@ -72,6 +79,14 @@ class WpPageSurvivorsBean extends WpPageBean
       $this->arrFilters[self::FIELD_NAME],
       // Liste des Extensions - 6
       $this->getExpansionFilters($this->arrFilters[self::FIELD_EXPANSIONID]),
+      // Liste des Compétences bleues - 7
+      $this->getBeanSkillFilters(self::COLOR_BLUE, $this->arrFilters['blue-skillId']),
+      // Liste des Compétences jaunes - 8
+      $this->getBeanSkillFilters(self::COLOR_YELLOW, $this->arrFilters['yellow-skillId']),
+      // Liste des Compétences oranges - 9
+      $this->getBeanSkillFilters(self::COLOR_ORANGE, $this->arrFilters['orange-skillId']),
+      // Liste des Compétences rouges - 10
+      $this->getBeanSkillFilters(self::COLOR_RED, $this->arrFilters['red-skillId']),
     );
     return $this->getRender($this->urlTemplate, $args);
   }
@@ -104,4 +119,11 @@ class WpPageSurvivorsBean extends WpPageBean
   public function setFilters($post=null)
   { parent::setBeanFilters($post, self::FIELD_NAME); }
 
+  private function isSkillSearched()
+  {
+    return isset($this->arrFilters[self::COLOR_BLUE.'-'.self::FIELD_SKILLID])&&$this->arrFilters[self::COLOR_BLUE.'-'.self::FIELD_SKILLID]!=''
+    || isset($this->arrFilters[self::COLOR_YELLOW.'-'.self::FIELD_SKILLID])&&$this->arrFilters[self::COLOR_YELLOW.'-'.self::FIELD_SKILLID]!=''
+    || isset($this->arrFilters[self::COLOR_ORANGE.'-'.self::FIELD_SKILLID])&&$this->arrFilters[self::COLOR_ORANGE.'-'.self::FIELD_SKILLID]!=''
+    || isset($this->arrFilters[self::COLOR_RED.'-'.self::FIELD_SKILLID])&&$this->arrFilters[self::COLOR_RED.'-'.self::FIELD_SKILLID]!='';
+  }
 }

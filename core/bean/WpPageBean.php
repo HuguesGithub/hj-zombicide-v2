@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * WpPageBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.01
+ * @version 1.05.06
  */
 class WpPageBean extends MainPageBean
 {
@@ -220,6 +220,46 @@ class WpPageBean extends MainPageBean
       if ($Expansion->getField($fieldToCheck)==0)
       { continue; }
       $strReturned .= $this->getOption($Expansion->getId(), $Expansion->getName(), $selExpansionsId);
+    }
+    return $strReturned;
+  }
+  /**
+   * @return string
+   */
+  public function getBeanSkillFilters($color='', $skillId='')
+  {
+    switch ($color) {
+      case self::COLOR_BLUE :
+        $label = 'Bleues';
+        $tagLevelIds = '10,11';
+      break;
+      case self::COLOR_YELLOW :
+        $label = 'Jaunes';
+        $tagLevelIds = '20';
+      break;
+      case self::COLOR_ORANGE :
+        $label = 'Oranges';
+        $tagLevelIds = '30,31';
+      break;
+      case self::COLOR_RED :
+        $label = 'Rouges';
+        $tagLevelIds = '40,41,42';
+      break;
+      default :
+        $label = 'Toutes';
+        $tagLevelIds = '';
+      break;
+    }
+    $strReturned = $this->getOption('', $label, $skillId);
+    if ( $tagLevelIds!='') {
+      $filters = array(self::FIELD_TAGLEVELID=>$tagLevelIds);
+      $Skills = $this->SkillServices->getSkillsWithFiltersIn($filters);
+    } else {
+      $Skills = $this->SkillServices->getSkillsWithFilters();
+    }
+    while (!empty($Skills)) {
+      $Skill = array_shift($Skills);
+      $strReturned .= $this->getOption($Skill->getId(), $Skill->getName(), $skillId);
     }
     return $strReturned;
   }

@@ -18,11 +18,20 @@
           <button class="btn btn-outline-secondary ajaxAction" data-ajaxaction="filter" type="button">Rechercher</button>
         </div>
       </div>
-      <div class="input-group">
+      <div class="input-group mb-3">
         <div class="input-group-prepend">
           <label class="input-group-text" for="filter-expansionId" style="height: 102px">Extension</label>
         </div>
         <select multiple="" class="form-control" id="filter-expansionId" name="filter-expansion">%6$s</select>
+      </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="filter-skills">Compétences</label>
+        </div>
+        <select class="form-control" id="filter-blue-skill" name="filter-blue-skill">%7$s</select>
+        <select class="form-control" id="filter-yellow-skill" name="filter-yellow-skill">%8$s</select>
+        <select class="form-control" id="filter-orange-skill" name="filter-orange-skill">%9$s</select>
+        <select class="form-control" id="filter-red-skill" name="filter-red-skill">%10$s</select>
       </div>
     </div>
     %1$s

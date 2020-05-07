@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SkillServices
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.30
+ * @version 1.05.06
  */
 class SkillServices extends LocalServices
 {
@@ -46,6 +46,18 @@ class SkillServices extends LocalServices
     $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
     $this->buildFilters($arrFilters);
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
+  }
+  /**
+   * @param array $arrFilters
+   * @param string $orderby
+   * @param string $order
+   * @return array
+   */
+  public function getSkillsWithFiltersIn($arrFilters=array(), $orderby=self::FIELD_NAME, $order=self::ORDER_ASC)
+  {
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFiltersIn($this->arrParams, $arrFilters);
   }
 
   public function insertSkill($Skill)

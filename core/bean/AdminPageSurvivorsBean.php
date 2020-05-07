@@ -6,12 +6,14 @@ if (!defined('ABSPATH')) {
  * AdminPageSurvivorsBean
  * @author Hugues
  * @since 1.05.01
- * @version 1.05.02
+ * @version 1.05.06
  */
 class AdminPageSurvivorsBean extends AdminPageBean
 {
   protected $tplHomeCheckCard  = 'web/pages/admin/fragments/home-check-card.php';
   protected $urlSurvivorListing = 'web/pages/admin/survivor-listing.php';
+  protected $urlSurvivorEdit = 'web/pages/admin/fragments/survivor-edit.php';
+  protected $urlFragmentSurvSkillTabContent = 'web/pages/admin/fragments/fragment-survivor-skills-tabcontent.php';
   /**
    * Class Constructor
    */
@@ -20,6 +22,7 @@ class AdminPageSurvivorsBean extends AdminPageBean
     $this->urlParams = $urlParams;
     parent::__construct(self::CST_SURVIVOR);
     $this->title = 'Survivants';
+    $this->SkillServices = new SkillServices();
     $this->SurvivorServices  = new SurvivorServices();
   }
   /**
@@ -27,6 +30,22 @@ class AdminPageSurvivorsBean extends AdminPageBean
    * @return $Bean
    */
   public function getSpecificContentPage()
+  {
+    if (isset($this->urlParams[self::FIELD_ID])) {
+      $this->Survivor = $this->SurvivorServices->selectSurvivor($this->urlParams[self::FIELD_ID]);
+      switch ($this->urlParams[self::CST_POSTACTION]) {
+        case self::CST_EDIT :
+          return $this->getEditContentPage();
+        break;
+        default :
+          return $this->getListContentPage();
+        break;
+      }
+    } else {
+      return $this->getListContentPage();
+    }
+  }
+  public function getListContentPage()
   {
     $strRows = '';
     $nbPerPage = 10;
@@ -74,6 +93,62 @@ class AdminPageSurvivorsBean extends AdminPageBean
       '','','','','','','','','','','','','','','','','','','','','','',''
     );
     return $this->getRender($this->urlSurvivorListing, $args);
+  }
+
+  private function getOption($value, $name, $selection='')
+  { return '<option value="'.$value.'"'.($value==$selection ? ' selected' : '').'>'.$name.'</option>'; }
+
+  private function getSkillSelect($id='')
+  {
+    $strReturned = $this->getOption('', 'Aucune', $id);
+    $Skills = $this->Skills;
+    while (!empty($Skills)) {
+      $Skill = array_shift($Skills);
+      $strReturned .= $this->getOption($Skill->getId(), $Skill->getName(), $id);
+    }
+    return '<select>'.$strReturned.'</select>';
+  }
+  public function getEditContentPage()
+  {
+    $msgError = "Ce Survivant n'a pas de profil de ce type. Il n'est donc pas possible de sélectionner des compétences.";
+    $this->Skills = $this->SkillServices->getSkillsWithFilters();
+
+    $args = array(
+    // Le Survivant a-t-il un profil Standard ? - 1
+    (!$this->Survivor->isStandard() ? $msgError : $this->getListSelects(self::CST_SURVIVORTYPEID_S)),
+    // Le Survivant a-t-il un profil Zombivant ? - 2
+    (!$this->Survivor->isZombivor() ? $msgError : $this->getListSelects(self::CST_SURVIVORTYPEID_Z)),
+    // Le Survivant a-t-il un profil Ultimate ? - 3
+    (!$this->Survivor->isUltimate() ? $msgError : $this->getListSelects(self::CST_SURVIVORTYPEID_U)),
+    // Le Survivant a-t-il un profil Ultimate Zombivant ? - 4
+    (!$this->Survivor->isUltimatez() ? $msgError : $this->getListSelects(self::CST_SURVIVORTYPEID_UZ)),
+    // L'identifiant du Survivant - 5
+    $this->Survivor->getId(),
+    // Le nom du Survivant - 6
+    $this->Survivor->getName(),
+    // A-t-il un profil Standard ? - 7
+    ($this->Survivor->isStandard() ? ' checked' : ''),
+    // A-t-il un profil Standard ? - 8
+    ($this->Survivor->isZombivor() ? ' checked' : ''),
+    // A-t-il un profil Standard ? - 9
+    ($this->Survivor->isUltimate() ? ' checked' : ''),
+    // A-t-il un profil Standard ? - 10
+    ($this->Survivor->isUltimatez() ? ' checked' : ''),
+    // Extension d'origine du Survivant - 11
+    $this->Survivor->getExpansion()->getName(),
+    );
+
+    return $this->getRender($this->urlSurvivorEdit, $args);
+  }
+  private function getListSelects($survivorTypeId)
+  {
+    $tagLevelIds = array('10', '11', '20', '30', '31', '40', '41', '42');
+    $args = array();
+    while (!empty($tagLevelIds)) {
+      $levelId = array_shift($tagLevelIds);
+      array_push($args, $this->getSkillSelect($this->Survivor->getSkill($survivorTypeId, $levelId)->getId()),);
+    }
+    return  $this->getRender($this->urlFragmentSurvSkillTabContent, $args);
   }
 
   /**

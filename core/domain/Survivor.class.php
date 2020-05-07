@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Survivor
  * @author Hugues.
  * @since 1.0.00
- * @version 1.05.02
+ * @version 1.05.06
  */
 class Survivor extends LocalDomain
 {
@@ -238,6 +238,33 @@ class Survivor extends LocalDomain
   }
   ////////////////////////////////////////////////////////////////////////////
 
+  protected function initSurvivorSkills()
+  {
+    $SurvivorSkills = $this->SurvivorSkillServices->getSurvivorSkillsWithFilters(array(self::FIELD_SURVIVORID=>$this->getId()));
+    while (!empty($SurvivorSkills)) {
+      $SurvivorSkill = array_shift($SurvivorSkills);
+      $survivorTypeId = $SurvivorSkill->getSurvivorTypeId();
+      $tagLevelId = $SurvivorSkill->getTagLevelId();
+      if (!isset($this->SurvivorSkills[$survivorTypeId])) {
+        $this->SurvivorSkills[$survivorTypeId] = array();
+      }
+      $this->SurvivorSkills[$survivorTypeId][$tagLevelId] = $SurvivorSkill->getSkill();
+    }
+  }
+
+  public function getSkill($type, $rank)
+  {
+    if ($this->SurvivorSkills == null) {
+      $this->SurvivorSkills = array();
+      $this->initSurvivorSkills();
+    }
+    return ($this->SurvivorSkills[$type][$rank]==null ? new Skill() : $this->SurvivorSkills[$type][$rank]);
+  }
+
+
+
+
+
   /**
    * @param int $survivorTypeId
    * @return boolean
@@ -315,6 +342,9 @@ class Survivor extends LocalDomain
    */
   public function getUlSkills($type='', $withLink=false)
   {
+    if ($type=='' && !$this->isStandard() && $this->isUltimate()) {
+      $type='u';
+    }
     $SurvivorSkills = $this->getSurvivorSkills();
     $str = '';
     $strTmp = '';

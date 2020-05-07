@@ -722,6 +722,18 @@ function resolvePageSurvivantAjaxActions(clicked) {
   if ($hj('#filter-expansionId').val()!=null) {
     filters += '&expansionId='+$hj('#filter-expansionId').val();
   }
+  if ($hj('#filter-blue-skill').val()!=null) {
+    filters += '&blue-skillId='+$hj('#filter-blue-skill').val();
+  }
+  if ($hj('#filter-yellow-skill').val()!=null) {
+    filters += '&yellow-skillId='+$hj('#filter-yellow-skill').val();
+  }
+  if ($hj('#filter-orange-skill').val()!=null) {
+    filters += '&orange-skillId='+$hj('#filter-orange-skill').val();
+  }
+  if ($hj('#filter-red-skill').val()!=null) {
+    filters += '&red-skillId='+$hj('#filter-red-skill').val();
+  }
 
   switch (ajaxaction) {
     // On change le nombre d'éléments affichés
