@@ -112,7 +112,7 @@ class SurvivorActions extends LocalActions
     $Survivor->setBackground($description);
     $Survivor->setExpansionId($this->getExpansionId());
     $arrProfiles = unserialize($this->WpPost->getPostMeta('profils'));
-    foreach ($arrProfiles as $key=>$value) {
+    foreach ($arrProfiles as $value) {
       switch ($value) {
         case 'Standard' :
           $Survivor->setStandard(1);
@@ -202,7 +202,7 @@ class SurvivorActions extends LocalActions
       $doUpdate = true;
     }
     if (isset($arrProfils)) {
-      // TODO
+      // TODO : Vérifier que les profils saisis sur le WpPost correspondent à ceux en base.
     }
     if ($doUpdate) {
       // Si nécessaire, on update en base.

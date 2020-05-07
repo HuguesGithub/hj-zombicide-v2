@@ -1,5 +1,8 @@
 <section id="page-missions">
-  %2$s
+  <section class="row">
+    <div class="col-5">%2$s</div>
+    <div class="col-7">%3$s</div>
+  </section>
   <section id="listing">
     <div class="publicMissionRow tableHeader row">
       <span class="col-12 col-md-3">Nom</span>
@@ -52,5 +55,4 @@
       <span class="col-md-2">Origine</span>
     </div>
   </section>
-  %3$s
 </section>

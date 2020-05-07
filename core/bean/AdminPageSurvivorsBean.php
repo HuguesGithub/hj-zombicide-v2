@@ -189,7 +189,7 @@ class AdminPageSurvivorsBean extends AdminPageBean
       // Le titre de la carte - 1
       $this->title,
       // L'id du container de retour pour afficher les vérifications - 2
-      self::CST_SURVIVOR.'-verif',
+      self::CST_SURVIVOR,
       // Le contenu du container de vérification - 3
       $strBilan,
    );

@@ -230,8 +230,8 @@ class Survivor extends LocalDomain
    */
   public function getPortraitUrl($type='')
   {
-    $name = ($this->getAltImgName()!='' ? $this->getAltImgName() : $this->name);
-    $wholeUrl = $this->imgBaseUrl.$this->getNiceName($name).($type!='' ? '-'.$type : '').'.jpg';
+    $usedName = ($this->getAltImgName()!='' ? $this->getAltImgName() : $this->name);
+    $wholeUrl = $this->imgBaseUrl.$this->getNiceName($usedName).($type!='' ? '-'.$type : '').'.jpg';
     if (self::isAdmin() && @getimagesize($wholeUrl)===false) {
       $wholeUrl = $this->imgBaseUrl.($type!='' ? '-'.$type : '').'.jpg';
     }

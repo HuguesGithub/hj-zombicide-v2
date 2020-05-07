@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageToolsBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.04.27
+ * @version 1.05.07
  */
 class WpPageToolsBean extends WpPageBean
 {
@@ -30,9 +30,9 @@ class WpPageToolsBean extends WpPageBean
     // Gestion du menu des Stand Alone et Extensions officielles
     $arrExpansions = array(
       'Saison 1' => array(23, 9, 10),
-      'Saison 2' => array(24, 11, 12, 13),
-      'Saison 3' => array(25, 16, 17, 18),
-      'Extensions' => array(4, 14),
+      'Saison 2' => array(24, 11, 12),
+      'Saison 3' => array(25, 16, 17),
+      'Extensions' => array(4, 14, 19, 26),
     );
     $str = '';
     $arrOfficiels = array();

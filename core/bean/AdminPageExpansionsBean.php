@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * AdminPageExpansionsBean
  * @author Hugues
  * @since 1.04.30
- * @version 1.04.30
+ * @version 1.05.O7
  */
 class AdminPageExpansionsBean extends AdminPageBean
 {
@@ -37,7 +37,7 @@ class AdminPageExpansionsBean extends AdminPageBean
       // Le titre de la carte - 1
       $this->title,
       // L'id du container de retour pour afficher les vérifications - 2
-      self::CST_EXPANSION.'-verif',
+      self::CST_EXPANSION,
       // Le contenu du container de vérification - 3
       $strBilan,
    );

@@ -1,5 +1,8 @@
 <section id="page-survivants">
-  %2$s
+  <section class="row">
+    <div class="col-5">%2$s</div>
+    <div class="col-7">%3$s</div>
+  </section>
   <section id="listing">
     <div class="publicSurvivorRow tableHeader row">
       <span class="survivorPortraits col-12 col-md-1"></span>
@@ -43,5 +46,4 @@
       <span class="survivorExpansion col-md-4">Extension</span>
     </div>
   </section>
-  %3$s
 </section>

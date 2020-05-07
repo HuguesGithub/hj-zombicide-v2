@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * AdminPageSkillsBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.30
+ * @version 1.05.07
  */
 class AdminPageSkillsBean extends AdminPageBean
 {
@@ -64,7 +64,7 @@ class AdminPageSkillsBean extends AdminPageBean
       // Filtres - 2
       '',
       // Url pour créer une nouvelle Compétence - 3
-      $this->getQueryArg(array(self::CST_ONGLET=>self::CST_SKILL, self::CST_POSTACTION=>'add')),
+      '/wp-admin/post-new.php',
       // Subs - 4
       '',
       // Pagination - 5
@@ -97,7 +97,7 @@ class AdminPageSkillsBean extends AdminPageBean
       // Le titre de la carte - 1
       $this->title,
       // L'id du container de retour pour afficher les vérifications - 2
-      self::CST_SKILL.'-verif',
+      self::CST_SKILL,
       // Le contenu du container de vérification - 3
       $strBilan,
    );
