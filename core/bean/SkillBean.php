@@ -27,10 +27,6 @@ class SkillBean extends LocalBean
    */
   public function getRowForAdminPage()
   {
-    $queryArgs = array(
-      self::CST_ONGLET     => self::CST_SKILL,
-      self::FIELD_ID       => $this->Skill->getId()
-    );
     ///////////////////////////////////////////////////////////////
     // On enrichi le template et on le retourne.
     $args = array(

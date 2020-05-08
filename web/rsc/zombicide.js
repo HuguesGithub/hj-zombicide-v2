@@ -650,13 +650,13 @@ function addSelectionSurvivantActions() {
     var arr = teamLoader.split(',');
     var nb = arr.length;
     // On parcour la liste pour cocher les trucs qui vont bien
-    for (i=0; i<nb; i++) {
+    for (var i=0; i<nb; i++) {
       var subArr = arr[i].split('-');
       if (subArr.length==1) {
         // un Survivant spécifique
         $hj('button[data-survivor-id="'+arr[0]+'"]').removeClass('hidden').click();
       } else {
-        for (j=subArr[0]; j<=subArr[1]; j++) {
+        for (var j=subArr[0]; j<=subArr[1]; j++) {
           // Un intervalle de Survivants
           $hj('button[data-survivor-id="'+j+'"]').removeClass('hidden').click();
         }
