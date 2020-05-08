@@ -62,39 +62,15 @@
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="survivor-tabContent" role="tabpanel" aria-labelledby="survivor-tab">
-        <div class="row">
-          <div class="col"><span class="badge badge-blue-skill col-3">Bleu</span></div>
-          <div class="col"><span class="badge badge-yellow-skill col-3">Jaune</span></div>
-          <div class="col"><span class="badge badge-orange-skill col-3">Orange</span></div>
-          <div class="col"><span class="badge badge-red-skill col-3">Rouge</span></div>
-        </div>
         %1$s
       </div>
       <div class="tab-pane fade" id="zombivor-tabContent" role="tabpanel" aria-labelledby="zombivor-tab">
-        <div class="row">
-          <div class="col"><span class="badge badge-blue-skill col-3">Bleu</span></div>
-          <div class="col"><span class="badge badge-yellow-skill col-3">Jaune</span></div>
-          <div class="col"><span class="badge badge-orange-skill col-3">Orange</span></div>
-          <div class="col"><span class="badge badge-red-skill col-3">Rouge</span></div>
-        </div>
         %2$s
       </div>
       <div class="tab-pane fade" id="ultimate-tabContent" role="tabpanel" aria-labelledby="ultimate-tab">
-        <div class="row">
-          <div class="col"><span class="badge badge-blue-skill col-3">Bleu</span></div>
-          <div class="col"><span class="badge badge-yellow-skill col-3">Jaune</span></div>
-          <div class="col"><span class="badge badge-orange-skill col-3">Orange</span></div>
-          <div class="col"><span class="badge badge-red-skill col-3">Rouge</span></div>
-        </div>
         %3$s
       </div>
       <div class="tab-pane fade" id="ultimatez-tabContent" role="tabpanel" aria-labelledby="ultimatez-tab">
-        <div class="row">
-          <div class="col"><span class="badge badge-blue-skill col-3">Bleu</span></div>
-          <div class="col"><span class="badge badge-yellow-skill col-3">Jaune</span></div>
-          <div class="col"><span class="badge badge-orange-skill col-3">Orange</span></div>
-          <div class="col"><span class="badge badge-red-skill col-3">Rouge</span></div>
-        </div>
         %4$s
       </div>
     </div>

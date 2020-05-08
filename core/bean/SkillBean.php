@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SkillBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.30
+ * @version 1.05.08
  */
 class SkillBean extends LocalBean
 {
@@ -31,10 +31,6 @@ class SkillBean extends LocalBean
       self::CST_ONGLET     => self::CST_SKILL,
       self::FIELD_ID       => $this->Skill->getId()
     );
-    $queryArgs[self::CST_POSTACTION] = self::CST_TRASH;
-    $hrefTrash = $this->getQueryArg($queryArgs);
-    $queryArgs[self::CST_POSTACTION] = self::CST_CLONE;
-    $hrefClone = $this->getQueryArg($queryArgs);
     ///////////////////////////////////////////////////////////////
     // On enrichi le template et on le retourne.
     $args = array(
@@ -46,10 +42,10 @@ class SkillBean extends LocalBean
       $this->Skill->getEditUrl(),
       // Nom de la Compétence
       $this->Skill->getName(),
-      // Url de suppression
-      $hrefTrash,
-      // Url de Duplication
-      $hrefClone,
+      // Url de suppression (on les a enlevé)
+      '',
+      // Url de Duplication (on les a enlevé)
+      '',
       // Article publié ?
       '#',
       // Url Article

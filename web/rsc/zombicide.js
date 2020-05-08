@@ -641,6 +641,55 @@ function addSelectionSurvivantActions() {
       resolveCallAjax(data, 'page-selection-survivants');
     }
   });
+  $hj('#loadOwnTeam').unbind().click(function(){
+    // On supprime toute sélection précédente
+    $hj('#listing button').addClass('hidden');
+    $hj('#listing i').removeClass('fa-check-square').addClass('fa-square');
+    // On récupère la sélection soumise
+    var teamLoader = $hj('#teamLoader').val();
+    var arr = teamLoader.split(',');
+    var nb = arr.length;
+    // On parcour la liste pour cocher les trucs qui vont bien
+    for (i=0; i<nb; i++) {
+      var subArr = arr[i].split('-');
+      if (subArr.length==1) {
+        // un Survivant spécifique
+        $hj('button[data-survivor-id="'+arr[0]+'"]').removeClass('hidden').click();
+      } else {
+        for (j=subArr[0]; j<=subArr[1]; j++) {
+          // Un intervalle de Survivants
+          $hj('button[data-survivor-id="'+j+'"]').removeClass('hidden').click();
+        }
+      }
+    }
+  });
+  $hj('#saveOwnTeam').unbind().click(function(e){
+    var strSave = '';
+    $hj('#listing i.fa-check-square').each(function(){
+      strSave += $hj(this).parent().attr('data-survivor-id')+',';
+    });
+
+    var textArea = document.createElement("textarea");
+    textArea.value = strSave.substring(0,strSave.length-1);
+
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+    }
+    document.body.removeChild(textArea);
+  });
 }
 
 
