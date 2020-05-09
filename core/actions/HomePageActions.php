@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * HomePageActions
  * @author Hugues
  * @since 1.04.07
- * @version 1.04.27
+ * @version 1.05.09
  */
 class HomePageActions extends LocalActions
 {
@@ -43,6 +43,6 @@ class HomePageActions extends LocalActions
   public function dealWithGetMoreNews()
   {
     $Bean = new WpPageHomeBean();
-    return $Bean->addMoreNews($this->post[self::ATTR_VALUE]);
+    return $Bean->addMoreNews($this->post[self::ATTR_VALUE], true, false);
   }
 }

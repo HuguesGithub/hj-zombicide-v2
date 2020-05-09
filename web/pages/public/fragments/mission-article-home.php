@@ -2,7 +2,7 @@
   <div class="panel">
     <div class="panel-body">
       <div class="col-5">
-        <a href="%6$s"><span class="article-mission-extract-image"><span class="helper"></span><img src="%7$s" alt="%1$s"></span></a>
+        <a href="%6$s"><span class="article-mission-extract-image"><img src="%7$s" alt="%1$s"></span></a>
       </div>
       <div class="slide-content col-7">
         <header class="entry-content-header">

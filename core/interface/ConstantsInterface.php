@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.07
+ * @version 1.05.09
  */
 interface ConstantsInterface
 {
@@ -34,6 +34,7 @@ interface ConstantsInterface
   const AJAX_STARTTURN      = 'startTurn';
   const AJAX_SURVIVORVERIF  = 'survivor-verif';
   const AJAX_TRADE          = 'trade';
+  const AJAX_GETTHROWDICE   = 'getThrowDice';
 
   /////////////////////////////////////////////////
   // Attributs
@@ -182,6 +183,7 @@ interface ConstantsInterface
   const PAGE_ONLINE            = 'online';
   const PAGE_EQUIPMENT         = 'page-equipmentcards';
   const PAGE_MISSION           = 'page-missions';
+  const PAGE_PISTE_DE_DES      = 'page-piste-de-des';
   const PAGE_SELECT_SURVIVORS  = 'page-selection-survivants';
   const PAGE_SKILL             = 'page-competences';
   const PAGE_SPAWN             = 'page-spawncards';
@@ -220,6 +222,7 @@ interface ConstantsInterface
   const WP_METAKEY             = 'meta_key';
   const WP_METAVALUE           = 'meta_value';
   const WP_NUMBERPOSTS         = 'numberposts';
+  const WP_OFFSET              = 'offset';
   const WP_ORDER               = 'order';
   const WP_ORDERBY             = 'orderby';
   const WP_POST                = 'post';

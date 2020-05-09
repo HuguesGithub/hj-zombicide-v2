@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * WpPageBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.06
+ * @version 1.05.09
  */
 class WpPageBean extends MainPageBean
 {
@@ -45,6 +45,10 @@ class WpPageBean extends MainPageBean
       case self::PAGE_MISSION           :
         $Bean = new WpPageMissionsBean($this->WpPage);
         $strReturned = $Bean->getContentPage();
+      break;
+      case self::PAGE_PISTE_DE_DES      :
+        $Bean = new WpPageToolsBean($this->WpPage);
+        $strReturned = $Bean->getThrowSomeDiceContent();
       break;
       case self::PAGE_SELECT_SURVIVORS  :
         $Bean = new WpPageToolsBean($this->WpPage);

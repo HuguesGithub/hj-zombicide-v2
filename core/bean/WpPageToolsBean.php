@@ -6,11 +6,12 @@ if (!defined('ABSPATH')) {
  * Classe WpPageToolsBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.05.07
+ * @version 1.05.09
  */
 class WpPageToolsBean extends WpPageBean
 {
-  protected $urlTemplateSelSurv = 'web/pages/public/wppage-selectsurvivors.php';
+  protected $urlTemplatePisteDes = 'web/pages/public/wppage-pistededes.php';
+  protected $urlTemplateSelSurv  = 'web/pages/public/wppage-selectsurvivors.php';
   /**
    * Class Constructor
    * @param WpPage $WpPage
@@ -77,4 +78,14 @@ class WpPageToolsBean extends WpPageBean
     return $this->getRender($this->urlTemplateSelSurv, $args);
   }
 
+  /**
+   * @return string
+   */
+  public function getThrowSomeDiceContent()
+  {
+    $args = array(
+      '','','',
+    );
+    return $this->getRender($this->urlTemplatePisteDes, $args);
+  }
 }

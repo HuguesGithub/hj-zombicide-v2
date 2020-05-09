@@ -254,6 +254,29 @@ label {
   display: flex;
   flex-wrap: wrap;
   article {
+    &.news {
+      .panel {
+        .panel-body {
+          height: 294px;
+          .slide-entry-excerpt {
+            height: 268px;
+            h2 {
+              color: #ff9307;
+              font-size: 24px;
+            }
+            h5 {
+              color: #F6A800;
+              height: 36px;
+              line-height: 50px;
+            }
+            p, li {
+              font-size: 14px;
+              line-height: 14px;
+            }
+          }
+        }
+      }
+    }
     margin-bottom: @marginParDefaut;
     .panel {
       background-color: @blanc;
@@ -291,6 +314,10 @@ label {
         .slide-entry-excerpt {
           height: 210px;
           overflow: auto;
+          p {
+            font-size: 14px;
+            line-height: 14px;
+          }
         }
       }
       h3 {
@@ -441,14 +468,11 @@ article.mission {
     box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.5), -1px 1px 3px 0 rgba(0, 0, 0, 0.5);
     display: block;
     margin: 0 auto 3px;
-    min-height: 125px;
     overflow: hidden;
     text-align: center;
     width: 80%;
     img {
-      margin: 0 auto;
-      max-height: 144px;
-      vertical-align: middle;
+      width: 100%;
     }
     .helper {
       display: inline-block;

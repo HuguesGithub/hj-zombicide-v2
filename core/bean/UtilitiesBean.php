@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe UtilitiesBean
  * @author Hugues
  * @since 1.02.00
- * @version 1.05.02
+ * @version 1.05.09
  */
 class UtilitiesBean implements ConstantsInterface
 {
@@ -16,7 +16,7 @@ class UtilitiesBean implements ConstantsInterface
    * @param array $attributes
    * @return string
    */
-  protected function getBalise($balise, $label='', $attributes=array())
+  public function getBalise($balise, $label='', $attributes=array())
   { return '<'.$balise.$this->getExtraAttributesString($attributes).'>'.$label.'</'.$balise.'>'; }
   /**
    * @param array $attributes
