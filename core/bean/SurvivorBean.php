@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.02
+ * @version 1.05.10
  */
 class SurvivorBean extends LocalBean
 {
@@ -60,6 +60,8 @@ class SurvivorBean extends LocalBean
       $this->getAllSkills(),
       // Background du Survivant - 11
       $this->Survivor->getBackground(),
+      // Classe additionnelle, pour la ligne - 12
+      (!$this->Survivor->isStandard() ? ' ultimate' : ''),
     );
     return $this->getRender($this->urlRowPublic, $args);
   }
@@ -169,6 +171,8 @@ class SurvivorBean extends LocalBean
       ($this->Survivor->getBackground()!='' ? substr($this->Survivor->getBackground(), 0, 50).'...' : 'Non renseigné'),
       // Nom de l'image alternative, si défini. - 12
       $this->Survivor->getAltImgName(),
+      // Type du Survivant - 13
+      (!$this->Survivor->isStandard() ? ' ultimate' : ''),
     );
     return $this->getRender($this->urlRowAdmin, $args);
   }
@@ -190,28 +194,33 @@ class SurvivorBean extends LocalBean
   /**
    * @return string
    */
-  public function getAllPortraits()
+  public function getAllPortraits($displayedFiltered=true)
   {
     $Survivor = $this->Survivor;
     $name = $Survivor->getName();
-    $str  = $this->getStrImgPortrait($Survivor->getPortraitUrl(), 'Portrait Survivant - '.$name, $this->strPortraitSurvivant);
+    $str = '';
+    if ($Survivor->isStandard()) {
+      $str .= $this->getStrImgPortrait($Survivor->getPortraitUrl(), 'Portrait Survivant - '.$name, ($displayedFiltered?$this->strPortraitSurvivant:''));
+    }
     if ($Survivor->isZombivor()) {
-      $str .= $this->getStrImgPortrait($Survivor->getPortraitUrl('z'), 'Portrait Zombivant - '.$name, $this->strPortraitZombivant);
+      $str .= $this->getStrImgPortrait($Survivor->getPortraitUrl('z'), 'Portrait Zombivant - '.$name, ($displayedFiltered?$this->strPortraitZombivant:''));
     }
     if ($Survivor->isUltimate()) {
       $label = $this->strPortraitSurvivant.$this->strPortraitUltimate;
-      $str .= $this->getStrImgPortrait($Survivor->getPortraitUrl('u'), 'Portrait Ultimate - '.$name, $label);
+      $str .= $this->getStrImgPortrait($Survivor->getPortraitUrl('u'), 'Portrait Ultimate - '.$name, ($displayedFiltered?$label:''));
+    }
+    if ($Survivor->isUltimatez()) {
       $label = $this->strPortraitZombivant.$this->strPortraitUltimate;
-      $str .= $this->getStrImgPortrait($Survivor->getPortraitUrl('uz'), 'Portrait ZUltimate - '.$name, $label);
+      $str .= $this->getStrImgPortrait($Survivor->getPortraitUrl('uz'), 'Portrait ZUltimate - '.$name, ($displayedFiltered?$label:''));
     }
     return $str;
   }
   private function getProfileLi($type, $survivorTypeId, $label)
   {
-    $strProfils = '<li data-id="'.$this->Survivor->getId().'" data-type=".'$type.'" class="hasTooltip pointer"> ';
-    if ($this->Survivor->areDataSkillsOkay(survivorTypeId)) {
+    $strProfils = '<li data-id="'.$this->Survivor->getId().'" data-type="'.$type.'" class="hasTooltip pointer"> ';
+    if ($this->Survivor->areDataSkillsOkay($survivorTypeId)) {
       $strProfils .= $this->getIconFarCheckSquare().' '.$label.' <div class="tooltip">';
-      $strProfils .= $this->Survivor->getAdminUlSkills(survivorTypeId).'</div>';
+      $strProfils .= $this->Survivor->getAdminUlSkills($survivorTypeId).'</div>';
     } else {
       $strProfils .=  $this->getIconFarWindowClose().' '.$label;
     }
@@ -222,19 +231,19 @@ class SurvivorBean extends LocalBean
     $strProfils  = '<ul>';
     // A-t-il un profil Standard ?
     if ($this->Survivor->isStandard()) {
-      $strProfils .= $this>getProfileLi('survivant', self::CST_SURVIVORTYPEID_S, 'Standard');
+      $strProfils .= $this->getProfileLi('survivant', self::CST_SURVIVORTYPEID_S, 'Standard');
     }
     // A-t-il un profil Zombivant ?
     if ($this->Survivor->isZombivor()) {
-      $strProfils .= $this>getProfileLi('zombivant', self::CST_SURVIVORTYPEID_Z, 'Zombivant');
+      $strProfils .= $this->getProfileLi('zombivant', self::CST_SURVIVORTYPEID_Z, 'Zombivant');
     }
     // A-t-il un profil Ultimate ?
     if ($this->Survivor->isUltimate()) {
-      $strProfils .= $this>getProfileLi('ultimate survivant', self::CST_SURVIVORTYPEID_U, 'Ultimate');
+      $strProfils .= $this->getProfileLi('ultimate survivant', self::CST_SURVIVORTYPEID_U, 'Ultimate');
     }
     // A-t-il un profil UltimateZ ?
     if ($this->Survivor->isUltimatez()) {
-      $strProfils .= $this>getProfileLi('ultimate zombivant', self::CST_SURVIVORTYPEID_UZ, 'Ultimate Zombivant');
+      $strProfils .= $this->getProfileLi('ultimate zombivant', self::CST_SURVIVORTYPEID_UZ, 'Ultimate Zombivant');
     }
     return $strProfils.'</ul>';
   }

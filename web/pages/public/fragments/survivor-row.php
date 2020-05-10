@@ -1,4 +1,4 @@
-<div id="survivor-%1$s" class="publicSurvivorRow survivant row">
+<div id="survivor-%1$s" class="publicSurvivorRow survivant row%12$s">
   <span class="survivorPortraits col-4 col-md-1">%2$s</span>
   <span class="col-8 col-md-11 row">
     <span class="survivorName col-12 col-md-3"><a href="%3$s">%4$s</a></span>

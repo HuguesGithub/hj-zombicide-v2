@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * ExpansionActions
  * @author Hugues
  * @since 1.05.09
- * @version 1.05.09
+ * @version 1.05.10
  */
 class ToolActions extends LocalActions
 {
@@ -44,6 +44,8 @@ class ToolActions extends LocalActions
   {
     $Bean = new UtilitiesBean();
     $tag = self::TAG_SPAN;
+    $this->modif = 0;
+    $this->seuil = 4;
     //////////////////////////////////////////////////////////////////////
     // Initialisation des variables
     $params = $this->post['params'];
@@ -51,24 +53,24 @@ class ToolActions extends LocalActions
     while (!empty($arrParams)) {
       $param = array_shift($arrParams);
       list($key, $value) = explode('=', $param);
-      $$key = $value;
+      $this->{$key} = $value;
     }
 
 //    echo "[$nbDice][$seuil][$modif][$surunsix][$dual][$barbauto]";
     // Si on a un nombre dans Barbare / Mode Automatique, on prend le plus gros score entre le nombre de dés de l'arme et le nombre d'acteurs dans al Zone.
-    $nbDice = max($nbDice, $barabauto);
+    $this->nbDice = max($this->nbDice, $this->barabauto);
 
     $arrDice = array();
-    for ($i=0; $i<$nbDice; $i++) {
+    for ($i=0; $i<$this->nbDice; $i++) {
       $dice = rand(1, 6);
       if ($dice==1) {
         $color = self::COLOR_RED;
-        $dice = min(6,max(1,$dice+$modif));
+        $dice = min(6,max(1,$dice+$this->modif));
       } else {
-        $dice = min(6,max(1,$dice+$modif));
+        $dice = min(6,max(1,$dice+$this->modif));
         if ($dice>=6) {
           $color = self::COLOR_BLUE;
-        } elseif ($dice>=$seuil) {
+        } elseif ($dice>=$this->seuil) {
           $color = self::COLOR_YELLOW;
         } else {
           $color = self::COLOR_ORANGE;

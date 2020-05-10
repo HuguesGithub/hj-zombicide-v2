@@ -72,4 +72,4 @@
 }
 
 
-.thumb { margin-right: 1%; width: 49%; }
+.thumb { margin-right: 1%; width: 49%; max-width: 140px;}

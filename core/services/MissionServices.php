@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionServices
  * @author Hugues.
  * @since 1.00.00
- * @version 1.04.30
+ * @version 1.05.10
  */
 class MissionServices extends LocalServices
 {
@@ -290,4 +290,8 @@ class MissionServices extends LocalServices
 
   public function selectMission($missionId)
   { return $this->select(__FILE__, __LINE__, $missionId); }
+  public function updateMission($Mission)
+  { return $this->update(__FILE__, __LINE__, $Mission); }
+  public function insertMission($Mission)
+  { return $this->insert(__FILE__, __LINE__, $Mission); }
 }

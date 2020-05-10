@@ -31,6 +31,7 @@ class AjaxActions extends LocalActions
         $returned = HomePageActions::dealWithStatic($_POST);
       break;
       case self::AJAX_GETMISSIONS    :
+      case self::AJAX_MISSIONVERIF   :
         $returned = MissionActions::dealWithStatic($_POST);
       break;
       case self::AJAX_GETSKILLS      :

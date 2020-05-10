@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe AdminPageBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.01
+ * @version 1.05.10
  */
 class AdminPageBean extends MainPageBean
 {
@@ -94,6 +94,9 @@ class AdminPageBean extends MainPageBean
     $lstCards .= $Bean->getCheckCard();
     // La carte relatives aux Survivants
     $Bean = new AdminPageSurvivorsBean();
+    $lstCards .= $Bean->getCheckCard();
+    // La carte relatives aux Missions
+    $Bean = new AdminPageMissionsBean();
     $lstCards .= $Bean->getCheckCard();
 
     $args = array(

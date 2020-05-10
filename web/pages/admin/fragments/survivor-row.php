@@ -1,4 +1,4 @@
-<tr class="survivant">
+<tr class="survivant%13$s">
   <td><input id="cb-select-%1$s" name="post[]" value="%1$s" type="checkbox"></td>
   <td>%2$s</td>
   <td><strong><a class="row-title" href="%3$s">%4$s</a></strong>

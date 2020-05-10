@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.09
+ * @version 1.05.10
  */
 interface ConstantsInterface
 {
@@ -22,6 +22,7 @@ interface ConstantsInterface
   const AJAX_GETSURVIVORS   = 'getSurvivants';
   const AJAX_MAKENOISE      = 'makeNoise';
   const AJAX_MELEEATTACK    = 'meleeAttack';
+  const AJAX_MISSIONVERIF   = 'mission-verif';
   const AJAX_MOVE           = 'move';
   const AJAX_OPENDOOR       = 'openDoor';
   const AJAX_ORGANIZE       = 'organize';

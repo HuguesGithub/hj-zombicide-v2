@@ -173,6 +173,7 @@ update="UPDATE wp_11_zombicide_origine SET name='%s' "
 [Player]
 select="SELECT id, name "
 from="FROM wp_11_zombicide_player "
+where="WHERE name LIKE '%s' "
 insert="INSERT INTO wp_11_zombicide_player (name) VALUES ('%s');"
 update="UPDATE wp_11_zombicide_player SET name='%s' "
 [Rule]

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * AdminPageSurvivorsBean
  * @author Hugues
  * @since 1.05.01
- * @version 1.05.07
+ * @version 1.05.10
  */
 class AdminPageSurvivorsBean extends AdminPageBean
 {
@@ -158,6 +158,8 @@ class AdminPageSurvivorsBean extends AdminPageBean
     ($this->Survivor->isUltimatez() ? ' '.self::CST_CHECKED : ''),
     // Extension d'origine du Survivant - 11
     $this->Survivor->getExpansion()->getName(),
+    // Liste des portraits - 12
+    $this->Survivor->getBean()->getAllPortraits(false),
     );
 
     return $this->getRender($this->urlSurvivorEdit, $args);

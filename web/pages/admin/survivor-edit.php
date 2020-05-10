@@ -4,8 +4,7 @@
 </style>
 <div class="wrap">
   <div class="row">
-    <div class="col">----
-    </div>
+    <div class="col">%12$s</div>
     <div class="col">
       <div class="input-group mb-3">
         <div class="input-group-prepend">

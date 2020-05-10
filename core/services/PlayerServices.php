@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe PlayerServices
  * @author Hugues.
  * @since 1.04.27
- * @version 1.04.27
+ * @version 1.05.10
  */
 class PlayerServices extends LocalServices
 {
@@ -26,6 +26,14 @@ class PlayerServices extends LocalServices
 
   /**
    * @param array $arrFilters
+   */
+  private function buildFilters($arrFilters)
+  {
+    $this->arrParams[self::SQL_WHERE] = array();
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_NAME));
+  }
+  /**
+   * @param array $arrFilters
    * @param string $orderby
    * @param string $order
    * @return array
@@ -33,6 +41,7 @@ class PlayerServices extends LocalServices
   public function getPlayersWithFilters($arrFilters=array(), $orderby=self::FIELD_ID, $order=self::ORDER_ASC)
   {
     $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
   /**
