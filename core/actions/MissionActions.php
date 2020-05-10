@@ -88,20 +88,6 @@ class MissionActions extends LocalActions
     return $strBilan;
   }
 
-  private function insertMission()
-  {
-    // Si on n'en a pas, on doit créer une entrée correspondante.
-    $Mission = new Mission();
-    $title = $this->WpPost->getPostTitle();
-    // code
-    // levelId
-    // playerId
-    // durationId
-    // origineId
-
-    //$this->SurvivorServices->insertSurvivor($Survivor);
-    $this->strBilan .= '<br>Mission créée en base : '.$title.'.';
-  }
   private function checkMissions()
   {
     // On regarde les articles créés et on vérifie les données en base, si elles existent et si elles sont cohérentes entre elles.
@@ -235,26 +221,6 @@ class MissionActions extends LocalActions
     }
 
     /*
-      $isWpPostOkay = true;
-      // On récupère le WpPost et ses données
-      if ($missionId==-1) {
-          $this->strBilan .= '<br>Il faut la créer en base de données.';
-
-          $Mission = array_shift($Missions);
-          $this->strBilan .= '<br>La Mission <a href="#">'.$Mission->getTitle().'</a> existe en base.';
-        }
-      }
-
-
-
-      // On recherche un Survivant dans la base de données qui correspond.
-      $Mission = $this->MissionServices->selectMission($missionId);
-      if ($Mission->getId()=='') {
-        //$this->insertMission();
-      } else {
-        //$this->checkMission($Mission);
-      }
-    }
     // Puis, on regarde les données en base et on vérifie que des articles ont été créés pour elles.
     while (!empty($this->Missions)) {
       // On récupère l'extension.
@@ -273,33 +239,6 @@ class MissionActions extends LocalActions
     */
     if ($this->strBilan=='') {
       $this->strBilan = 'Il semblerait que tout aille à la perfection. Aucune anomalie remontée.';
-    }
-  }
-  private function getExpansionId()
-  {
-    $postId        = $this->WpPost->getPostMeta(self::FIELD_EXPANSIONID);
-    $Wp_post = get_post($postId);
-    $WpPost = WpPost::convertElement($Wp_post);
-    $codeExpansion = $WpPost->getPostMeta(self::FIELD_CODE);
-    $Expansions = $this->ExpansionServices->getExpansionsWithFilters(array(self::FIELD_CODE=>$codeExpansion));
-    $Expansion = array_shift($Expansions);
-    return $Expansion->getId();
-  }
-  private function checkMission($Mission)
-  {
-    // On initialise les données
-    $doUpdate = false;
-    $title         = $this->WpPost->getPostTitle();
-    // On vérifie si la donnée en base correspond à l'article.
-    if ($Mission->getTitle()!=$title) {
-      $Mission->setTitle($title);
-      $doUpdate = true;
-    }
-    // TODO : compléter la mécanique de vérification.
-    if ($doUpdate) {
-      // Si nécessaire, on update en base.
-      $this->MissionServices->updateMission($Mission);
-      $this->strBilan .= '<br>Mission mise à jour : '.$title.'.';
     }
   }
   // Fin du bloc relatif à la vérification des compétences sur la Home Admin.
