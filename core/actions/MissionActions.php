@@ -95,48 +95,7 @@ class MissionActions extends LocalActions
       $this->areDataOkay = true;
       $this->doUpdate = false;
       $this->WpPost = array_shift($this->WpPostMissions);
-      $href = '/wp-admin/post.php?post='.$this->WpPost->getID().'&action=edit';
-      $postTitle = $this->WpPost->getPostTitle();
-      $missionId = $this->WpPost->getPostMeta(self::FIELD_MISSIONID);
-      if ($missionId!='') {
-        $Mission = $this->MissionServices->selectMission($missionId);
-      } else {
-        // On n'a pas de correspondance avec la BDD. On va chercher par le nom.
-        $this->strBilan .= '<br>L article WpPost <a href="'.$href.'">'.$postTitle.'</a> a un missionId qui vaut -1.';
-
-        $Missions = $this->MissionServices->getMissionsWithFilters(array(self::FIELD_TITLE=>$postTitle));
-        if (empty($Missions)) {
-          $Mission = new Mission();
-        } else {
-          $this->Mission = array_shift($Missions);
-          $this->strBilan .= '<br>On peut renseigner missionId du WpPost avec : '.$this->Mission->getId().'.';
-        }
-      }
-
-      // On checke le Titre
-      if ($postTitle!=$this->Mission->getTitle()) {
-        $this->strBilan .= '<br>Le titre doit être mis à jour en base.';
-        $this->doUpdate = true;
-      }
-
-      $this->checkCode();
-      $this->checkLevel();
-      $this->checkPlayer();
-      $this->checkDuration();
-      $this->checkOrigine();
-
-      if (!$this->areDataOkay) {
-        $this->strBilan .= '<br>Analyse de l article WpPost <a href="'.$href.'">'.$postTitle.'</a> terminée, des données ne sont pas renseignées.<br>';
-      } elseif ($this->doUpdate) {
-        if ($missionId==-1) {
-          $this->Mission->setTitle($postTitle);
-          $this->MissionServices->insertMission($this->Mission);
-        } else {
-          $this->MissionServices->updateMission($this->Mission);
-        }
-        $this->strBilan .= '<br>Analyse de l article WpPost <a href="'.$href.'">'.$postTitle.'</a> terminée, avec anomalie.<br>';
-      }
-
+      $this->checkWpPostMission();
     }
 
     /*
@@ -160,6 +119,38 @@ class MissionActions extends LocalActions
       $this->strBilan = 'Il semblerait que tout aille à la perfection. Aucune anomalie remontée.';
     }
   }
+  private function checkWpPostMission()
+  {
+    $this->href = '/wp-admin/post.php?post='.$this->WpPost->getID().'&action=edit';
+    $this->postTitle = $this->WpPost->getPostTitle();
+    $this->missionId = $this->WpPost->getPostMeta(self::FIELD_MISSIONID);
+    $this->initMission()
+
+    // On checke le Titre
+    if ($this->postTitle!=$this->Mission->getTitle()) {
+      $this->strBilan .= '<br>Le titre doit être mis à jour en base.';
+      $this->doUpdate = true;
+    }
+
+    $this->checkCode();
+    $this->checkLevel();
+    $this->checkPlayer();
+    $this->checkDuration();
+    $this->checkOrigine();
+
+    if (!$this->areDataOkay) {
+      $this->strBilan .= '<br>Analyse de l article WpPost <a href="'.$this->href.'">'.$this->postTitle.'</a> terminée, des données ne sont pas renseignées.<br>';
+    } elseif ($this->doUpdate) {
+      if ($this->missionId==-1) {
+        $this->Mission->setTitle($this->postTitle);
+        $this->MissionServices->insertMission($this->Mission);
+      } else {
+        $this->MissionServices->updateMission($this->Mission);
+      }
+      $this->strBilan .= '<br>Analyse de l article WpPost <a href="'.$this->href.'">'.$this->postTitle.'</a> terminée, avec anomalie.<br>';
+    }
+
+  }
   private function checkCode()
   {
     // On checke le code
@@ -172,6 +163,23 @@ class MissionActions extends LocalActions
       $this->strBilan .= '<br><strong>Code</strong> à mettre à jour.';
       $this->Mission->setCode($postCode);
       $this->doUpdate = true;
+    }
+  }
+  private function initMission()
+  {
+    if ($this->missionId!='') {
+      $this->Mission = $this->MissionServices->selectMission($this->missionId);
+    } else {
+      // On n'a pas de correspondance avec la BDD. On va chercher par le nom.
+      $this->strBilan .= '<br>L article WpPost <a href="'.$this->href.'">'.$this->postTitle.'</a> a un missionId qui vaut -1.';
+
+      $Missions = $this->MissionServices->getMissionsWithFilters(array(self::FIELD_TITLE=>$this->postTitle));
+      if (empty($Missions)) {
+        $this->Mission = new Mission();
+      } else {
+        $this->Mission = array_shift($Missions);
+        $this->strBilan .= '<br>On peut renseigner missionId du WpPost avec : '.$this->Mission->getId().'.';
+      }
     }
   }
   private function checkLevel()
