@@ -230,6 +230,9 @@ class Survivor extends LocalDomain
    */
   public function getPortraitUrl($type='')
   {
+    if (!$this->isStandard() && $type=='') {
+      $type = 'u';
+    }
     $usedName = ($this->getAltImgName()!='' ? $this->getAltImgName() : $this->name);
     $wholeUrl = $this->imgBaseUrl.$this->getNiceName($usedName).($type!='' ? '-'.$type : '').'.jpg';
     if (self::isAdmin() && @getimagesize($wholeUrl)===false) {
@@ -358,7 +361,7 @@ class Survivor extends LocalDomain
           case 20 :
           case 30 :
           case 40 :
-            $str .= $this->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS='col-12 col-sm-6 col-lg-3'));
+            $str .= $this->getBean()->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS=>'col-12 col-sm-6 col-lg-3'));
             $strTmp = '';
           break;
           default :
@@ -366,10 +369,10 @@ class Survivor extends LocalDomain
         }
         $strTmp .= $this->getSkillLi($SurvivorSkill, $withLink);
       }
-      $str .= $this->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS='col-12 col-sm-6 col-lg-3'));
+      $str .= $this->getBean()->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS=>'col-12 col-sm-6 col-lg-3'));
     }
     return $str;
   }
   private function getSkillLi($SurvivorSkill, $withLink)
-  { return $this->getBadge(TAG_LI, $SurvivorSkill->getBean()->getBadge($withLink)); }
+  { return $this->getBean()->getBalise(self::TAG_LI, $SurvivorSkill->getBean()->getBadge($withLink)); }
 }

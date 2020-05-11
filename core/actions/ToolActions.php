@@ -56,7 +56,7 @@ class ToolActions extends LocalActions
       $this->{$key} = $value;
     }
 
-//    echo "[$nbDice][$seuil][$modif][$surunsix][$dual][$barbauto]";
+    // TODO : Prendre en compte "surunsix" et "dual".
     // Si on a un nombre dans Barbare / Mode Automatique, on prend le plus gros score entre le nombre de dés de l'arme et le nombre d'acteurs dans al Zone.
     $this->nbDice = max($this->nbDice, $this->barabauto);
 

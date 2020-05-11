@@ -257,44 +257,5 @@ class WpPostMissionBean extends WpPostBean
     } else {
       return 'WIP WpPostMissionBean displayWpPost';
     }
-    /*
-    $WpPost = $this->WpPost;
-    $Mission = $this->getMission();
-    $Bean = $Mission->getBean();
-    return $Bean->getExtract(true);
-    $missionImg = 'http://zombicide.jhugues.fr/wp-content/uploads/sites/11'.$WpPost->getPostMeta('missionImg');
-    $args = array(
-      // Href du PDF de la Mission - 1
-      $WpPost->getPdfUrl(),
-      // L'image associée à la Mission - 2
-      $missionImg,
-      // La page de recherche des missions - 3
-      'http://zombicide.jhugues.fr/page-missions/',
-      // - 4
-      '', // $Mission->getOrigineName()
-      // - 5
-      $WpPost->getGuid(),
-      // Code et Nom de la Mission - 6
-      $Mission->getCode().' - '.$Mission->getTitle(),
-      // - 7
-      '',
-      // Difficulté de la Mission - 8
-      $Mission->getStrDifficulty(),
-      // Nombre de joueurs de la Mission - 9
-      $Mission->getStrNbJoueurs(),
-      // Durée de la Mission - 10
-      $Mission->getStrDuree(),
-      // - 11
-      $Mission->getStrExpansions(),
-      // Synopsis de la Mission - 12
-      $WpPost->getPostContent(),
-      // Classe additionnelle de l'article - 13
-      $Mission->getStrClassFilters($isHome),
-      // Dalles requises - 14
-      $Mission->getStrTiles(),
-   );
-    $str = file_get_contents(PLUGIN_PATH.'web/pages/public/fragments/mission-article.php');
-    return vsprintf($str, $args);
-    * */
   }
 }
