@@ -6,11 +6,12 @@ if (!defined('ABSPATH')) {
  * AdminPageExpansionsBean
  * @author Hugues
  * @since 1.04.30
- * @version 1.05.O7
+ * @version 1.05.11
  */
 class AdminPageExpansionsBean extends AdminPageBean
 {
   protected $tplHomeCheckCard  = 'web/pages/admin/fragments/home-check-card.php';
+  protected $urlExpansionListing = 'web/pages/admin/expansion-listing.php';
   /**
    * Class Constructor
    */
@@ -20,6 +21,50 @@ class AdminPageExpansionsBean extends AdminPageBean
     parent::__construct(self::CST_EXPANSION);
     $this->title = 'Extensions';
     $this->ExpansionServices  = new ExpansionServices();
+  }
+  /**
+   * @param array $urlParams
+   * @return $Bean
+   */
+  public function getSpecificContentPage()
+  {
+    $strRows = '';
+    $nbPerPage = 15;
+    $curPage = $this->initVar(self::WP_CURPAGE, 1);
+    $orderby = $this->initVar(self::WP_ORDERBY, self::FIELD_NAME);
+    $order = $this->initVar(self::WP_ORDER, self::ORDER_ASC);
+    $Expansions = $this->ExpansionServices->getExpansionsWithFilters(array(), $orderby, $order);
+    $nbElements = count($Expansions);
+    $nbPages = ceil($nbElements/$nbPerPage);
+    $curPage = max(1, min($curPage, $nbPages));
+    $DisplayedExpansions = array_slice($Expansions, ($curPage-1)*$nbPerPage, $nbPerPage);
+    if (!empty($DisplayedExpansions)) {
+      foreach ($DisplayedExpansions as $Expansion) {
+        $ExpansionBean = new ExpansionBean($Expansion);
+        $strRows .= $ExpansionBean->getRowForAdminPage();
+      }
+    }
+    $queryArg = array(
+      self::CST_ONGLET => self::CST_EXPANSION,
+      self::WP_ORDERBY => $orderby,
+      self::WP_ORDER   => $order
+    );
+    // Pagination
+    $strPagination = $this->getPagination($queryArg, $post_status, $curPage, $nbPages, $nbElements);
+
+    $args = array(
+      // Liste des extensions affichées - 1
+      $strRows,
+      // Filtres - 2
+      '',
+      // Url pour créer une nouvelle Extension - 3
+      '/wp-admin/post-new.php',
+      // Subs - 4
+      '',
+      // Pagination - 5
+      $strPagination,
+    );
+    return $this->getRender($this->urlExpansionListing, $args);
   }
 
   /**

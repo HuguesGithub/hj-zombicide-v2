@@ -6,10 +6,11 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.04.27
+ * @version 1.05.11
  */
 class ExpansionBean extends LocalBean
 {
+  protected $urlRowAdmin  = 'web/pages/admin/fragments/expansion-row.php';
   /**
    * Class Constructor
    * @param Expansion $Expansion
@@ -30,58 +31,57 @@ class ExpansionBean extends LocalBean
     return $str. '"><span><i class="far fa-square"></i></span> '.$this->Expansion->getName().'</div>';
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /**
-   * @param string $tBodyButtons Template des Boutons de fin de ligne
    * @return string
-   *
-  public function getRowForAdminPage($tBodyButtons)
+   */
+  public function getRowForAdminPage()
   {
-    $Expansion = $this->Expansion;
-    $arrF = array(self::FIELD_EXPANSIONID=>$Expansion->getId());
-    $MissionExpansions = $this->MissionExpansionServices->getMissionExpansionsWithFilters($arrF);
-    $nb = count($MissionExpansions);
-    $queryArg = array(
-      self::CST_ONGLET=>'parametre',
-      self::CST_POSTACTION=>'edit',
-      'table'=>'expansion',
-      'id'=>$Expansion->getId()
-    );
-    $urlEdit = $this->getQueryArg($queryArg);
-    $queryArg[self::CST_POSTACTION] = self::CST_TRASH;
-    $urlTrash = $this->getQueryArg($queryArg);
     $args = array(
-      $nb.' Mission'.($nb>1?'s':''),
-      $urlEdit,
-      $urlTrash
+      // L'identifiant de l'extension - 1
+      $this->Expansion->getId(),
+      // Le code de l'extension - 2
+      $this->Expansion->getCode(),
+      // L'url d'édition du WpPost - 3
+      $this->Expansion->getEditUrl(),
+      // L'url publique de l'extension - 4
+      $this->Expansion->getWpPostUrl(),
+      // Son nom - 5
+      $this->Expansion->getName(),
+      // Son rang d'affichage - 6
+      $this->Expansion->getDisplayRank(),
+      // Le nombre de Survivants - 7
+      $this->Expansion->getNbSurvivants(),
+      // Le nombre de Missions - 8
+      $this->Expansion->getNbMissions(),
+      // Est une Mission officielle - 9
+      ($this->Expansion->isOfficial() ? 'Oui' : 'Non'),
     );
-    $tBody  = '<tr><td>'.$Expansion->getId().self::CST_TD_SEP.$Expansion->getCode().self::CST_TD_SEP.$Expansion->getName();
-    $tBody .= self::CST_TD_SEP.$Expansion->getDisplayRank().'</td>';
-    return $tBody.vsprintf($tBodyButtons, $args).'</tr>';
+    return $this->getRender($this->urlRowAdmin, $args);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /**
    * @param int $id
    * @return string

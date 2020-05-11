@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Expansion
  * @author Hugues.
  * @since 1.04.00
- * @version 1.04.30
+ * @version 1.05.11
  */
 class Expansion extends LocalDomain
 {
@@ -154,6 +154,45 @@ class Expansion extends LocalDomain
       }
     }
     return $Obj;
+  }
+  /**
+   * @return string
+   */
+  public function getWpPostUrl()
+  {
+    $args = array(
+      self::WP_METAKEY   => self::FIELD_CODE,
+      self::WP_METAVALUE => $this->getCode(),
+      self::WP_TAXQUERY  => array(),
+      self::WP_CAT       => self::WP_CAT_EXPANSION_ID,
+    );
+    $WpPosts = $this->WpPostServices->getArticles($args);
+    if (!empty($WpPosts)) {
+      $WpPost = array_shift($WpPosts);
+      $url = $WpPost->getPermalink();
+    } else {
+      $url = '#';
+    }
+    return $url;
+  }
+  /**
+   * @version 1.05.11
+   * @return WpPost
+   */
+  public function getArticle()
+  {
+    $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_CODE, $this->getCode());
+    return (empty($WpPosts) ? new WpPost() : array_shift($WpPosts));
+  }
+
+  /**
+   * @version 1.05.11
+   * @return string
+   */
+  public function getEditUrl()
+  {
+    $WpPost = $this->getArticle();
+    return 'http://zombicidev2.jhugues.fr/wp-admin/post.php?post='.$WpPost->getID().'&action=edit';
   }
   /**
    * @return ExpansionBean

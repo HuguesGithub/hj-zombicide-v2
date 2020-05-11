@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe AdminPageBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.10
+ * @version 1.05.11
  */
 class AdminPageBean extends MainPageBean
 {
@@ -63,6 +63,7 @@ class AdminPageBean extends MainPageBean
    */
   public function getContentPage()
   {
+    $strReturned = 'Need to be an admin';
     if (self::isAdmin()) {
       if (!isset($this->urlParams[self::CST_ONGLET])) {
         $strReturned = $this->getHomeContentPage();
@@ -71,6 +72,9 @@ class AdminPageBean extends MainPageBean
         $strReturned = $Bean->getSpecificContentPage();
       } elseif ($this->urlParams[self::CST_ONGLET]==self::CST_SURVIVOR) {
         $Bean = new AdminPageSurvivorsBean($this->urlParams);
+        $strReturned = $Bean->getSpecificContentPage();
+      } elseif ($this->urlParams[self::CST_ONGLET]==self::CST_EXPANSION) {
+        $Bean = new AdminPageExpansionsBean($this->urlParams);
         $strReturned = $Bean->getSpecificContentPage();
       } else {
         $strReturned = "Need to add <b>".$this->urlParams[self::CST_ONGLET]."</b> to AdminPageBean > getContentPage().";
