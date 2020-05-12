@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.05.11
+ * @version 1.05.12
  */
 class ExpansionBean extends LocalBean
 {
@@ -36,6 +36,14 @@ class ExpansionBean extends LocalBean
    */
   public function getRowForAdminPage()
   {
+    // Les arguments pour le lien de détail.
+    $queryArgs = array(
+      self::CST_ONGLET     => self::CST_EXPANSION,
+      self::CST_POSTACTION => self::CST_EDIT,
+      self::FIELD_ID       =>$this->Expansion->getId()
+    );
+    ///////////////////////////////////////////////////////////////////////////
+    // On enrichit le template
     $args = array(
       // L'identifiant de l'extension - 1
       $this->Expansion->getId(),
@@ -55,7 +63,10 @@ class ExpansionBean extends LocalBean
       $this->Expansion->getNbMissions(),
       // Est une Mission officielle - 9
       ($this->Expansion->isOfficial() ? 'Oui' : 'Non'),
+      // Lien de détail de l'extension - 10
+      $this->getQueryArg($queryArgs),
     );
+    // Puis on le restitue
     return $this->getRender($this->urlRowAdmin, $args);
   }
 

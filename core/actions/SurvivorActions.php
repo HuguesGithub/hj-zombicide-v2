@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * SurvivorActions
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.07
+ * @version 1.05.12
  */
 class SurvivorActions extends LocalActions
 {
@@ -202,7 +202,38 @@ class SurvivorActions extends LocalActions
       $doUpdate = true;
     }
     if (isset($arrProfils)) {
-      // TODO : Vérifier que les profils saisis sur le WpPost correspondent à ceux en base.
+      // On vérifie le profil Standard
+      if (!$Survivor->isStandard() && in_array('Standard', $arrProfils)) {
+        $Survivor->setStandard(1);
+        $doUpdate = true;
+      } elseif ($Survivor->isStandard() && !in_array('Standard', $arrProfils)) {
+        $Survivor->setStandard(0);
+        $doUpdate = true;
+      }
+      // On vérifie le profil Zombivant
+      if (!$Survivor->isZombivor() && in_array('Zombivant', $arrProfils)) {
+        $Survivor->setZombivor(1);
+        $doUpdate = true;
+      } elseif ($Survivor->isZombivor() && !in_array('Zombivant', $arrProfils)) {
+        $Survivor->setZombivor(0);
+        $doUpdate = true;
+      }
+      // On vérifie le profil Ultimate
+      if (!$Survivor->isUltimate() && in_array('Ultimate', $arrProfils)) {
+        $Survivor->setUltimate(1);
+        $doUpdate = true;
+      } elseif ($Survivor->isUltimate() && !in_array('Ultimate', $arrProfils)) {
+        $Survivor->setUltimate(0);
+        $doUpdate = true;
+      }
+      // On vérifie le profil Ultimate Zombivant
+      if (!$Survivor->isUltimatez() && in_array('Ultimate Zombivant', $arrProfils)) {
+        $Survivor->setUltimatez(1);
+        $doUpdate = true;
+      } elseif ($Survivor->isUltimatez() && !in_array('Ultimate Zombivant', $arrProfils)) {
+        $Survivor->setUltimatez(0);
+        $doUpdate = true;
+      }
     }
     if ($doUpdate) {
       // Si nécessaire, on update en base.

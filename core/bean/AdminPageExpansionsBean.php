@@ -6,12 +6,13 @@ if (!defined('ABSPATH')) {
  * AdminPageExpansionsBean
  * @author Hugues
  * @since 1.04.30
- * @version 1.05.11
+ * @version 1.05.12
  */
 class AdminPageExpansionsBean extends AdminPageBean
 {
   protected $tplHomeCheckCard  = 'web/pages/admin/fragments/home-check-card.php';
   protected $urlExpansionListing = 'web/pages/admin/expansion-listing.php';
+  protected $urlAdminEdit = 'web/pages/admin/expansion-edit.php';
   /**
    * Class Constructor
    */
@@ -21,12 +22,83 @@ class AdminPageExpansionsBean extends AdminPageBean
     parent::__construct(self::CST_EXPANSION);
     $this->title = 'Extensions';
     $this->ExpansionServices  = new ExpansionServices();
+    $this->MissionServices    = new MissionServices();
+    $this->SurvivorServices   = new SurvivorServices();
   }
   /**
    * @param array $urlParams
    * @return $Bean
    */
   public function getSpecificContentPage()
+  {
+    if (isset($this->urlParams[self::FIELD_ID])) {
+      $this->Expansion = $this->ExpansionServices->selectExpansion($this->urlParams[self::FIELD_ID]);
+    }
+    if (isset($_POST)&&!empty($_POST)) {
+      $this->dealWithPost();
+    }
+    switch ($this->urlParams[self::CST_POSTACTION]) {
+      case 'confirmEdit'  :
+      case self::CST_EDIT :
+        return $this->getEditContentPage();
+      break;
+      default :
+        return $this->getListContentPage();
+      break;
+    }
+  }
+  private function dealWithPost()
+  {
+    if ($this->urlParams[self::CST_POSTACTION]=='confirmEdit') {
+      // On ne met à jour via cette interface que les données suivantes :
+      // Le nombre de Survivants.
+      $this->Expansion->setNbSurvivants($_POST[self::FIELD_NBSURVIVANTS]);
+      // Le nombre de Missions.
+      $this->Expansion->setNbMissions($_POST[self::FIELD_NBMISSIONS]);
+      // Une fois fait, on peut sauvegarder les modifications.
+      $this->ExpansionServices->updateExpansion($this->Expansion);
+    }
+  }
+  public function getEditContentPage()
+  {
+    $args = array(
+      self::FIELD_EXPANSIONID => $this->Expansion->getId(),
+    );
+    // Nombre de Survivants attendus
+    $ExpectedSurvivors = $this->SurvivorServices->getSurvivorsWithFilters($args);
+    $nbExpectedSurvivors = count($ExpectedSurvivors);
+
+    // Nb de Missions attendues
+    $ExpectedMissions = $this->MissionServices->getMissionsByExpansionId($this->Expansion->getId());
+    $nbExpectedMissions = count($ExpectedMissions);
+
+    //////////////////////////////////////////////////////////////////////////
+    // On enrichit le template
+    $args = array(
+    // L'identifiant de l'extension - 1
+    $this->Expansion->getId(),
+    // Le code de l'extension - 2
+    $this->Expansion->getCode(),
+    // Le nom de l'extension - 3
+    $this->Expansion->getName(),
+    // Le rang d'affichage de l'extension - 4
+    $this->Expansion->getDisplayRank(),
+    // Le nombre de Survivants de l'extension - 5
+    $this->Expansion->getNbSurvivants(),
+    // Le nombre théorique de Survivants de l'extension - 6
+    $nbExpectedSurvivors,
+    // Le nombre de Missions de l'extension - 7
+    $this->Expansion->getNbMissions(),
+    // Le nombre théorique de Missions - 8
+    $nbExpectedMissions,
+    // L'extension est-elle officielle ? - 9
+    ($this->Expansion->isOfficial() ? self::CST_CHECKED : ''),
+    );
+    // Puis on le restitue.
+    return $this->getRender($this->urlAdminEdit, $args);
+  }
+
+  public function getListContentPage()
   {
     $strRows = '';
     $nbPerPage = 15;

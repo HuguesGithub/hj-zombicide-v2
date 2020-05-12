@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * SkillActions
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.30
+ * @version 1.05.12
  */
 class SkillActions extends LocalActions
 {
@@ -55,7 +55,12 @@ class SkillActions extends LocalActions
   public function dealWithSkillVerif($isVerif=false)
   {
     // On récupère les articles de compétences
-    $this->WpPostSkills = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_SKILL_ID);
+    $args = array(
+      self::WP_CAT         => self::WP_CAT_SKILL_ID,
+      self::WP_TAXQUERY    => array(),
+      self::WP_POSTSTATUS  => self::WP_PUBLISH.', future',
+    );
+    $this->WpPostSkills = $this->WpPostServices->getArticles($args);
     $nbWpPostSkills = count($this->WpPostSkills);
     // Et les compétences en base
     $this->Skills = $this->SkillServices->getSkillsWithFilters();

@@ -6,10 +6,11 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.10
+ * @version 1.05.12
  */
 class SurvivorBean extends LocalBean
 {
+  protected $urlFormRadioBouton = 'web/pages/public/fragments/form-radio-bouton.php';
   protected $urlRowAdmin  = 'web/pages/admin/fragments/survivor-row.php';
   protected $urlRowPublic = 'web/pages/public/fragments/survivor-row.php';
   protected $urlArticle   = 'web/pages/public/fragments/survivor-article.php';
@@ -30,91 +31,9 @@ class SurvivorBean extends LocalBean
     $this->ExpansionServices = new ExpansionServices();
     $this->SurvivorServices  = new SurvivorServices();
   }
-  /**
-   * @return string
-   */
-  public function getRowForSurvivorsPage()
-  {
-    ///////////////////////////////////////////////////////////////
-    // On enrichi le template et on le retourne.
-    $args = array(
-      // Id du Survivant - 1
-      $this->Survivor->getId(),
-      // Les portraits du Survivants - 2
-      $this->getAllPortraits(),
-      // Url du WpPost associé, s'il existe - 3
-      $this->Survivor->getWpPostUrl(),
-      // Nom du Survivant - 4
-      $this->Survivor->getName(),
-      // Si on a un profil de Zombivant, on donne la possibilité de l'afficher - 5
-      ($this->Survivor->isZombivor()?self::CST_CHANGEPROFILE:''),
-      // Si on a un profil de Zombivant, on veut une case à cocher - 6
-      ($this->Survivor->isZombivor()?self::CST_SQUAREPOINTER:self::CST_WINDOWCLOSE),
-      // Si on a un profil d'Ultimate, on donne la possibilité de l'afficher - 7
-      ($this->Survivor->isUltimate()?self::CST_CHANGEPROFILE:''),
-      // Si on a un profil d'Ultimate, on veut une case à cocher - 8
-      ($this->Survivor->isUltimate()?self::CST_SQUAREPOINTER:self::CST_WINDOWCLOSE),
-      // Extension à laquelle est rattaché le Survivant - 9
-      $this->Survivor->getExpansion()->getName(),
-      // Liste des Compétences du Survivant - 10
-      $this->getAllSkills(),
-      // Background du Survivant - 11
-      $this->Survivor->getBackground(),
-      // Classe additionnelle, pour la ligne - 12
-      (!$this->Survivor->isStandard() ? ' ultimate' : ''),
-    );
-    return $this->getRender($this->urlRowPublic, $args);
-  }
-  /**
-   * @return string
-   */
-  public function getContentForHome()
-  {
-    $args = array(
-      // Url de l'article - 1
-      $this->Survivor->getWpPostUrl(),
-      // Url du portrait du Survivant - 2
-      $this->Survivor->getPortraitUrl(),
-      // Url vers la page Survivants - 3
-      '/'.self::PAGE_SURVIVOR,
-      // Nom du Survivant - 4
-      $this->Survivor->getName(),
-      // Les Compétences du Survivant - 5
-      $this->Survivor->getUlSkills(),
-      // Le Survivant a-t-il une version Zombivant ? - 6
-      $this->Survivor->isZombivor() ? 'Oui' : 'Non',
-      // Le Survivant a-t-il une version Ultimate ?  - 7
-      $this->Survivor->isUltimate() ? 'Oui' : 'Non',
-      // Background du Survivant - 8
-      $this->Survivor->getBackground(),
-      // Classe additionnelle de l'article - 9
-      $this->Survivor->getStrClassFilters($isHome).' '.$this->Survivor->getExpansion()->getCode(),
-      // Le Nom de l'extension - 10
-      $this->Survivor->getExpansion()->getName(),
-    );
-    return $this->getRender($this->urlArticle, $args);
-  }
-  /**
-   * @return string
-   */
-  public function getButton()
-  {
-    $label = $this->getIconFarSquare().' '.$this->Survivor->getName();
-    $attributes = array(
-      self::ATTR_TYPE             => self::TAG_BUTTON,
-      self::ATTR_CLASS            => 'btn btn-light btn-survivor hidden',
-      self::ATTR_DATA_EXPANSIONID => $this->Survivor->getExpansionId(),
-      self::ATTR_DATA_SURVIVORID  => $this->Survivor->getId(),
-    );
-    return $this->getBalise(self::TAG_BUTTON, $label, $attributes);
-  }
 
-
-
-
-
-
-
+  //////////////////////////////////////////////////////////////////////////
+  // Différentes modes de présentation des Survivants
   /**
    * @return string
    */
@@ -176,6 +95,134 @@ class SurvivorBean extends LocalBean
     );
     return $this->getRender($this->urlRowAdmin, $args);
   }
+  /**
+   * @return string
+   */
+  public function getRowForSurvivorsPage()
+  {
+    ///////////////////////////////////////////////////////////////
+    // On enrichi le template et on le retourne.
+    $args = array(
+      // Id du Survivant - 1
+      $this->Survivor->getId(),
+      // Les portraits du Survivants - 2
+      $this->getAllPortraits(),
+      // Url du WpPost associé, s'il existe - 3
+      $this->Survivor->getWpPostUrl(),
+      // Nom du Survivant - 4
+      $this->Survivor->getName(),
+      // Si on a un profil de Zombivant, on donne la possibilité de l'afficher - 5
+      ($this->Survivor->isZombivor()?self::CST_CHANGEPROFILE:''),
+      // Si on a un profil de Zombivant, on veut une case à cocher - 6
+      ($this->Survivor->isZombivor()?self::CST_SQUAREPOINTER:self::CST_WINDOWCLOSE),
+      // Si on a un profil d'Ultimate, on donne la possibilité de l'afficher - 7
+      ($this->Survivor->isUltimate()?self::CST_CHANGEPROFILE:''),
+      // Si on a un profil d'Ultimate, on veut une case à cocher - 8
+      ($this->Survivor->isUltimate()?self::CST_SQUAREPOINTER:self::CST_WINDOWCLOSE),
+      // Extension à laquelle est rattaché le Survivant - 9
+      $this->Survivor->getExpansion()->getName(),
+      // Liste des Compétences du Survivant - 10
+      $this->getAllSkills(),
+      // Background du Survivant - 11
+      $this->Survivor->getBackground(),
+      // Classe additionnelle, pour la ligne - 12
+      (!$this->Survivor->isStandard() ? ' ultimate' : ''),
+    );
+    return $this->getRender($this->urlRowPublic, $args);
+  }
+  /**
+   * @return string
+   */
+  public function getContentForHome()
+  {
+    //////////////////////////////////////////////////////////////////
+    // Liste des profils du Survivants.
+    $checked = false;
+    $strProfiles  = '';
+    $name = self::CST_SURVIVOR.'-skill-'.$this->Survivor->getId();
+    if ($this->Survivor->isStandard()) {
+      $strProfiles .= $this->getFormRadioBouton($name, self::CST_SURVIVOR, 'Survivant', self::CST_CHANGEPROFILE, $checked);
+    }
+    if ($this->Survivor->isZombivor()) {
+      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ZOMBIVOR, 'Zombivant', self::CST_CHANGEPROFILE, $checked);
+    }
+    if ($this->Survivor->isUltimate()) {
+      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATE, 'Ultimate', self::CST_CHANGEPROFILE, $checked);
+    }
+    if ($this->Survivor->isUltimatez()) {
+      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATEZ, 'Ultimate Zombivant', self::CST_CHANGEPROFILE, $checked);
+    }
+    //////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////
+    // On enrichit le template
+    $args = array(
+      // Url de l'article - 1
+      $this->Survivor->getWpPostUrl(),
+      // Url du portrait du Survivant - 2
+      $this->Survivor->getPortraitUrl(),
+      // Url vers la page Survivants - 3
+      '/'.self::PAGE_SURVIVOR,
+      // Nom du Survivant - 4
+      $this->Survivor->getName(),
+      // Les Compétences du Survivant - 5
+      $this->Survivor->getUlSkills(),
+      // Liste des profils du Survivant - 6
+      $strProfiles,
+      // Plus utilisé - 7
+      '',
+      // Background du Survivant - 8
+      $this->Survivor->getBackground(),
+      // Classe additionnelle de l'article - 9
+      $this->Survivor->getStrClassFilters().' '.$this->Survivor->getExpansion()->getCode(),
+      // Le Nom de l'extension - 10
+      $this->Survivor->getExpansion()->getName(),
+    );
+    // puis on le retourne
+    return $this->getRender($this->urlArticle, $args);
+  }
+  //////////////////////////////////////////////////////////////////////////
+  private function getFormRadioBouton($name, $value, $libelle, $extraClass, &$checked)
+  {
+    $smallArgs = array(
+      // Name du radio bouton - 1
+      $name,
+      // Valeur du radio bouton (on s'en fout) - 2
+      $value,
+      // Checked ou pas - 3
+      (!$checked ? ' '.self::CST_CHECKED : ''),
+      // Libellé du bouton - 4
+      $libelle,
+      // Classe supplémentaire - 5
+      $extraClass,
+    );
+    $checked = true;
+    return $this->getRender($this->urlFormRadioBouton, $smallArgs);
+  }
+
+
+
+  /**
+   * @return string
+   */
+  public function getButton()
+  {
+    $label = $this->getIconFarSquare().' '.$this->Survivor->getName();
+    $attributes = array(
+      self::ATTR_TYPE             => self::TAG_BUTTON,
+      self::ATTR_CLASS            => 'btn btn-light btn-survivor hidden',
+      self::ATTR_DATA_EXPANSIONID => $this->Survivor->getExpansionId(),
+      self::ATTR_DATA_SURVIVORID  => $this->Survivor->getId(),
+    );
+    return $this->getBalise(self::TAG_BUTTON, $label, $attributes);
+  }
+
+
+
+
+
+
+
   /**
    * @param string $color
    * @return string

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * ExpansionActions
  * @author Hugues
  * @since 1.04.30
- * @version 1.04.30
+ * @version 1.05.12
  */
 class ExpansionActions extends LocalActions
 {
@@ -49,7 +49,12 @@ class ExpansionActions extends LocalActions
   public function dealWithExpansionVerif($isVerif=false)
   {
     // On récupère les articles d'extensions
-    $this->WpPostExpansions = $this->WpPostServices->getWpPostByCategoryId(self::WP_CAT_EXPANSION_ID);
+    $args = array(
+      self::WP_CAT         => self::WP_CAT_EXPANSION_ID,
+      self::WP_TAXQUERY    => array(),
+      self::WP_POSTSTATUS  => self::WP_PUBLISH.', future',
+    );
+    $this->WpPostExpansions = $this->WpPostServices->getArticles($args);
     $nbWpPostExpansions = count($this->WpPostExpansions);
     // Et les extensions en base
     $this->Expansions = $this->ExpansionServices->getExpansionsWithFilters();
@@ -102,6 +107,7 @@ class ExpansionActions extends LocalActions
         self::WP_METAVALUE    => $code,
         self::WP_TAXQUERY     => array(),
         self::WP_CAT          => self::WP_CAT_EXPANSION_ID,
+        self::WP_POSTSTATUS  => self::WP_PUBLISH.', future',
       );
       $WpPost = $this->WpPostServices->getArticles($args);
       if (empty($WpPost)) {

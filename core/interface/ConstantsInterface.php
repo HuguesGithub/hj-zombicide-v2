@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.10
+ * @version 1.05.12
  */
 interface ConstantsInterface
 {
@@ -104,6 +104,9 @@ interface ConstantsInterface
   const CST_SURVIVORTYPEID_U  = 3;
   const CST_SURVIVORTYPEID_UZ = 4;
   const CST_TRASH             = 'trash';
+  const CST_ULTIMATE          = 'ultimate';
+  const CST_ULTIMATEZ         = 'ultimatez';
+  const CST_ZOMBIVOR          = 'zombivor';
 
   /////////////////////////////////////////////////
   // Fields

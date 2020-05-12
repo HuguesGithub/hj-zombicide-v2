@@ -3,10 +3,7 @@
     <div class="panel-body">
       <div class="col-5">
         <a href="%1$s"><span class="article-survivor-extract-image"><img src="%2$s" alt="%4$s"></span></a>
-        <div class="survivor_version">
-          Zombivant : <em>%6$s </em><br>
-          Ultimate : <em>%7$s </em>
-        </div>
+        <div class="survivor_version">%6$s</div>
       </div>
       <div class="slide-content col-7">
         <header class="entry-content-header">

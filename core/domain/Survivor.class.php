@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Survivor
  * @author Hugues.
  * @since 1.0.00
- * @version 1.05.07
+ * @version 1.05.12
  */
 class Survivor extends LocalDomain
 {
@@ -313,7 +313,7 @@ class Survivor extends LocalDomain
       }
       $strReturned .= '<li><span>'.$SurvivorSkill->getBean()->getBadge().'</span></li>';
     }
-    return $this->getBalise(self::TAG_UL, $strReturned, array(self::ATTR_CLASS=>'col-12'));
+    return $this->getBean()->getBalise(self::TAG_UL, $strReturned, array(self::ATTR_CLASS=>'col-12'));
   }
 
 
@@ -324,7 +324,7 @@ class Survivor extends LocalDomain
    * @param bool $isHome
    * @return string
    */
-  public function getStrClassFilters($isHome)
+  public function getStrClassFilters()
   { return 'col-12 col-md-6 col-xl-4'; }
   /**
    * Retourne si le type de Survivant associé au SurvivorSkill est bien celui attendu.

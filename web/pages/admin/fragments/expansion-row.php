@@ -3,6 +3,7 @@
     <td>%2$s
       <div class="row-actions">
         <span class="edit"><a href="%3$s">Modifier WpPost</a></span>
+        <span class="edit"> | <a href="%10$s">Modifier</a></span>
         <span class="view"> | <a href="%4$s">Aperçu</a></span>
       </div>
     </td>
