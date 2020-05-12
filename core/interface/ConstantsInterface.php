@@ -165,6 +165,13 @@ interface ConstantsInterface
   const ID_ONLINE_CHAT_CONTENT   = 'online-chat-content';
 
   /////////////////////////////////////////////////
+  // Labels
+  const LBL_STANDARD             = 'Standard';
+  const LBL_ZOMBIVANT            = 'Zombivant';
+  const LBL_ULTIMATE             = 'Ultimate';
+  const LBL_ULTIMATEZOMBIVANT    = 'Ultimate Zombivant';
+
+  /////////////////////////////////////////////////
   // Niveau de Danger
   const LVL_BLUE                 = 'blue';
   const LVL_YELLOW               = 'yellow';

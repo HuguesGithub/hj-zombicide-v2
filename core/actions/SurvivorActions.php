@@ -114,16 +114,16 @@ class SurvivorActions extends LocalActions
     $arrProfiles = unserialize($this->WpPost->getPostMeta('profils'));
     foreach ($arrProfiles as $value) {
       switch ($value) {
-        case 'Standard' :
+        case self::LBL_STANDARD :
           $Survivor->setStandard(1);
         break;
-        case 'Zombivant' :
+        case self::LBL_ZOMBIVANT :
           $Survivor->setZombivor(1);
         break;
-        case 'Ultimate' :
+        case self::LBL_ULTIMATE :
           $Survivor->setUltimate(1);
         break;
-        case 'Ultimate Zombivant' :
+        case self::LBL_ULTIMATEZOMBIVANT :
           $Survivor->setUltimatez(1);
         break;
         default :
@@ -180,68 +180,74 @@ class SurvivorActions extends LocalActions
   }
   private function checkSurvivor($Survivor)
   {
+    $this->Survivor = $Survivor;
     // On initialise les données
-    $doUpdate = false;
+    $this->doUpdate = false;
     $name          = $this->WpPost->getPostTitle();
     $background    = $this->WpPost->getPostContent();
     $expansionId   = $this->getExpansionId();
     $arrProfils    = unserialize($this->WpPost->getPostMeta('profils'));
     // On vérifie si la donnée en base correspond à l'article.
-    if ($Survivor->getName()!=$name) {
-      $Survivor->setName($name);
-      $doUpdate = true;
+    if ($this->Survivor->getName()!=$name) {
+      $this->Survivor->setName($name);
+      $this->doUpdate = true;
     }
-    if ($Survivor->getExpansionId()!=$expansionId) {
-      $Survivor->setExpansionId($expansionId);
-      $this->strBilan .= '<br>Survivant mis à jour au niveau de l extension : '.$Survivor->getExpansionId().' - '.$expansionId.'.';
-      $doUpdate = true;
+    if ($this->Survivor->getExpansionId()!=$expansionId) {
+      $this->Survivor->setExpansionId($expansionId);
+      $this->strBilan .= '<br>Survivant mis à jour au niveau de l extension : '.$this->Survivor->getExpansionId().' - '.$expansionId.'.';
+      $this->doUpdate = true;
     }
-    if ($Survivor->getBackground()!=$background && $background!='' ) {
+    if ($this->Survivor->getBackground()!=$background && $background!='' ) {
       $this->strBilan .= '<br>Background KO.';
-      $Survivor->setBackground($background);
-      $doUpdate = true;
+      $this->Survivor->setBackground($background);
+      $this->doUpdate = true;
     }
-    if (isset($arrProfils)) {
-      // On vérifie le profil Standard
-      if (!$Survivor->isStandard() && in_array('Standard', $arrProfils)) {
-        $Survivor->setStandard(1);
-        $doUpdate = true;
-      } elseif ($Survivor->isStandard() && !in_array('Standard', $arrProfils)) {
-        $Survivor->setStandard(0);
-        $doUpdate = true;
-      }
-      // On vérifie le profil Zombivant
-      if (!$Survivor->isZombivor() && in_array('Zombivant', $arrProfils)) {
-        $Survivor->setZombivor(1);
-        $doUpdate = true;
-      } elseif ($Survivor->isZombivor() && !in_array('Zombivant', $arrProfils)) {
-        $Survivor->setZombivor(0);
-        $doUpdate = true;
-      }
-      // On vérifie le profil Ultimate
-      if (!$Survivor->isUltimate() && in_array('Ultimate', $arrProfils)) {
-        $Survivor->setUltimate(1);
-        $doUpdate = true;
-      } elseif ($Survivor->isUltimate() && !in_array('Ultimate', $arrProfils)) {
-        $Survivor->setUltimate(0);
-        $doUpdate = true;
-      }
-      // On vérifie le profil Ultimate Zombivant
-      if (!$Survivor->isUltimatez() && in_array('Ultimate Zombivant', $arrProfils)) {
-        $Survivor->setUltimatez(1);
-        $doUpdate = true;
-      } elseif ($Survivor->isUltimatez() && !in_array('Ultimate Zombivant', $arrProfils)) {
-        $Survivor->setUltimatez(0);
-        $doUpdate = true;
-      }
-    }
-    if ($doUpdate) {
+    $this->checkProfiles();
+    // Vérifications terminées, on fait la mise à jour si nécessaire.
+    if ($this->doUpdate) {
       // Si nécessaire, on update en base.
-      $this->SurvivorServices->updateSurvivor($Survivor);
+      $this->SurvivorServices->updateSurvivor($this->Survivor);
       $this->strBilan .= '<br>Survivant mis à jour : '.$name.'.';
     }
   }
-  // Fin du bloc relatif à la vérification des compétences sur la Home Admin.
+  private function checkProfiles()
+  {
+    if (isset($this->arrProfils)) {
+      // On vérifie le profil Standard
+      if (!$this->Survivor->isStandard() && in_array(self::LBL_STANDARD, $this->arrProfils)) {
+        $this->Survivor->setStandard(1);
+        $this->doUpdate = true;
+      } elseif ($this->Survivor->isStandard() && !in_array(self::LBL_STANDARD, $this->arrProfils)) {
+        $this->Survivor->setStandard(0);
+        $this->doUpdate = true;
+      }
+      // On vérifie le profil Zombivant
+      if (!$this->Survivor->isZombivor() && in_array(self::LBL_ZOMBIVANT, $this->arrProfils)) {
+        $this->Survivor->setZombivor(1);
+        $this->doUpdate = true;
+      } elseif ($this->Survivor->isZombivor() && !in_array(self::LBL_ZOMBIVANT, $this->arrProfils)) {
+        $this->Survivor->setZombivor(0);
+        $this->doUpdate = true;
+      }
+      // On vérifie le profil Ultimate
+      if (!$this->Survivor->isUltimate() && in_array(self::LBL_ULTIMATE, $this->arrProfils)) {
+        $this->Survivor->setUltimate(1);
+        $this->doUpdate = true;
+      } elseif ($this->Survivor->isUltimate() && !in_array(self::LBL_ULTIMATE, $this->arrProfils)) {
+        $this->Survivor->setUltimate(0);
+        $this->doUpdate = true;
+      }
+      // On vérifie le profil Ultimate Zombivant
+      if (!$this->Survivor->isUltimatez() && in_array(self::LBL_ULTIMATEZOMBIVANT, $this->arrProfils)) {
+        $this->Survivor->setUltimatez(1);
+        $this->doUpdate = true;
+      } elseif ($this->Survivor->isUltimatez() && !in_array(self::LBL_ULTIMATEZOMBIVANT, $this->arrProfils)) {
+        $this->Survivor->setUltimatez(0);
+        $this->doUpdate = true;
+      }
+    }
+  }
+  // Fin du bloc relatif à la vérification des extensions sur la Home Admin.
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////
