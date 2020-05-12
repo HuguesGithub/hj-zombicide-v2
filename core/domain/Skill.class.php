@@ -6,9 +6,9 @@ if (!defined('ABSPATH')) {
  * Classe Skill
  * @author Hugues.
  * @since 1.00.00
- * @version 1.05.01
+ * @version 1.05.12
  */
-class Skill extends LocalDomain
+class Skill extends WpPostRelais
 {
   /**
    * Id technique de la donnée
@@ -35,6 +35,16 @@ class Skill extends LocalDomain
    * @var int $expansionId
    */
   protected $expansionId;
+
+  public function __construct($attributes=array())
+  {
+    parent::__construct($attributes);
+    $this->metakey   = self::FIELD_CODE;
+    $this->metavalue = self::FIELD_CODE;
+    $this->categId   = self::WP_CAT_SKILL_ID;
+    $this->adminTab  = self::CST_SKILL;
+  }
+
   /**
    * @return int
    */
@@ -85,6 +95,8 @@ class Skill extends LocalDomain
    */
   public function setExpansionId($expansionId)
   { $this->expansionId = $expansionId; }
+
+  ///////////////////////////////////////////////////////////////
   /**
    * @return array
    */
@@ -99,40 +111,20 @@ class Skill extends LocalDomain
   public static function convertElement($row, $a='', $b='')
   { return parent::convertElement(new Skill(), self::getClassVars(), $row); }
   /**
-   * @return string
-   */
-  public function getWpPostUrl()
-  {
-    $args = array(
-      self::WP_METAKEY   => self::FIELD_CODE,
-      self::WP_METAVALUE => $this->getCode(),
-      self::WP_TAXQUERY  => array(),
-      self::WP_CAT       => self::WP_CAT_SKILL_ID,
-    );
-    $WpPosts = $this->WpPostServices->getArticles($args);
-    if (!empty($WpPosts)) {
-      $WpPost = array_shift($WpPosts);
-      $url = $WpPost->getPermalink();
-    } else {
-      $url = '/page-competences/?skillId='.$this->id;
-    }
-    return $url;
-  }
-  /**
    * @return SkillBean
    */
   public function getBean()
   { return new SkillBean($this); }
+  ///////////////////////////////////////////////////////////////
 
-  /**
-   * @version 1.04.27
-   * @return WpPost
-   */
-  public function getArticle()
-  {
-    $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_CODE, $this->getCode());
-    return (empty($WpPosts) ? new WpPost() : array_shift($WpPosts));
-  }
+
+
+
+
+
+
+
+
 
   public function getExpansion()
   {
@@ -142,23 +134,4 @@ class Skill extends LocalDomain
     return $this->Expansion;
   }
 
-  /**
-   * @version 1.04.27
-   * @return string
-   */
-  public function getEditUrl()
-  {
-    $WpPost = $this->getArticle();
-    if ($WpPost->getID()=='') {
-      $queryArgs = array(
-        self::CST_ONGLET     => self::CST_SKILL,
-        self::CST_POSTACTION => self::CST_EDIT,
-        self::FIELD_ID       => $this->getId()
-      );
-      $hrefEdit = $this->getQueryArg($queryArgs);
-    } else {
-      $hrefEdit = 'http://zombicidev2.jhugues.fr/wp-admin/post.php?post='.$WpPost->getID().'&action=edit';
-    }
-    return $hrefEdit;
-  }
 }

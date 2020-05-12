@@ -186,7 +186,7 @@ class SurvivorActions extends LocalActions
     $name          = $this->WpPost->getPostTitle();
     $background    = $this->WpPost->getPostContent();
     $expansionId   = $this->getExpansionId();
-    $arrProfils    = unserialize($this->WpPost->getPostMeta('profils'));
+    $this->arrProfils    = unserialize($this->WpPost->getPostMeta('profils'));
     // On vérifie si la donnée en base correspond à l'article.
     if ($this->Survivor->getName()!=$name) {
       $this->Survivor->setName($name);

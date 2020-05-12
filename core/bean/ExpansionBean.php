@@ -11,37 +11,23 @@ if (!defined('ABSPATH')) {
 class ExpansionBean extends LocalBean
 {
   protected $urlRowAdmin  = 'web/pages/admin/fragments/expansion-row.php';
+  protected $urlRowPublic = 'web/pages/public/fragments/expansion-row.php';
   /**
-   * Class Constructor
    * @param Expansion $Expansion
    */
-  public function __construct($Expansion='')
+  public function __construct($Expansion=null)
   {
     parent::__construct();
-    $this->Expansion = ($Expansion=='' ? new Expansion() : $Expansion);
+    $this->Expansion = ($Expansion==null ? new Expansion() : $Expansion);
   }
 
-  /**
-   * @return string
-   */
-  public function getButton($extraClass='btn-dark')
-  {
-    $str  = '<div type="button" class="btn btn-expansion'.$extraClass.'" data-expansion-id="'.$this->Expansion->getId();
-    $str .= '" data-nb-survivants="'.$this->Expansion->getNbSurvivants();
-    return $str. '"><span><i class="far fa-square"></i></span> '.$this->Expansion->getName().'</div>';
-  }
-
+  //////////////////////////////////////////////////////////////////////////
+  // Différentes modes de présentation
   /**
    * @return string
    */
   public function getRowForAdminPage()
   {
-    // Les arguments pour le lien de détail.
-    $queryArgs = array(
-      self::CST_ONGLET     => self::CST_EXPANSION,
-      self::CST_POSTACTION => self::CST_EDIT,
-      self::FIELD_ID       =>$this->Expansion->getId()
-    );
     ///////////////////////////////////////////////////////////////////////////
     // On enrichit le template
     $args = array(
@@ -50,7 +36,7 @@ class ExpansionBean extends LocalBean
       // Le code de l'extension - 2
       $this->Expansion->getCode(),
       // L'url d'édition du WpPost - 3
-      $this->Expansion->getEditUrl(),
+      $this->Expansion->getWpPostEditUrl(),
       // L'url publique de l'extension - 4
       $this->Expansion->getWpPostUrl(),
       // Son nom - 5
@@ -64,9 +50,10 @@ class ExpansionBean extends LocalBean
       // Est une Mission officielle - 9
       ($this->Expansion->isOfficial() ? 'Oui' : 'Non'),
       // Lien de détail de l'extension - 10
-      $this->getQueryArg($queryArgs),
+      $this->Expansion->getEditUrl(),
     );
-    // Puis on le restitue
+    ///////////////////////////////////////////////////////////////
+    // Puis on le retourne
     return $this->getRender($this->urlRowAdmin, $args);
   }
 
@@ -89,7 +76,38 @@ class ExpansionBean extends LocalBean
 
 
 
+  /**
+   * @return string
+   */
+  public function getButton($extraClass='btn-dark')
+  {
+    $str  = '<div type="button" class="btn btn-expansion'.$extraClass.'" data-expansion-id="'.$this->Expansion->getId();
+    $str .= '" data-nb-survivants="'.$this->Expansion->getNbSurvivants();
+    return $str. '"><span><i class="far fa-square"></i></span> '.$this->Expansion->getName().'</div>';
+  }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ////////////////////////////////////////////////////////////////////////////
 
 
 

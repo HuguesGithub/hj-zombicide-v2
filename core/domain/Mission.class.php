@@ -6,9 +6,9 @@ if (!defined('ABSPATH')) {
  * Classe Mission
  * @author Hugues.
  * @since 1.04.00
- * @version 1.05.02
+ * @version 1.05.12
  */
-class Mission extends LocalDomain
+class Mission extends WpPostRelais
 {
   /**
    * Id technique de la donnée
@@ -65,6 +65,15 @@ class Mission extends LocalDomain
    * @var int $liveAble
    */
   protected $liveAble;
+
+  public function __construct($attributes=array())
+  {
+    parent::__construct($attributes);
+    $this->metakey   = self::FIELD_MISSIONID;
+    $this->metavalue = self::FIELD_ID;
+    $this->categId   = self::WP_CAT_MISSION_ID;
+    $this->adminTab  = self::CST_MISSION;
+  }
 
   /**
    * @return int
@@ -176,6 +185,8 @@ class Mission extends LocalDomain
    */
   public function setLiveAble($liveAble)
   { $this->liveAble=$liveAble; }
+
+  ///////////////////////////////////////////////////////////////
   /**
    * @return array
    */
@@ -194,6 +205,17 @@ class Mission extends LocalDomain
    */
   public function getBean()
   { return new MissionBean($this); }
+  ///////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
   /**
    * @param string $orderBy
    * @param string $order
@@ -443,17 +465,6 @@ class Mission extends LocalDomain
   public function getTileOrientation($x, $y)
   { return $this->getMissionTile($x, $y)->getOrientation(); }
   /**
-   * @return string
-   */
-  public function getWpPostUrl()
-  { return $this->getWpPost()->getPermalink(); }
-  public function getWpPost()
-  {
-    $args = array('meta_key'=>self::CST_MISSIONID, 'meta_value'=>$this->id);
-    $WpPosts = $this->WpPostServices->getArticles($args);
-    return (!empty($WpPosts) ? array_shift($WpPosts) : new WpPost());
-  }
-  /**
    * @param array $MissionExpansions
    */
   public function setMissionExpansions($MissionExpansions)
@@ -548,4 +559,5 @@ class Mission extends LocalDomain
       // On vérifie l'extension rattachée à la Mission et en fonction on donnera du matériel.
     }
   }
+
 }

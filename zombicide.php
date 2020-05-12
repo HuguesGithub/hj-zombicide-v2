@@ -80,9 +80,9 @@ function zombisite_menu()
     if (function_exists('add_submenu_page')) {
       $arrUrlSubMenu = array(
         'skill'      => 'Compétences',
+        'expansion'  => 'Extensions',
         'mission'    => 'Missions',
         'survivor'   => 'Survivants',
-        'parametre'  => 'Paramètres',
       );
       foreach ($arrUrlSubMenu as $key => $value) {
         $urlSubMenu = $urlRoot.'&amp;onglet='.$key;

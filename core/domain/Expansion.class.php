@@ -6,9 +6,9 @@ if (!defined('ABSPATH')) {
  * Classe Expansion
  * @author Hugues.
  * @since 1.04.00
- * @version 1.05.11
+ * @version 1.05.12
  */
-class Expansion extends LocalDomain
+class Expansion extends WpPostRelais
 {
   /**
    * Id technique de la donnée
@@ -45,6 +45,16 @@ class Expansion extends LocalDomain
    * @var boolean $official;
    */
   protected $official;
+
+  public function __construct($attributes=array())
+  {
+    parent::__construct($attributes);
+    $this->metakey   = self::FIELD_CODE;
+    $this->metavalue = self::FIELD_CODE;
+    $this->categId   = self::WP_CAT_EXPANSION_ID;
+    $this->adminTab  = self::CST_EXPANSION;
+  }
+
   /**
    * Getter Id
    * @return int
@@ -122,6 +132,8 @@ class Expansion extends LocalDomain
    */
   public function setOfficial($official)
   { $this->official = $official; }
+
+  ///////////////////////////////////////////////////////////////
   /**
    * Retourne les attributs de la classe
    * @return array
@@ -135,6 +147,18 @@ class Expansion extends LocalDomain
    */
   public static function convertElement($row, $a='', $b='')
   { return parent::convertElement(new Expansion(), self::getClassVars(), $row); }
+  /**
+   * @return ExpansionBean
+   */
+  public function getBean()
+  { return new ExpansionBean($this); }
+  ///////////////////////////////////////////////////////////////
+
+
+
+
+
+
   /**
    * @param array $row
    */
@@ -155,50 +179,6 @@ class Expansion extends LocalDomain
     }
     return $Obj;
   }
-  /**
-   * @return string
-   */
-  public function getWpPostUrl()
-  {
-    $args = array(
-      self::WP_METAKEY   => self::FIELD_CODE,
-      self::WP_METAVALUE => $this->getCode(),
-      self::WP_TAXQUERY  => array(),
-      self::WP_CAT       => self::WP_CAT_EXPANSION_ID,
-    );
-    $WpPosts = $this->WpPostServices->getArticles($args);
-    if (!empty($WpPosts)) {
-      $WpPost = array_shift($WpPosts);
-      $url = $WpPost->getPermalink();
-    } else {
-      $url = '#';
-    }
-    return $url;
-  }
-  /**
-   * @version 1.05.11
-   * @return WpPost
-   */
-  public function getArticle()
-  {
-    $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_CODE, $this->getCode());
-    return (empty($WpPosts) ? new WpPost() : array_shift($WpPosts));
-  }
-
-  /**
-   * @version 1.05.11
-   * @return string
-   */
-  public function getEditUrl()
-  {
-    $WpPost = $this->getArticle();
-    return 'http://zombicidev2.jhugues.fr/wp-admin/post.php?post='.$WpPost->getID().'&action=edit';
-  }
-  /**
-   * @return ExpansionBean
-   */
-  public function getBean()
-  { return new ExpansionBean($this); }
 
   public function getMissions()
   {

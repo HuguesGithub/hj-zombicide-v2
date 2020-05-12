@@ -2,9 +2,9 @@
   <td><input id="cb-select-%1$s" name="post[]" value="%1$s" type="checkbox"></td>
     <td>%2$s
       <div class="row-actions">
-        <span class="edit"><a href="%3$s">Modifier WpPost</a></span>
-        <span class="edit"> | <a href="%10$s">Modifier</a></span>
-        <span class="view"> | <a href="%4$s">Aperçu</a></span>
+        <span class="edit"><a href="%3$s">Admin WpPost</a></span>
+        <span class="edit"> | <a href="%10$s">Data BDD</a></span>
+        <span class="view"> | <a href="%4$s">WpPost Public</a></span>
       </div>
     </td>
     <td><strong><a class="row-title" href="%3$s">%5$s</a></strong></td>

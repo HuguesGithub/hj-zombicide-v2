@@ -10,17 +10,8 @@ if (!defined('ABSPATH')) {
  */
 class SurvivorBean extends LocalBean
 {
-  protected $urlFormRadioBouton = 'web/pages/public/fragments/form-radio-bouton.php';
   protected $urlRowAdmin  = 'web/pages/admin/fragments/survivor-row.php';
   protected $urlRowPublic = 'web/pages/public/fragments/survivor-row.php';
-  protected $urlArticle   = 'web/pages/public/fragments/survivor-article.php';
-  protected $urlCardVisit = 'web/pages/public/fragments/survivor-cardvisit.php';
-  protected $tplSkillBadge = '<a class="badge badge-%1$s-skill" href="%2$s">%3$s</a>';
-  protected $tplDisabledSkillBadge = '<span class="badge badge-%1$s-skill">%3$s</span>';
-  private $strPortraitSurvivant = 'portrait-survivant';
-  private $strPortraitZombivant = 'portrait-zombivant';
-  private $strPortraitUltimate  = ' portrait-ultimate';
-
   /**
    * @param Survivor $Survivor
    */
@@ -39,6 +30,8 @@ class SurvivorBean extends LocalBean
    */
   public function getRowForAdminPage()
   {
+    ///////////////////////////////////////////////////////////////////////////
+    // On définit le label et l'url selon l'existence du WpPost associé au Survivant
     $wpPostId = $this->Survivor->getWpPost()->getID();
     if ($wpPostId=='') {
       $hrefEditWpPost = '/wp-admin/post-new.php';
@@ -47,29 +40,24 @@ class SurvivorBean extends LocalBean
       $hrefEditWpPost = '/wp-admin/post.php?post='.$this->Survivor->getWpPost()->getID().'&action=edit';
       $labelEditWpPost = 'Modifier';
     }
-    $queryArgs = array(
-      self::CST_ONGLET => self::CST_SURVIVOR,
-      self::CST_POSTACTION => self::CST_EDIT,
-      self::FIELD_ID =>$this->Survivor->getId()
-    );
-    $urlWpPost = $this->Survivor->getWpPostUrl();
-    ///////////////////////////////////////////////////////////////
-    // On enrichi le template et on le retourne.
+
+    ///////////////////////////////////////////////////////////////////////////
+    // On enrichit le template
     $args = array(
       // Identifiant du Survivant - 1
       $this->Survivor->getId(),
       // Portraits - 2
       $this->getAllPortraits(),
       // Url d'édition - 3
-      $this->getQueryArg($queryArgs),
+      $this->Survivor->getEditUrl(),
       // Nom du Survivant - 4
       $this->Survivor->getName(),
       // Url d'édition du WpPost - 5
-      $hrefEditWpPost,
-     // Article publié ? - 6
-      $urlWpPost!='#' ? '' : ' hidden',
+      $this->Survivor->getWpPostEditUrl(),
+      // Article publié ? - 6
+      '',
       // Url de l'Article - 7
-      $urlWpPost,
+      $this->Survivor->getWpPostUrl(),
       // Libellé de l'action sur le WpPost - 8
       $labelEditWpPost,
       // Liste des profils existants - 9
@@ -93,8 +81,23 @@ class SurvivorBean extends LocalBean
       // Type du Survivant - 13
       (!$this->Survivor->isStandard() ? ' ultimate' : ''),
     );
+    ///////////////////////////////////////////////////////////////
+    // Puis on le retourne
     return $this->getRender($this->urlRowAdmin, $args);
   }
+
+
+
+  protected $urlFormRadioBouton = 'web/pages/public/fragments/form-radio-bouton.php';
+  protected $urlArticle   = 'web/pages/public/fragments/survivor-article.php';
+  protected $urlCardVisit = 'web/pages/public/fragments/survivor-cardvisit.php';
+  protected $tplSkillBadge = '<a class="badge badge-%1$s-skill" href="%2$s">%3$s</a>';
+  protected $tplDisabledSkillBadge = '<span class="badge badge-%1$s-skill">%3$s</span>';
+  private $strPortraitSurvivant = 'portrait-survivant';
+  private $strPortraitZombivant = 'portrait-zombivant';
+  private $strPortraitUltimate  = ' portrait-ultimate';
+
+
   /**
    * @return string
    */
@@ -353,6 +356,14 @@ class SurvivorBean extends LocalBean
     return $strType;
   }
 
+  public function getCartouche()
+  {
+    $content = $this->getStrImgPortrait($this->Survivor->getPortraitUrl(), '', '').' '.$this->Survivor->getName();
+    $attributes = array(
+      self::ATTR_CLASS => 'cartouche',
+    );
+    return $this->getBalise(self::TAG_SPAN, $content, $attributes);
+  }
 
 
 }

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe AdminPageBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.11
+ * @version 1.05.12
  */
 class AdminPageBean extends MainPageBean
 {
@@ -75,6 +75,9 @@ class AdminPageBean extends MainPageBean
         $strReturned = $Bean->getSpecificContentPage();
       } elseif ($this->urlParams[self::CST_ONGLET]==self::CST_EXPANSION) {
         $Bean = new AdminPageExpansionsBean($this->urlParams);
+        $strReturned = $Bean->getSpecificContentPage();
+      } elseif ($this->urlParams[self::CST_ONGLET]==self::CST_MISSION) {
+        $Bean = new AdminPageMissionsBean($this->urlParams);
         $strReturned = $Bean->getSpecificContentPage();
       } else {
         $strReturned = "Need to add <b>".$this->urlParams[self::CST_ONGLET]."</b> to AdminPageBean > getContentPage().";

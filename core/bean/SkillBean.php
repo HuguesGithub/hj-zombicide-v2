@@ -6,36 +6,38 @@ if (!defined('ABSPATH')) {
  * Classe SkillBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.08
+ * @version 1.05.12
  */
 class SkillBean extends LocalBean
 {
   protected $urlRowAdmin  = 'web/pages/admin/fragments/skill-row.php';
   protected $urlRowPublic = 'web/pages/public/fragments/skill-row.php';
   /**
-   * Class Constructor
    * @param Skill $Skill
    */
-  public function __construct($Skill='')
+  public function __construct($Skill=null)
   {
     parent::__construct();
+    $this->Skill = ($Skill==null ? new Skill() : $Skill);
     $this->SurvivorSkillServices = new SurvivorSkillServices();
-    $this->Skill = ($Skill=='' ? new Skill() : $Skill);
   }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Différentes modes de présentation
   /**
    * @return string
    */
   public function getRowForAdminPage()
   {
     ///////////////////////////////////////////////////////////////
-    // On enrichi le template et on le retourne.
+    // On enrichit le template et on le retourne.
     $args = array(
       // Identifiant de la Competence
       $this->Skill->getId(),
       // Code de la Compétence
       $this->Skill->getCode(),
       // Url d'édition
-      $this->Skill->getEditUrl(),
+      $this->Skill->getWpPostEditUrl(),
       // Nom de la Compétence
       $this->Skill->getName(),
       // Url de suppression (on les a enlevé)
@@ -51,8 +53,27 @@ class SkillBean extends LocalBean
       // Officiel ou non ? - 10
       ($this->Skill->getExpansion()->isOfficial() ? 'Oui' : 'Non'),
     );
+    ///////////////////////////////////////////////////////////////
+    // Puis on le retourne
     return $this->getRender($this->urlRowAdmin, $args);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /**
    * @return string
    */

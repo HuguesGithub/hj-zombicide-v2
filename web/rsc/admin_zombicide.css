@@ -73,3 +73,18 @@
 
 
 .thumb { margin-right: 1%; width: 49%; max-width: 140px;}
+
+span.cartouche {
+    height: 38px;
+    border: 1px solid #303030;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.cartouche img.thumb {
+    height: 20px;
+    margin: 0;
+    width: 20px;
+}

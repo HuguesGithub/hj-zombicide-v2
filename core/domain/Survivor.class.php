@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
  * @since 1.0.00
  * @version 1.05.12
  */
-class Survivor extends LocalDomain
+class Survivor extends WpPostRelais
 {
   /**
    * Id technique de la donnée
@@ -66,6 +66,10 @@ class Survivor extends LocalDomain
     parent::__construct($attributes);
     $this->imgBaseUrl = 'http://www.jhugues.fr/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p';
     $this->SurvivorSkills = array();
+    $this->metakey   = self::FIELD_SURVIVORID;
+    $this->metavalue = self::FIELD_ID;
+    $this->categId   = self::WP_CAT_SURVIVOR_ID;
+    $this->adminTab  = self::CST_SURVIVOR;
   }
   /**
    * @return int
@@ -167,6 +171,8 @@ class Survivor extends LocalDomain
    */
   public function setLiveAble($liveAble)
   { $this->liveAble=$liveAble; }
+
+  ///////////////////////////////////////////////////////////////
   /**
    * @return array
    */
@@ -185,31 +191,19 @@ class Survivor extends LocalDomain
    */
   public function getBean()
   { return new SurvivorBean($this); }
+  ///////////////////////////////////////////////////////////////
 
-  ////////////////////////////////////////////////////////////////////////////
-  // Méthodes relatives à l'article WpPost
-  /**
-   * @return WpPost
-   */
-  public function getWpPost()
-  {
-    $args = array(
-      self::WP_METAKEY   => self::FIELD_SURVIVORID,
-      self::WP_METAVALUE => $this->id,
-      self::WP_TAXQUERY  => array(),
-    );
-    if (MainPageBean::isAdmin()) {
-      $args[self::WP_POSTSTATUS] = self::WP_PUBLISH.', future';
-    }
-    $WpPosts = $this->WpPostServices->getArticles($args);
-    return (!empty($WpPosts) ? array_shift($WpPosts) : new WpPost());
-  }
-  /**
-   * @return string
-   */
-  public function getWpPostUrl()
-  { return $this->getWpPost()->getPermalink(); }
-  ////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 
   ////////////////////////////////////////////////////////////////////////////
   // Méthodes relatives aux Portraits

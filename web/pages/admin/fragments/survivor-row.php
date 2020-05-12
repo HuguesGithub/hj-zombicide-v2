@@ -3,9 +3,9 @@
   <td>%2$s</td>
   <td><strong><a class="row-title" href="%3$s">%4$s</a></strong>
     <div class="row-actions">
-      <span class="edit"><a href="%5$s">%8$s WpPost</a></span>
-      <span class="edit"> | <a href="%3$s">Modifier</a></span>
-      <span class="view%6$s"> | <a href="%7$s">Aperçu</a></span>
+      <span class="edit"><a href="%5$s">Admin WpPost</a></span>
+      <span class="edit"> | <a href="%3$s">Data BDD</a></span>
+      <span class="view%6$s"> | <a href="%7$s">WpPost Public</a></span>
     </div>
   </td>
   <td>%9$s</td>

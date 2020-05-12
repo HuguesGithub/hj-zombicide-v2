@@ -67,6 +67,11 @@ class AdminPageExpansionsBean extends AdminPageBean
     // Nombre de Survivants attendus
     $ExpectedSurvivors = $this->SurvivorServices->getSurvivorsWithFilters($args);
     $nbExpectedSurvivors = count($ExpectedSurvivors);
+    $strExpectedSurvivors = '';
+    while (!empty($ExpectedSurvivors)) {
+      $Survivor = array_shift($ExpectedSurvivors);
+      $strExpectedSurvivors .= $Survivor->getBean()->getCartouche();
+    }
 
     // Nb de Missions attendues
     $ExpectedMissions = $this->MissionServices->getMissionsByExpansionId($this->Expansion->getId());
@@ -93,6 +98,8 @@ class AdminPageExpansionsBean extends AdminPageBean
     $nbExpectedMissions,
     // L'extension est-elle officielle ? - 9
     ($this->Expansion->isOfficial() ? self::CST_CHECKED : ''),
+    // La liste des Survivants en question - 10
+    $strExpectedSurvivors,
     );
     // Puis on le restitue.
     return $this->getRender($this->urlAdminEdit, $args);

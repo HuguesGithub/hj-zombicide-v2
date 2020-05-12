@@ -6,25 +6,12 @@ if (!defined('ABSPATH')) {
  * Classe MissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.27
+ * @version 1.05.12
  */
 class MissionBean extends LocalBean
 {
-  protected $urlTemplateExtract = 'web/pages/public/fragments/mission-article.php';
-  protected $urlTemplateHome    = 'web/pages/public/fragments/mission-article-home.php';
-  protected $strModelObjRules   = '<li class="objRule">%1$s <span class="tooltip"><header>%1$s</header><content>%2$s</content></span></li>';
-  protected $h5Ul               = '<h5>%1$s</h5><ul>%2$s</ul>';
+  protected $urlRowAdmin        = 'web/pages/admin/fragments/mission-row.php';
   protected $urlRowPublic       = 'web/pages/public/fragments/mission-row.php';
-  /**
-   * Class par défaut du Select
-   * @var $classe
-   */
-  public $classe = 'custom-select custom-select-sm filters';
-  /**
-   * Template pour afficher une Mission
-   * @var $tplMissionExtract
-   */
-  public static $tplMissionExtract  = 'web/pages/public/fragments/article-mission-extract.php';
   /**
    * @param Mission $Mission
    */
@@ -35,9 +22,64 @@ class MissionBean extends LocalBean
     $this->ExpansionServices = new ExpansionServices();
     $this->MissionServices   = new MissionServices();
     $this->WpPostServices    = new WpPostServices();
-    $this->tplRow = 'web/pages/admin/mission/row.php';
-    $this->tplEdit = 'web/pages/admin/mission/edit.php';
   }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Différentes modes de présentation
+  /**
+   * @return string
+   */
+  public function getRowForAdminPage()
+  {
+    ///////////////////////////////////////////////////////////////
+    // Les infos WpPost regroupées dans une cellule.
+    $infosWpPost  = $this->Mission->getTitle().' - '.$this->Mission->getCode().'<br>';
+    $infosWpPost .= $this->Mission->getStrDifPlaDur();
+
+    /////////////////////////////////////////////////////////////////
+    // On enrichit le template
+    $args = array(
+      // Identifiant de la Mission - 1
+      $this->Mission->getId(),
+      // Les infos du WpPost associé - 2
+      $infosWpPost,
+      // Url d'édition du WpPost - 3
+      $this->Mission->getWpPostEditUrl(),
+      // Url d'édition de la BDD - 4
+      $this->Mission->getEditUrl(),
+      // Url pulique de l'article en ligne - 5
+      $this->Mission->getWpPostUrl(),
+      // Dimensions de la map - 6
+      $this->Mission->getHeight().'x'.$this->Mission->getWidth(),
+    );
+    ///////////////////////////////////////////////////////////////
+    // Puis on le retourne
+    return $this->getRender($this->urlRowAdmin, $args);
+  }
+
+
+
+
+
+
+
+
+  protected $urlTemplateExtract = 'web/pages/public/fragments/mission-article.php';
+  protected $urlTemplateHome    = 'web/pages/public/fragments/mission-article-home.php';
+  protected $strModelObjRules   = '<li class="objRule">%1$s <span class="tooltip"><header>%1$s</header><content>%2$s</content></span></li>';
+  protected $h5Ul               = '<h5>%1$s</h5><ul>%2$s</ul>';
+
+
+  /**
+   * Class par défaut du Select
+   * @var $classe
+   */
+  public $classe = 'custom-select custom-select-sm filters';
+  /**
+   * Template pour afficher une Mission
+   * @var $tplMissionExtract
+   */
+  public static $tplMissionExtract  = 'web/pages/public/fragments/article-mission-extract.php';
   /**
    * @param string $isHome
    * @return string
@@ -165,48 +207,6 @@ class MissionBean extends LocalBean
 
 
 
-  /**
-   * @return string
-   */
-  public function getRowForAdminPage()
-  {
-    $Mission = $this->Mission;
-    $queryArgs = array(self::CST_ONGLET=>self::CST_MISSION, self::CST_POSTACTION=>'edit', 'id'=>$Mission->getId());
-    $hrefEdit = $this->getQueryArg($queryArgs);
-    $queryArgs[self::CST_POSTACTION] = self::CST_TRASH;
-    $hrefTrash = $this->getQueryArg($queryArgs);
-    $queryArgs[self::CST_POSTACTION] = 'clone';
-    $hrefClone = $this->getQueryArg($queryArgs);
-    $urlWpPost = $Mission->getWpPostUrl();
-    $args = array(
-      // Identifiant de la Mission
-      $Mission->getId(),
-      // Code de la Mission
-      $Mission->getCode(),
-      // Url d'édition
-      $hrefEdit,
-      // Titre de la Mission
-      $Mission->getTitle(),
-      // Url de suppression
-      $hrefTrash,
-      // Url de Duplication
-      $hrefClone,
-      // Article publié ?
-      $urlWpPost!='#' ? '' : ' hidden',
-      // Url Article
-      $urlWpPost,
-      $Mission->getStrDifficulty(),
-      $Mission->getStrDuree(),
-      $Mission->getStrNbJoueurs(),
-      $Mission->getStrOrigine(),
-      $Mission->getStrTiles(),
-      $Mission->getStrRules(),
-      $Mission->getStrObjectives(),
-      $Mission->getStrExpansions(),
-  );
-    $str = file_get_contents(PLUGIN_PATH.'web/pages/admin/fragments/fragment-row-mission.php');
-    return vsprintf($str, $args);
-  }
   /**
    * @param Mission $Mission
    * @param int $rkRow
