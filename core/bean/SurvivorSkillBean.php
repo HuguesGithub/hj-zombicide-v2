@@ -26,7 +26,7 @@ class SurvivorSkillBean extends LocalBean
       $tag = self::TAG_A;
       $attributes = array(
         self::ATTR_CLASS => 'badge badge-'.$this->getColor().'-skill',
-        self::ATTR_HREF  => '/page-competences/?skillId='.$this->SurvivorSkill->getSkill->getId(),
+        self::ATTR_HREF  => '/page-competences/?skillId='.$this->SurvivorSkill->getSkill()->getId(),
       );
     } else {
       $tag = self:: TAG_SPAN;

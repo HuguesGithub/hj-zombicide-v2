@@ -46,15 +46,6 @@ class Expansion extends WpPostRelais
    */
   protected $official;
 
-  public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->metakey   = self::FIELD_CODE;
-    $this->metavalue = self::FIELD_CODE;
-    $this->categId   = self::WP_CAT_EXPANSION_ID;
-    $this->adminTab  = self::CST_EXPANSION;
-  }
-
   /**
    * Getter Id
    * @return int
@@ -153,6 +144,14 @@ class Expansion extends WpPostRelais
   public function getBean()
   { return new ExpansionBean($this); }
   ///////////////////////////////////////////////////////////////
+
+  /**
+   * @return string
+   */
+  public function getWpPost()
+  { return $this->getMainWpPost(self::FIELD_CODE, $this->code, self::WP_CAT_EXPANSION_ID); }
+
+
 
 
 

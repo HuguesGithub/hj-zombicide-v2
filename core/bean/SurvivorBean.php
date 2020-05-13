@@ -12,6 +12,7 @@ class SurvivorBean extends LocalBean
 {
   protected $urlRowAdmin  = 'web/pages/admin/fragments/survivor-row.php';
   protected $urlRowPublic = 'web/pages/public/fragments/survivor-row.php';
+  protected $urlArticle   = 'web/pages/public/fragments/survivor-article.php';
   /**
    * @param Survivor $Survivor
    */
@@ -31,17 +32,6 @@ class SurvivorBean extends LocalBean
   public function getRowForAdminPage()
   {
     ///////////////////////////////////////////////////////////////////////////
-    // On définit le label et l'url selon l'existence du WpPost associé au Survivant
-    $wpPostId = $this->Survivor->getWpPost()->getID();
-    if ($wpPostId=='') {
-      $hrefEditWpPost = '/wp-admin/post-new.php';
-      $labelEditWpPost = 'Créer';
-    } else {
-      $hrefEditWpPost = '/wp-admin/post.php?post='.$this->Survivor->getWpPost()->getID().'&action=edit';
-      $labelEditWpPost = 'Modifier';
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
     // On enrichit le template
     $args = array(
       // Identifiant du Survivant - 1
@@ -49,62 +39,35 @@ class SurvivorBean extends LocalBean
       // Portraits - 2
       $this->getAllPortraits(),
       // Url d'édition - 3
-      $this->Survivor->getEditUrl(),
+      $this->Survivor->getEditUrl(self::CST_SURVIVOR),
       // Nom du Survivant - 4
       $this->Survivor->getName(),
       // Url d'édition du WpPost - 5
       $this->Survivor->getWpPostEditUrl(),
       // Article publié ? - 6
-      '',
-      // Url de l'Article - 7
       $this->Survivor->getWpPostUrl(),
-      // Libellé de l'action sur le WpPost - 8
-      $labelEditWpPost,
-      // Liste des profils existants - 9
+      // Liste des profils existants - 7
       $this->getListeProfils(),
-      /*
-      // - 8
-      ($this->Survivor->isZombivor() ? self::CST_CHANGEPROFILE : ''),
-      // Le Survivant a-t-il un profil Zombivant ? - 9
-      ($this->Survivor->isZombivor() ? $this->getIconFarSquarePointer() : $this->getIconFarWindowClose()),
-      // - 10
-      ($this->Survivor->isUltimate() ? self::CST_CHANGEPROFILE : ''),
-      // Le Survivant a-t-il un profil Zombivant ? - 11
-      ($this->Survivor->isUltimate() ? $this->getIconFarSquarePointer() : $this->getIconFarWindowClose()),
-      */
-      // Extension de provenance - 10
+      // Extension de provenance - 8
       $this->Survivor->getExpansion()->getName(),
-      // Background du Survivant - 11
+      // Background du Survivant - 9
       ($this->Survivor->getBackground()!='' ? substr($this->Survivor->getBackground(), 0, 50).'...' : 'Non renseigné'),
-      // Nom de l'image alternative, si défini. - 12
+      // Nom de l'image alternative, si défini. - 10
       $this->Survivor->getAltImgName(),
-      // Type du Survivant - 13
+      // Type du Survivant - 11
       (!$this->Survivor->isStandard() ? ' ultimate' : ''),
     );
     ///////////////////////////////////////////////////////////////
     // Puis on le retourne
     return $this->getRender($this->urlRowAdmin, $args);
   }
-
-
-
-  protected $urlFormRadioBouton = 'web/pages/public/fragments/form-radio-bouton.php';
-  protected $urlArticle   = 'web/pages/public/fragments/survivor-article.php';
-  protected $urlCardVisit = 'web/pages/public/fragments/survivor-cardvisit.php';
-  protected $tplSkillBadge = '<a class="badge badge-%1$s-skill" href="%2$s">%3$s</a>';
-  protected $tplDisabledSkillBadge = '<span class="badge badge-%1$s-skill">%3$s</span>';
-  private $strPortraitSurvivant = 'portrait-survivant';
-  private $strPortraitZombivant = 'portrait-zombivant';
-  private $strPortraitUltimate  = ' portrait-ultimate';
-
-
   /**
    * @return string
    */
-  public function getRowForSurvivorsPage()
+  public function getRowForPublicPage()
   {
     ///////////////////////////////////////////////////////////////
-    // On enrichi le template et on le retourne.
+    // On enrichit le template et on le retourne.
     $args = array(
       // Id du Survivant - 1
       $this->Survivor->getId(),
@@ -144,16 +107,16 @@ class SurvivorBean extends LocalBean
     $strProfiles  = '';
     $name = self::CST_SURVIVOR.'-skill-'.$this->Survivor->getId();
     if ($this->Survivor->isStandard()) {
-      $strProfiles .= $this->getFormRadioBouton($name, self::CST_SURVIVOR, 'Survivant', self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= $this->getFormRadioBouton($name, self::CST_SURVIVOR, self::LBL_SURVIVANT, self::CST_CHANGEPROFILE, $checked);
     }
     if ($this->Survivor->isZombivor()) {
-      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ZOMBIVOR, 'Zombivant', self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ZOMBIVOR, self::LBL_ZOMBIVANT, self::CST_CHANGEPROFILE, $checked);
     }
     if ($this->Survivor->isUltimate()) {
-      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATE, 'Ultimate', self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATE, self::LBL_ULTIMATE, self::CST_CHANGEPROFILE, $checked);
     }
     if ($this->Survivor->isUltimatez()) {
-      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATEZ, 'Ultimate Zombivant', self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATEZ, self::LBL_ULTIMATEZOMBIVANT, self::CST_CHANGEPROFILE, $checked);
     }
     //////////////////////////////////////////////////////////////////
 
@@ -181,9 +144,34 @@ class SurvivorBean extends LocalBean
       // Le Nom de l'extension - 10
       $this->Survivor->getExpansion()->getName(),
     );
-    // puis on le retourne
+    ///////////////////////////////////////////////////////////////
+    // Puis on le retourne
     return $this->getRender($this->urlArticle, $args);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  protected $urlFormRadioBouton = 'web/pages/public/fragments/form-radio-bouton.php';
+  protected $urlCardVisit = 'web/pages/public/fragments/survivor-cardvisit.php';
+  protected $tplSkillBadge = '<a class="badge badge-%1$s-skill" href="%2$s">%3$s</a>';
+  protected $tplDisabledSkillBadge = '<span class="badge badge-%1$s-skill">%3$s</span>';
+  private $strPortraitSurvivant = 'portrait-survivant';
+  private $strPortraitZombivant = 'portrait-zombivant';
+  private $strPortraitUltimate  = ' portrait-ultimate';
+
+
   //////////////////////////////////////////////////////////////////////////
   private function getFormRadioBouton($name, $value, $libelle, $extraClass, &$checked)
   {

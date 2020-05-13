@@ -66,15 +66,6 @@ class Mission extends WpPostRelais
    */
   protected $liveAble;
 
-  public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->metakey   = self::FIELD_MISSIONID;
-    $this->metavalue = self::FIELD_ID;
-    $this->categId   = self::WP_CAT_MISSION_ID;
-    $this->adminTab  = self::CST_MISSION;
-  }
-
   /**
    * @return int
    */
@@ -207,8 +198,11 @@ class Mission extends WpPostRelais
   { return new MissionBean($this); }
   ///////////////////////////////////////////////////////////////
 
-
-
+  /**
+   * @return string
+   */
+  public function getWpPost()
+  { return $this->getMainWpPost(self::FIELD_MISSIONID, $this->id, self::WP_CAT_MISSION_ID); }
 
 
 

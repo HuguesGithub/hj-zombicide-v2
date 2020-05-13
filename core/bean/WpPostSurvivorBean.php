@@ -26,11 +26,6 @@ class WpPostSurvivorBean extends WpPostBean
     $this->Survivor = $this->SurvivorServices->selectSurvivor($survivorId);
   }
   /**
-   * @return Survivor
-   */
-  public function getSurvivor()
-  { return $this->Survivor; }
-  /**
    * @return string
    */
   public function displayWpPost()
@@ -42,7 +37,7 @@ class WpPostSurvivorBean extends WpPostBean
   public function getContentPage()
   {
     //////////////////////////////////////////////////////////////////
-    // On enrichi le template puis on le restitue.
+    // On enrichit le template puis on le restitue.
     $args = array(
       // Tous les portraits existants - 1
       $this->Survivor->getBean()->getAllPortraits(),
@@ -57,4 +52,15 @@ class WpPostSurvivorBean extends WpPostBean
     );
     return $this->getRender($this->urlTemplate, $args);
   }
+
+
+
+
+
+
+  /**
+   * @return Survivor
+   */
+  public function getSurvivor()
+  { return $this->Survivor; }
 }

@@ -167,6 +167,7 @@ interface ConstantsInterface
   /////////////////////////////////////////////////
   // Labels
   const LBL_STANDARD             = 'Standard';
+  const LBL_SURVIVANT            = 'Survivant';
   const LBL_ZOMBIVANT            = 'Zombivant';
   const LBL_ULTIMATE             = 'Ultimate';
   const LBL_ULTIMATEZOMBIVANT    = 'Ultimate Zombivant';

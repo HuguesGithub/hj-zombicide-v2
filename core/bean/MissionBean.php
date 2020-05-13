@@ -12,6 +12,7 @@ class MissionBean extends LocalBean
 {
   protected $urlRowAdmin        = 'web/pages/admin/fragments/mission-row.php';
   protected $urlRowPublic       = 'web/pages/public/fragments/mission-row.php';
+  protected $urlArticle         = 'web/pages/public/fragments/mission-article.php';
   /**
    * @param Mission $Mission
    */
@@ -46,7 +47,7 @@ class MissionBean extends LocalBean
       // Url d'édition du WpPost - 3
       $this->Mission->getWpPostEditUrl(),
       // Url d'édition de la BDD - 4
-      $this->Mission->getEditUrl(),
+      $this->Mission->getEditUrl(self::CST_MISSION),
       // Url pulique de l'article en ligne - 5
       $this->Mission->getWpPostUrl(),
       // Dimensions de la map - 6
@@ -56,6 +57,125 @@ class MissionBean extends LocalBean
     // Puis on le retourne
     return $this->getRender($this->urlRowAdmin, $args);
   }
+  /**
+   * @return string
+   */
+  public function getRowForPublicPage()
+  {
+    ///////////////////////////////////////////////////////////////
+    // On enrichi le template et on le retourne.
+    $urlWpPost = $this->Mission->getWpPostUrl();
+    $args = array(
+      // L'identifiant de la Mission - 1
+      $this->Mission->getId(),
+      // L'url pour accéder au détail de la Mission - 2
+      $urlWpPost,
+      // Le Titre de la Mission - 3
+      $this->Mission->getTitle(),
+      // La Difficulté, le nombre de Survivants et la Durée de la Mission - 4
+      $this->Mission->getStrDifPlaDur(),
+      // La liste des Extensions nécessaires à la Mission - 5
+      $this->Mission->getStrExpansions(),
+      // L'origine de la publication originelle - 6
+      $this->getStrOrigine(),
+    );
+    ///////////////////////////////////////////////////////////////
+    // Puis on le retourne
+    return $this->getRender($this->urlRowPublic, $args);
+  }
+  /**
+   * @return string
+   */
+  public function getContentForHome()
+  {
+    ///////////////////////////////////////////////////////////////
+    // On enrichit le template et on le retourne.
+    $args = array(
+      // Titre de la Mission - 1
+      $this->Mission->getWpPost()->getPostTitle(),
+      // Synopsis - 2
+      $this->Mission->getWpPost()->getPostContent(),
+      // Extensions nécessaires - 3
+      $this->getStrExpansions(),
+      // Dalles nécessaires - 4
+      $this->getStrTiles(),
+      // Classes additionnellets - 5
+      ' col-12 col-md-6 col-xl-4',
+      // Url de l'Article de la Mission - 6
+      $this->Mission->getWpPostUrl(),
+      // Url de l'img source de la map - 7
+      $this->getThumbUrl(),
+      // Url vers la page Missions - 7
+      '/'.self::PAGE_MISSION,
+      // Difficulté - 9
+      $this->getLinkedDifficulty(),
+      // Nb de Survivants - 10
+      $this->getStrNbJoueurs(),
+      // Durée - 11
+      $this->getLinkedDuration(),
+    );
+    ///////////////////////////////////////////////////////////////
+    // Puis on le retourne
+    return $this->getRender($this->urlArticle, $args);
+  }
+
+  private function getStrExpansions()
+  {
+    $expansionIds = unserialize($this->Mission->getWpPost()->getPostMeta('expansionIds'));
+    if ($expansionIds=='') {
+      if (self::isAdmin()) {
+        $strReturned = 'Wip Dalles';
+      } else {
+        $strReturned = '';
+      }
+    } else {
+      $strReturned = implode(', ', $expansionIds);
+    }
+    return $strReturned;
+  }
+  private function getStrTiles()
+  {
+    $strTileIds = $this->Mission->getWpPost()->getPostMeta('tileIds');
+    if ($strTileIds=='') {
+      $strTileIds = (self::isAdmin() ? 'Wip Tiles' : '');
+    }
+    return $strTileIds;
+  }
+  private function getThumbUrl()
+  {
+    $thumbId = $this->Mission->getWpPost()->getPostMeta('map');
+    $WpPost = get_post($thumbId);
+    return $WpPost->guid;
+  }
+  private function getLinkedDifficulty()
+  { return '<a href="/tag/'.strtolower($this->getStrDifficulty()).'">'.$this->getStrDifficulty().'</a>'; }
+  private function getStrDifficulty()
+  {
+    $strLevel = $this->Mission->getWpPost()->getPostMeta(self::FIELD_LEVELID);
+    if ($strLevel=='') {
+      $strLevel = $this->Mission->getLevel()->getName();
+    }
+    return $strLevel;
+  }
+  private function getStrNbJoueurs()
+  {
+    $strPlayers = $this->Mission->getWpPost()->getPostMeta(self::FIELD_PLAYERID);
+    if ($strPlayers=='') {
+      $strPlayers = (self::isAdmin() ? 'Wip Nb' : '');
+    }
+    return $strPlayers.' Survivants';
+  }
+  private function getLinkedDuration()
+  { return '<a href="/tag/'.strtolower(str_replace(' ', '-', $this->getStrDuree())).'">'.$this->getStrDuree().'</a>'; }
+  private function getStrDuree()
+  {
+    $strDuree = $this->Mission->getWpPost()->getPostMeta(self::FIELD_DURATIONID);
+    return ($strDuree=='' ? $this->getMission()->getDuration()->getStrDuree() : ' minutes');
+  }
+  // Fin des extras pour l'affichage d'un article de la Home
+  ///////////////////////////////////////////////////////////////
+
+
 
 
 
@@ -147,30 +267,6 @@ class MissionBean extends LocalBean
   { return $this->getMissionContentObjRules(self::WP_CAT_OBJECTIVE_ID, 'Objectifs'); }
   public function getMissionContentRules()
   { return $this->getMissionContentObjRules(self::WP_CAT_RULE_ID, 'Regles speciales'); }
-  /**
-   * @return string
-   */
-  public function getRowForMissionsPage()
-  {
-    ///////////////////////////////////////////////////////////////
-    // On enrichi le template et on le retourne.
-    $urlWpPost = $this->Mission->getWpPostUrl();
-    $args = array(
-      // L'identifiant de la Mission - 1
-      $this->Mission->getId(),
-      // L'url pour accéder au détail de la Mission - 2
-      $urlWpPost,
-      // Le Titre de la Mission - 3
-      $this->Mission->getTitle(),
-      // La Difficulté, le nombre de Survivants et la Durée de la Mission - 4
-      $this->Mission->getStrDifPlaDur(),
-      // La liste des Extensions nécessaires à la Mission - 5
-      $this->Mission->getStrExpansions(),
-      // L'origine de la publication originelle - 6
-      $this->getStrOrigine(),
-    );
-    return $this->getRender($this->urlRowPublic, $args);
-  }
   /**
    * @return Mission
    */
@@ -363,46 +459,7 @@ class MissionBean extends LocalBean
     $str .= $select;
     return $str.'<textarea id="'.$type.'-description" name="'.$type.'-description" class="form-control"></textarea></content></span></li>';
   }
-  /**
-   * @return string
-   */
-  public function getMissionRulesBlock()
-  {
-    $this->MissionRules = $this->Mission->getMissionRules();
-    $displayMissionRules = array();
-    if (!empty($this->MissionRules)) {
-      foreach ($this->MissionRules as $MissionRule) {
-        $Rule = $MissionRule->getRule();
-        if ($Rule->getSetting()==1) {
-          continue;
-        }
-        $displayMissionRules[$MissionRule->getId()] = $MissionRule;
-      }
-    }
-    $none = '<li>Aucune règle spéciale</li>';
-    $type = 'rule';
-    $select = $this->RuleServices->getRuleNoSettingSelect('', 'id', $this->classe);
-    return $this->getMissionObjAndRuleGenericBlock($displayMissionRules, $none, $type, $select);
-  }
-  /**
-   * @return string
-   */
-  public function getMissionSettingsBlock()
-  {
-    if (!empty($this->MissionRules)) {
-      foreach ($this->MissionRules as $MissionRule) {
-        $Rule = $MissionRule->getRule();
-        if ($Rule->getSetting()==0) {
-          continue;
-        }
-        $displayMissionRules[$MissionRule->getId()] = $MissionRule;
-      }
-    }
-    $none = '<li>Aucune mise en place particulière</li>';
-    $type = 'setting';
-    $select = $this->RuleServices->getRuleSettingSelect('', 'id', $this->classe);
-    return $this->getMissionObjAndRuleGenericBlock($displayMissionRules, $none, $type, $select);
-  }
+
   /**
    * @return string
    */

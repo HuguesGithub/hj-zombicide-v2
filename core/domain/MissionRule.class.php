@@ -84,14 +84,5 @@ class MissionRule extends LocalDomain
    */
   public static function convertElement($row, $a='', $b='')
   { return parent::convertElement(new MissionRule(), self::getClassVars(), $row); }
-  /**
-   * @return Rule
-   */
-  public function getRule()
-  {
-    if ($this->Rule==null) {
-     $this->Rule = $this->getRuleFromGlobal($this->ruleId);
-    }
-    return $this->Rule;
-  }
+
 }

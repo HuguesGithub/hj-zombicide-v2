@@ -55,7 +55,7 @@ class WpPageSkillsBean extends WpPageBean
     $strBody = '';
     if (!empty($displayedSkills)) {
       foreach ($displayedSkills as $Skill) {
-        $strBody .= $Skill->getBean()->getRowForSkillsPage();
+        $strBody .= $Skill->getBean()->getRowForPublicPage();
       }
     }
     /////////////////////////////////////////////////////////////////////////////

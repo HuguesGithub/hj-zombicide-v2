@@ -10,34 +10,31 @@ if (!defined('ABSPATH')) {
  */
 class WpPostRelais extends LocalDomain
 {
-  protected $metakey;
-  protected $metavalue;
-  protected $categId;
-  protected $adminTab;
 
   public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-  }
+  { parent::__construct($attributes); }
 
   ////////////////////////////////////////////////////////////////////////////
   // Méthodes relatives à l'article WpPost
   /**
    * @return WpPost
    */
-  public function getWpPost()
+  public function getMainWpPost($metakey, $value, $categId)
   {
-    $args = array(
-      self::WP_METAKEY   => $this->metakey,
-      self::WP_METAVALUE => $this->getField($this->metavalue),
-      self::WP_TAXQUERY  => array(),
-      self::WP_CAT       => $this->categId,
-    );
-    if (MainPageBean::isAdmin()) {
-      $args[self::WP_POSTSTATUS] = self::WP_PUBLISH.', future';
+    if ($this->WpPost==null) {
+      $args = array(
+        self::WP_METAKEY   => $metakey,
+        self::WP_METAVALUE => $value,
+        self::WP_TAXQUERY  => array(),
+        self::WP_CAT       => $categId,
+      );
+      if (MainPageBean::isAdmin()) {
+        $args[self::WP_POSTSTATUS] = self::WP_PUBLISH.', future';
+      }
+      $WpPosts = $this->WpPostServices->getArticles($args);
+      $this->WpPost = (!empty($WpPosts) ? array_shift($WpPosts) : new WpPost());
     }
-    $WpPosts = $this->WpPostServices->getArticles($args);
-    return (!empty($WpPosts) ? array_shift($WpPosts) : new WpPost());
+    return $this->WpPost;
   }
   /**
    * @return string
@@ -54,10 +51,10 @@ class WpPostRelais extends LocalDomain
   /**
    * @return string
    */
-  public function getEditUrl()
+  public function getEditUrl($onglet)
   {
     $queryArgs = array(
-      self::CST_ONGLET     => $this->adminTab,
+      self::CST_ONGLET     => $onglet,
       self::CST_POSTACTION => self::CST_EDIT,
       self::FIELD_ID       => $this->getId()
     );

@@ -51,7 +51,7 @@ class WpPageMissionsBean extends WpPageBean
     $strBody = '';
     if (!empty($displayedMissions)) {
       foreach ($displayedMissions as $Mission) {
-        $strBody .= $Mission->getBean()->getRowForMissionsPage();
+        $strBody .= $Mission->getBean()->getRowForPublicPage();
       }
     }
     /////////////////////////////////////////////////////////////////////////////

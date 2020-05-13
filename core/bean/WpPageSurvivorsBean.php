@@ -52,7 +52,7 @@ class WpPageSurvivorsBean extends WpPageBean
     $strBody = '';
     if (!empty($displayedSurvivors)) {
       foreach ($displayedSurvivors as $Survivor) {
-        $strBody .= $Survivor->getBean()->getRowForSurvivorsPage();
+        $strBody .= $Survivor->getBean()->getRowForPublicPage();
       }
     }
     /////////////////////////////////////////////////////////////////////////////

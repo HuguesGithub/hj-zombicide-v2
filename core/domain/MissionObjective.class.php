@@ -83,14 +83,5 @@ class MissionObjective extends LocalDomain
    */
   public static function convertElement($row, $a='', $b='')
   { return parent::convertElement(new MissionObjective(), self::getClassVars(), $row); }
-  /**
-   * @return Objective
-   */
-  public function getObjective()
-  {
-    if ($this->Objective==null) {
-      $this->Objective = $this->getObjectiveFromGlobal($this->objectiveId);
-    }
-    return $this->Objective;
-  }
+
 }

@@ -36,15 +36,6 @@ class Skill extends WpPostRelais
    */
   protected $expansionId;
 
-  public function __construct($attributes=array())
-  {
-    parent::__construct($attributes);
-    $this->metakey   = self::FIELD_CODE;
-    $this->metavalue = self::FIELD_CODE;
-    $this->categId   = self::WP_CAT_SKILL_ID;
-    $this->adminTab  = self::CST_SKILL;
-  }
-
   /**
    * @return int
    */
@@ -116,6 +107,12 @@ class Skill extends WpPostRelais
   public function getBean()
   { return new SkillBean($this); }
   ///////////////////////////////////////////////////////////////
+
+  /**
+   * @return string
+   */
+  public function getWpPost()
+  { return $this->getMainWpPost(self::FIELD_CODE, $this->code, self::WP_CAT_SKILL_ID); }
 
 
 

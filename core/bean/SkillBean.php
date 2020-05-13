@@ -32,52 +32,31 @@ class SkillBean extends LocalBean
     ///////////////////////////////////////////////////////////////
     // On enrichit le template et on le retourne.
     $args = array(
-      // Identifiant de la Competence
+      // Identifiant de la Competence - 1
       $this->Skill->getId(),
-      // Code de la Compétence
+      // Code de la Compétence - 2
       $this->Skill->getCode(),
-      // Url d'édition
+      // Url d'édition du WpPost - 3
       $this->Skill->getWpPostEditUrl(),
-      // Nom de la Compétence
-      $this->Skill->getName(),
-      // Url de suppression (on les a enlevé)
-      '',
-      // Url de Duplication (on les a enlevé)
-      '',
-      // Article publié ?
-      '#',
-      // Url Article
+      // Url d'édition BDD - 4
+      $this->Skill->getEditUrl(self::CST_SKILL),
+      // Url publique de l'Article - 5
       $this->Skill->getWpPostUrl(),
-      // Description du Skill - 9
+      // Nom de la Compétence - 6
+      $this->Skill->getName(),
+      // Description du Skill - 7
       $this->Skill->getDescription(),
-      // Officiel ou non ? - 10
+      // Officiel ou non ? - 8
       ($this->Skill->getExpansion()->isOfficial() ? 'Oui' : 'Non'),
     );
     ///////////////////////////////////////////////////////////////
     // Puis on le retourne
     return $this->getRender($this->urlRowAdmin, $args);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /**
    * @return string
    */
-  public function getRowForSkillsPage()
+  public function getRowForPublicPage()
   {
     ///////////////////////////////////////////////////////////////
     // On enrichi le template et on le retourne.
@@ -95,6 +74,23 @@ class SkillBean extends LocalBean
     );
     return $this->getRender($this->urlRowPublic, $args);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   private function getSkillCartouches()
   {
     ///////////////////////////////////////////////////////////////

@@ -10,6 +10,7 @@ if (!defined('ABSPATH')) {
  */
 class WpPostNewsBean extends WpPostBean
 {
+  protected $urlTemplate = 'web/pages/public/fragments/article-news-extract.php';
   /**
    * Constructeur
    */
@@ -18,27 +19,18 @@ class WpPostNewsBean extends WpPostBean
     parent::__construct();
     $this->WpPost = $WpPost;
   }
+
   /**
    * @param string $isHome
    * @return string
    */
-  public function displayThumbWpPost($isHome=false)
+  public function displayWpPost()
   {
-    return 'News Thumb';
-  }
-  /**
-   * @param string $isHome
-   * @return string
-   */
-  public function displayWpPost($isHome=false)
-  {
-    $WpPost = $this->WpPost;
     $args = array(
-      $WpPost->getPostContent(),
-      $WpPost->getPostTitle(),
+      $this->WpPost->getPostContent(),
+      $this->WpPost->getPostTitle(),
       '','','','','','','',
     );
-    $str = file_get_contents(PLUGIN_PATH.'web/pages/public/fragments/article-news-extract.php');
-    return vsprintf($str, $args);
+    return $this->getRender($this->urlTemplate, $args);
   }
 }

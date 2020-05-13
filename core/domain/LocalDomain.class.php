@@ -10,6 +10,11 @@ if (!defined('ABSPATH')) {
  */
 class LocalDomain extends GlobalDomain implements ConstantsInterface
 {
+  protected $metakey;
+  protected $metavalue;
+  protected $categId;
+  protected $adminOnglet;
+
   public function __construct($attributes=array())
   {
     global $globalExpansions;
@@ -63,66 +68,8 @@ class LocalDomain extends GlobalDomain implements ConstantsInterface
 
 
 
-  /**
-   * @param int $origineId
-   * @return Origine
-   */
-  protected function getOrigineFromGlobal($origineId)
-  {
-    global $globalOrigines;
-    if (!empty($globalOrigines)) {
-      foreach ($globalOrigines as $Origine) {
-        if ($Origine->getId() == $origineId) {
-         return $Origine;
-        }
-      }
-    }
-    $GlobalOrigine = $this->OrigineServices->select(__FILE__, __LINE__, $origineId);
-    if ($GlobalOrigine != null) {
-      $globalOrigines[] = $GlobalOrigine;
-    }
-    return $GlobalOrigine;
-  }
-  /**
-   * @param int $ruleId
-   * @return Rule
-   */
-  protected function getRuleFromGlobal($ruleId)
-  {
-    global $globalRules;
-    if (!empty($globalRules)) {
-      foreach ($globalRules as $Rule) {
-        if ($Rule->getId()==$ruleId) {
-          return $Rule;
-        }
-      }
-    }
-    $GlobalRule = $this->RuleServices->selectRule($ruleId);
-    if ($GlobalRule != null) {
-      $globalRules[] = $GlobalRule;
-    }
-    return $GlobalRule;
-  }
-  /**
-   * @param int $objectiveId
-   * @return Objective
-   */
-  protected function getObjectiveFromGlobal($objectiveId)
-  {
-    global $globalObjectives;
-    if (!empty($globalObjectives)) {
-      foreach ($globalObjectives as $Objective) {
-        if ($Objective->getId()==$objectiveId) {
-          return $Objective;
-        }
-      }
-    }
-    $GlobalObjective = $this->ObjectiveServices->selectObjective($objectiveId);
-    if ($GlobalObjective != null) {
-      $globalObjectives[] = $GlobalObjective;
-    }
-    return $GlobalObjective;
-  }
+
+
   /**
    * @return string
    */

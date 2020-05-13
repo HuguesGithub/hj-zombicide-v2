@@ -66,10 +66,6 @@ class Survivor extends WpPostRelais
     parent::__construct($attributes);
     $this->imgBaseUrl = 'http://www.jhugues.fr/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p';
     $this->SurvivorSkills = array();
-    $this->metakey   = self::FIELD_SURVIVORID;
-    $this->metavalue = self::FIELD_ID;
-    $this->categId   = self::WP_CAT_SURVIVOR_ID;
-    $this->adminTab  = self::CST_SURVIVOR;
   }
   /**
    * @return int
@@ -193,7 +189,11 @@ class Survivor extends WpPostRelais
   { return new SurvivorBean($this); }
   ///////////////////////////////////////////////////////////////
 
-
+  /**
+   * @return string
+   */
+  public function getWpPost()
+  { return $this->getMainWpPost(self::FIELD_SURVIVORID, $this->id, self::WP_CAT_SURVIVOR_ID); }
 
 
 

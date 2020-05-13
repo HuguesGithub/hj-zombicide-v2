@@ -50,7 +50,7 @@ class ExpansionBean extends LocalBean
       // Est une Mission officielle - 9
       ($this->Expansion->isOfficial() ? 'Oui' : 'Non'),
       // Lien de détail de l'extension - 10
-      $this->Expansion->getEditUrl(),
+      $this->Expansion->getEditUrl(self::CST_EXPANSION),
     );
     ///////////////////////////////////////////////////////////////
     // Puis on le retourne
