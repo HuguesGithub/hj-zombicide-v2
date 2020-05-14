@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * SurvivorActions
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.12
+ * @version 1.05.14
  */
 class SurvivorActions extends LocalActions
 {
@@ -210,25 +210,33 @@ class SurvivorActions extends LocalActions
       $this->strBilan .= '<br>Survivant mis à jour : '.$name.'.';
     }
   }
+  private function checkStandardProfile()
+  {
+    if (!$this->Survivor->isStandard() && in_array(self::LBL_STANDARD, $this->arrProfils)) {
+      $this->Survivor->setStandard(1);
+      $this->doUpdate = true;
+    } elseif ($this->Survivor->isStandard() && !in_array(self::LBL_STANDARD, $this->arrProfils)) {
+      $this->Survivor->setStandard(0);
+      $this->doUpdate = true;
+    }
+  }
+  private function checkZombivorProfile()
+  {
+    if (!$this->Survivor->isZombivor() && in_array(self::LBL_ZOMBIVANT, $this->arrProfils)) {
+      $this->Survivor->setZombivor(1);
+      $this->doUpdate = true;
+    } elseif ($this->Survivor->isZombivor() && !in_array(self::LBL_ZOMBIVANT, $this->arrProfils)) {
+      $this->Survivor->setZombivor(0);
+      $this->doUpdate = true;
+    }
+  }
   private function checkProfiles()
   {
     if (isset($this->arrProfils)) {
       // On vérifie le profil Standard
-      if (!$this->Survivor->isStandard() && in_array(self::LBL_STANDARD, $this->arrProfils)) {
-        $this->Survivor->setStandard(1);
-        $this->doUpdate = true;
-      } elseif ($this->Survivor->isStandard() && !in_array(self::LBL_STANDARD, $this->arrProfils)) {
-        $this->Survivor->setStandard(0);
-        $this->doUpdate = true;
-      }
+      $this->checkStandardProfile();
       // On vérifie le profil Zombivant
-      if (!$this->Survivor->isZombivor() && in_array(self::LBL_ZOMBIVANT, $this->arrProfils)) {
-        $this->Survivor->setZombivor(1);
-        $this->doUpdate = true;
-      } elseif ($this->Survivor->isZombivor() && !in_array(self::LBL_ZOMBIVANT, $this->arrProfils)) {
-        $this->Survivor->setZombivor(0);
-        $this->doUpdate = true;
-      }
+      $this->checkZombivorProfile();
       // On vérifie le profil Ultimate
       if (!$this->Survivor->isUltimate() && in_array(self::LBL_ULTIMATE, $this->arrProfils)) {
         $this->Survivor->setUltimate(1);

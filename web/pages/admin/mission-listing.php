@@ -27,6 +27,7 @@
           <td id="cb" class="manage-column column-cb check-column"><input id="cb-select-all-1" type="checkbox"></td>
           <th scope="col" id="infosWpPost" class="manage-column">Infos WpPost</th>
           <th scope="col" id="dimensions" class="manage-column column-date">Dimensions</th>
+          <th scope="col" id="map" class="manage-column">Map</th>
         </tr>
       </thead>
       <tbody id="the-list">%1$s</tbody>
@@ -35,6 +36,7 @@
           <td class="manage-column column-cb check-column"><input id="cb-select-all-2" type="checkbox"></td>
           <th scope="col" class="manage-column">Infos WpPost</th>
           <th scope="col" class="manage-column">Dimensions</th>
+          <th scope="col" class="manage-column">Map</th>
         </tr>
       </tfoot>
     </table>

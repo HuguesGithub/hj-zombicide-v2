@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Mission
  * @author Hugues.
  * @since 1.04.00
- * @version 1.05.12
+ * @version 1.05.14
  */
 class Mission extends WpPostRelais
 {
@@ -308,7 +308,7 @@ class Mission extends WpPostRelais
     return $this->Player;
   }
   public function getThumbUrl()
-  { return '/wp-content/plugins/hj-zombicide/web/rsc/img/missions/'.$this->getCode(); }
+  { return '/wp-content/plugins/hj-zombicide/web/rsc/img/missions/'.$this->getCode().'-Thumb.png'; }
   /**
    * @return string
    */

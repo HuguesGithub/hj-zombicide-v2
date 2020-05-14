@@ -6,12 +6,13 @@ if (!defined('ABSPATH')) {
  * AdminPageMissionsBean
  * @author Hugues
  * @since 1.05.10
- * @version 1.05.12
+ * @version 1.05.14
  */
 class AdminPageMissionsBean extends AdminPageBean
 {
   protected $tplHomeCheckCard  = 'web/pages/admin/fragments/home-check-card.php';
   protected $urlMissionListing = 'web/pages/admin/mission-listing.php';
+  protected $urlAdminEdit      = 'web/pages/admin/mission-edit.php';
   /**
    * Class Constructor
    */
@@ -37,7 +38,7 @@ class AdminPageMissionsBean extends AdminPageBean
     switch ($this->urlParams[self::CST_POSTACTION]) {
       case 'confirmEdit'  :
       case self::CST_EDIT :
-        //return $this->getEditContentPage();
+        return $this->getEditContentPage();
       break;
       default :
         return $this->getListContentPage();
@@ -84,6 +85,38 @@ class AdminPageMissionsBean extends AdminPageBean
       $strPagination,
     );
     return $this->getRender($this->urlMissionListing, $args);
+  }
+  public function getEditContentPage()
+  {
+    //////////////////////////////////////////////////////////////////////////
+    // On enrichit le template
+    $args = array(
+    // L'identifiant de la mission - 1
+    $this->Mission->getId(),
+    // Le code de la Mission - 2
+    $this->Mission->getCode(),
+    // Le titre de la Mission - 3
+    $this->Mission->getTitle(),
+    // Le synopsis de la Mission - 4
+    $this->Mission->getWpPost()->getPostContent(),
+    // La difficulté de la Mission - 5
+    $this->Mission->getStrDifficulty(),
+    // Le nombre de Survivants de la Mission - 6
+    $this->Mission->getStrNbJoueurs(),
+    // La durée de la Mission - 7
+    $this->Mission->getStrDuree(),
+    // L'origine de la Mission - 8
+    $this->Mission->getStrOrigine(),
+    // La liste des extensions utilisées - 9
+    implode(', ', unserialize($this->Mission->getWpPost()->getPostMeta('expansionIds'))),
+    // La liste des dalles utilisées - 10
+    $this->Mission->getWpPost()->getPostMeta('tileIds'),
+    // Url de l'image de la map - 11
+    $this->Mission->getThumbUrl(),
+      '', '', '', '', '', '', '', '', '', '', '', '', '',
+    );
+    // Puis on le restitue.
+    return $this->getRender($this->urlAdminEdit, $args);
   }
 
   /**

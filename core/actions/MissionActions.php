@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * MissionActions
  * @author Hugues
  * @since 1.02.00
- * @version 1.05.10
+ * @version 1.05.14
  */
 class MissionActions extends LocalActions
 {
@@ -124,7 +124,7 @@ class MissionActions extends LocalActions
     $this->href = '/wp-admin/post.php?post='.$this->WpPost->getID().'&action=edit';
     $this->postTitle = $this->WpPost->getPostTitle();
     $this->missionId = $this->WpPost->getPostMeta(self::FIELD_MISSIONID);
-    $this->initMission()
+    $this->initMission();
 
     // On checke le Titre
     if ($this->postTitle!=$this->Mission->getTitle()) {

@@ -8,4 +8,5 @@
       </div>
     </td>
     <td>%6$s</td>
+    <td><img src="%7$s"/></td>
 </tr>

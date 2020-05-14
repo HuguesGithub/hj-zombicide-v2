@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.12
+ * @version 1.05.14
  */
 class MissionBean extends LocalBean
 {
@@ -52,6 +52,8 @@ class MissionBean extends LocalBean
       $this->Mission->getWpPostUrl(),
       // Dimensions de la map - 6
       $this->Mission->getHeight().'x'.$this->Mission->getWidth(),
+      // Url de la Map - 7
+      $this->Mission->getThumbUrl(),
     );
     ///////////////////////////////////////////////////////////////
     // Puis on le retourne
@@ -104,7 +106,7 @@ class MissionBean extends LocalBean
       // Url de l'Article de la Mission - 6
       $this->Mission->getWpPostUrl(),
       // Url de l'img source de la map - 7
-      $this->getThumbUrl(),
+      $this->Mission->getThumbUrl(),
       // Url vers la page Missions - 7
       '/'.self::PAGE_MISSION,
       // Difficulté - 9
@@ -118,6 +120,13 @@ class MissionBean extends LocalBean
     // Puis on le retourne
     return $this->getRender($this->urlArticle, $args);
   }
+
+
+
+
+
+
+
 
   private function getStrExpansions()
   {
@@ -140,12 +149,6 @@ class MissionBean extends LocalBean
       $strTileIds = (self::isAdmin() ? 'Wip Tiles' : '');
     }
     return $strTileIds;
-  }
-  private function getThumbUrl()
-  {
-    $thumbId = $this->Mission->getWpPost()->getPostMeta('map');
-    $WpPost = get_post($thumbId);
-    return $WpPost->guid;
   }
   private function getLinkedDifficulty()
   { return '<a href="/tag/'.strtolower($this->getStrDifficulty()).'">'.$this->getStrDifficulty().'</a>'; }
