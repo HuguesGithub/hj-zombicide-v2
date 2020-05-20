@@ -353,6 +353,15 @@ label {
 
 #card-container {
   text-align: center;
+  .card {
+    margin: @marginParDefaut;
+    max-width: 290px;
+    border-radius: @radiusParDefaut;
+    overflow: hidden;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.35);
+    background-color: transparent;
+    display: inline-block;
+  }
 }
 .card {
   background: @blanc border-box;
@@ -696,7 +705,7 @@ article.survivor {
   border: 2px solid @orange;
   border-radius: 10px;
   color: @orange;
-  font-family: "Bungee";
+  font-family: "Bungee",Arial,sans-serif;
   font-size: 12px;
   line-height: 11px;
   padding: 5px;
@@ -705,21 +714,7 @@ article.survivor {
   }
 }
 
-/******************************
- *** CARDS
- ******************************/
 
-#card-container {
-  .card {
-    margin: @marginParDefaut;
-    max-width: 290px;
-    border-radius: @radiusParDefaut;
-    overflow: hidden;
-    box-shadow: 5px 5px 5px rgba(0,0,0,0.35);
-    background-color: transparent;
-    display: inline-block;
-  }
-}
 /******************************
  *** PAGINATION
  ******************************/

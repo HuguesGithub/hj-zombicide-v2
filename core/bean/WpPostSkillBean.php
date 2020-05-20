@@ -68,14 +68,35 @@ class WpPostSkillBean extends WpPostBean
     }
 
     //////////////////////////////////////////////////////////////////
+    // On enrichi le template puis on le restitue.
+    $args = array(
+      // Nom de la Compétence - 1
+      $this->Skill->getName(),
+      // Description de la Compétence - 2
+      $this->Skill->getDescription(),
+      // Liste des Survivants ayant la compétence en Bleu (Zombivant et Ultimate compris) - 3
+      $this->buildSkillBadges(1, $arrTags),
+      // Liste des Survivants ayant la compétence en Jaune (Zombivant et Ultimate compris) - 4
+      $this->buildSkillBadges(2, $arrTags),
+      // Liste des Survivants ayant la compétence en Orange (Zombivant et Ultimate compris) - 5
+      $this->buildSkillBadges(3, $arrTags),
+      // Liste des Survivants ayant la compétence en Rouge (Zombivant et Ultimate compris) - 6
+      $this->buildSkillBadges(4, $arrTags),
+      // Lien de navigation - 7
+      $this->getNavLinks(),
+    );
+    return $this->getRender($this->urlTemplate, $args);
+  }
+  private function getNavLinks()
+  {
+    //////////////////////////////////////////////////////////////////
     // On construit les liens de navigation
     // On récupère toutes les compétences, classées par ordre alphabétique.
-    // On les parcourt jusqu'à trouver la courante.
-    // On exploite la précédente et la suivante.
     $Skills = $this->SkillServices->getSkillsWithFilters();
     $firstSkill = null;
     while (!empty($Skills)) {
       $Skill = array_shift($Skills);
+      // On les parcourt jusqu'à trouver la courante.
       if ($Skill->getId()==$this->Skill->getId()) {
         break;
       }
@@ -93,6 +114,7 @@ class WpPostSkillBean extends WpPostBean
     }
 
     $nav = '';
+    // On exploite la précédente et la suivante.
     if (!empty($prevSkill)) {
       $attributes = array(self::ATTR_HREF=>$prevSkill->getWpPost()->getPermalink(), self::ATTR_CLASS=>'adjacent-link col-3');
       $nav .= $this->getBalise(self::TAG_A, '&laquo; '.$prevSkill->getWpPost()->getPostTitle(), $attributes);
@@ -101,29 +123,8 @@ class WpPostSkillBean extends WpPostBean
       $attributes = array(self::ATTR_HREF=>$nextSkill->getWpPost()->getPermalink(), self::ATTR_CLASS=>'adjacent-link col-3');
       $nav .= $this->getBalise(self::TAG_A, $nextSkill->getWpPost()->getPostTitle().' &raquo;', $attributes);
     }
-
-
-    //////////////////////////////////////////////////////////////////
-    // On enrichi le template puis on le restitue.
-    $args = array(
-      // Nom de la Compétence - 1
-      $this->Skill->getName(),
-      // Description de la Compétence - 2
-      $this->Skill->getDescription(),
-      // Liste des Survivants ayant la compétence en Bleu (Zombivant et Ultimate compris) - 3
-      $this->buildSkillBadges(1, $arrTags),
-      // Liste des Survivants ayant la compétence en Jaune (Zombivant et Ultimate compris) - 4
-      $this->buildSkillBadges(2, $arrTags),
-      // Liste des Survivants ayant la compétence en Orange (Zombivant et Ultimate compris) - 5
-      $this->buildSkillBadges(3, $arrTags),
-      // Liste des Survivants ayant la compétence en Rouge (Zombivant et Ultimate compris) - 6
-      $this->buildSkillBadges(4, $arrTags),
-      // Lien de navigation - 7
-      $nav,
-    );
-    return $this->getRender($this->urlTemplate, $args);
+    return $nav;
   }
-
   private function buildSkillBadges($rank, $arrTags)
   {
     $strReturned = '';
