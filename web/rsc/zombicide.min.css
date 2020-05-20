@@ -487,10 +487,6 @@ article.mission .article-mission-extract-image {
   width: 80%;
 }
 
-article.mission .article-mission-extract-image img {
-  width: 100%;
-}
-
 article.mission .article-mission-extract-image .helper {
   display: inline-block;
   height: 100%;
@@ -787,6 +783,35 @@ article.survivor.levelFan .topCornerBandeau {
 .skillRepByLevel .badge {
   margin: 0 5px 2px 0;
 }
+
+.cartouche img {
+  border-radius: 10px;
+  width: 24px;
+}
+.adjacent-link {
+  border: 2px solid #ff9307;
+  border-radius: 10px;
+  color: #ff9307  ;
+  font-family: "Bungee";
+  font-size: 12px;
+  line-height: 11px;
+  padding: 5px;
+}
+a.adjacent-link:hover {
+  color: #ff9307  ;
+}
+/******************************
+ *** CARDS
+ ******************************/
+#card-container .card {
+  margin: 10px;
+  max-width: 290px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.35);
+  background-color: transparent;
+  display: inline-block;
+}
 /******************************
  *** PAGINATION
  ******************************/
@@ -807,6 +832,7 @@ article.survivor.levelFan .topCornerBandeau {
 .page-item.active .page-link {
   background-color: #ff9307;
   color: #303030;
+  border: 1px solid #ff9307;
 }
 
 .page-item.disabled .page-link {

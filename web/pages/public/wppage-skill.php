@@ -19,4 +19,5 @@
       <span class="skillRepByLevel col-12 col-lg-10">%6$s</span>
     </div>
   </section>
+  <div class="d-flex justify-content-between col-12" style="text-align:center;">%7$s</div>
 </section>

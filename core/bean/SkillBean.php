@@ -75,22 +75,6 @@ class SkillBean extends LocalBean
     return $this->getRender($this->urlRowPublic, $args);
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   private function getSkillCartouches()
   {
     ///////////////////////////////////////////////////////////////

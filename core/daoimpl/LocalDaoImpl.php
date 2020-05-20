@@ -8,7 +8,7 @@ define('SQL_PARAMS_ORDERBY', '__orderby__');
  * Classe LocalDaoImpl
  * @author Hugues.
  * @since 1.00.00
- * @version 1.02.00
+ * @version 1.05.20
  */
 class LocalDaoImpl extends GlobalDaoImpl implements ConstantsInterface
 {
@@ -93,5 +93,15 @@ class LocalDaoImpl extends GlobalDaoImpl implements ConstantsInterface
   {
     $Objs = $this->selectEntry($file, $line, $arrParams);
     return (empty($Objs) ? $Obj : array_shift($Objs));
+  }
+
+  /**
+   * @param unknown $file
+   * @param unknown $line
+   * @param unknown $arrUpdate
+   */
+  public function update($file, $line, $arrUpdate) {
+    $requete = $this->update.$this->whereId;
+    return $this->createEditDeleteEntry($file, $line, $requete, $arrUpdate);
   }
 }

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.14
+ * @version 1.05.20
  */
 class MissionBean extends LocalBean
 {
@@ -173,7 +173,7 @@ class MissionBean extends LocalBean
   private function getStrDuree()
   {
     $strDuree = $this->Mission->getWpPost()->getPostMeta(self::FIELD_DURATIONID);
-    return ($strDuree=='' ? $this->getMission()->getDuration()->getStrDuree() : ' minutes');
+    return ($strDuree=='' ? $this->getMission()->getDuration()->getStrDuree() : $strDuree.' minutes');
   }
   // Fin des extras pour l'affichage d'un article de la Home
   ///////////////////////////////////////////////////////////////

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.12
+ * @version 1.05.20
  */
 class SurvivorBean extends LocalBean
 {
@@ -344,13 +344,22 @@ class SurvivorBean extends LocalBean
     return $strType;
   }
 
-  public function getCartouche()
+  public function getCartouche($extraAttributes=array(), $linked=false)
   {
     $content = $this->getStrImgPortrait($this->Survivor->getPortraitUrl(), '', '').' '.$this->Survivor->getName();
     $attributes = array(
       self::ATTR_CLASS => 'cartouche',
     );
-    return $this->getBalise(self::TAG_SPAN, $content, $attributes);
+    if (!empty($extraAttributes)) {
+      $attributes = array_merge($attributes, $extraAttributes);
+    }
+    if ($linked) {
+      $tag = self::TAG_A;
+      $attributes[self::ATTR_HREF] = $this->Survivor->getWpPost()->getPermalink();
+    } else {
+      $tag = self::TAG_SPAN;
+    }
+    return $this->getBalise($tag, $content, $attributes);
   }
 
 

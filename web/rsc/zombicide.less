@@ -471,9 +471,6 @@ article.mission {
     overflow: hidden;
     text-align: center;
     width: 80%;
-    img {
-      width: 100%;
-    }
     .helper {
       display: inline-block;
       height: 100%;
@@ -688,6 +685,40 @@ article.survivor {
 }
 .skillRepByLevel .badge {
   margin: 0 5px 2px 0;
+}
+.cartouche {
+  img {
+    border-radius: @radiusParDefaut;
+    width: 24px;
+  }
+}
+.adjacent-link {
+  border: 2px solid @orange;
+  border-radius: 10px;
+  color: @orange;
+  font-family: "Bungee";
+  font-size: 12px;
+  line-height: 11px;
+  padding: 5px;
+  &:hover {
+    color: @orange;
+  }
+}
+
+/******************************
+ *** CARDS
+ ******************************/
+
+#card-container {
+  .card {
+    margin: @marginParDefaut;
+    max-width: 290px;
+    border-radius: @radiusParDefaut;
+    overflow: hidden;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.35);
+    background-color: transparent;
+    display: inline-block;
+  }
 }
 /******************************
  *** PAGINATION

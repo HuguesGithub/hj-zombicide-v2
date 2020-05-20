@@ -6,14 +6,16 @@ if (!defined('ABSPATH')) {
  * Classe LocalDomain
  * @author Hugues.
  * @since 1.00.00
- * @version 1.05.02
+ * @version 1.05.20
  */
 class LocalDomain extends GlobalDomain implements ConstantsInterface
 {
+  /*
   protected $metakey;
   protected $metavalue;
   protected $categId;
   protected $adminOnglet;
+  */
 
   public function __construct($attributes=array())
   {

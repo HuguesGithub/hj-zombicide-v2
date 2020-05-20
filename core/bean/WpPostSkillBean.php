@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPostSkillBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.01
+ * @version 1.05.20
  */
 class WpPostSkillBean extends WpPostBean
 {
@@ -68,6 +68,42 @@ class WpPostSkillBean extends WpPostBean
     }
 
     //////////////////////////////////////////////////////////////////
+    // On construit les liens de navigation
+    // On récupère toutes les compétences, classées par ordre alphabétique.
+    // On les parcourt jusqu'à trouver la courante.
+    // On exploite la précédente et la suivante.
+    $Skills = $this->SkillServices->getSkillsWithFilters();
+    $firstSkill = null;
+    while (!empty($Skills)) {
+      $Skill = array_shift($Skills);
+      if ($Skill->getId()==$this->Skill->getId()) {
+        break;
+      }
+      if ($firstSkill==null) {
+        $firstSkill = $Skill;
+      }
+      $prevSkill = $Skill;
+    }
+    $nextSkill = array_shift($Skills);
+    if (empty($prevSkill)) {
+      $prevSkill = array_pop($Skills);
+    }
+    if (empty($nextSkill)) {
+      $nextSkill = $firstSkill;
+    }
+
+    $nav = '';
+    if (!empty($prevSkill)) {
+      $attributes = array(self::ATTR_HREF=>$prevSkill->getWpPost()->getPermalink(), self::ATTR_CLASS=>'adjacent-link col-3');
+      $nav .= $this->getBalise(self::TAG_A, '&laquo; '.$prevSkill->getWpPost()->getPostTitle(), $attributes);
+    }
+    if (!empty($nextSkill)) {
+      $attributes = array(self::ATTR_HREF=>$nextSkill->getWpPost()->getPermalink(), self::ATTR_CLASS=>'adjacent-link col-3');
+      $nav .= $this->getBalise(self::TAG_A, $nextSkill->getWpPost()->getPostTitle().' &raquo;', $attributes);
+    }
+
+
+    //////////////////////////////////////////////////////////////////
     // On enrichi le template puis on le restitue.
     $args = array(
       // Nom de la Compétence - 1
@@ -82,47 +118,25 @@ class WpPostSkillBean extends WpPostBean
       $this->buildSkillBadges(3, $arrTags),
       // Liste des Survivants ayant la compétence en Rouge (Zombivant et Ultimate compris) - 6
       $this->buildSkillBadges(4, $arrTags),
+      // Lien de navigation - 7
+      $nav,
     );
     return $this->getRender($this->urlTemplate, $args);
   }
-  public function buildSkillUls($argsRank, $color)
-  {
-    $tplUl = '<ul class="col-3"><li>%1$s :</li>%2$s</ul>';
-    $strReturned = '';
-    foreach ($argsRank as $rank) {
-      $strReturned .= vsprintf($tplUl, array($this->arrLvls[$rank], $this->buildSkillLis($this->skills[$color][$rank], $color)));
-    }
-    return $strReturned;
-  }
-  /**
-   * Retourne la liste des Survivants ayant une compétence à ce niveau, dans des cartouches de couleur.
-   * @param array $Survivors Une liste des Survivants ayant cette compétence
-   * @param string $color Permet de colorer le cartouche
-   * @return string
-   */
-  public function buildSkillLis($Survivors, $color)
-  {
-    $strLis = '';
-    if (!empty($Survivors)) {
-      ksort($Survivors);
-      while (!empty($Survivors)) {
-        $Survivor = array_shift($Survivors);
-        $strLis .= $Survivor->getBean()->getSkillBadge($color);
-      }
-    }
-    return $strLis;
-  }
-  public function buildSkillBadges($rank, $arrTags)
+
+  private function buildSkillBadges($rank, $arrTags)
   {
     $strReturned = '';
     foreach ($arrTags as $key=>$value) {
+      $cartoucheAttributes = array(self::ATTR_CLASS=>'cartouche badge badge-'.$key.'-skill');
       $Survivors = $this->skills[$key][$rank];
       if (!empty($Survivors)) {
         ksort($Survivors);
         while (!empty($Survivors)) {
           $Survivor = array_shift($Survivors);
-          $strReturned .= $Survivor->getBean()->getSkillBadge($key);
+          $strReturned .= $Survivor->getBean()->getCartouche($cartoucheAttributes, true);
         }
+        $strReturned .= '<br>';
       }
     }
     return $strReturned;

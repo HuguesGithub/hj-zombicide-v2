@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe LocalServices
  * @author Hugues.
  * @since 1.00.00
- * @version 1.02.00
+ * @version 1.05.20
  */
 class LocalServices extends GlobalServices implements ConstantsInterface
 {
@@ -63,7 +63,18 @@ class LocalServices extends GlobalServices implements ConstantsInterface
   }
 
 
-
+  public function prepObject($Obj, $isUpdate=false) {
+    $arr = array();
+    $vars = $Obj->getClassVars();
+    if ( !empty($vars) ) {
+      foreach ( $vars as $key=>$value ) {
+        if ( $key=='id' ) { continue; }
+        $arr[] = $Obj->getField($key);
+      }
+      if ( $isUpdate ) { $arr[] = $Obj->getField('id'); }
+    }
+    return $arr;
+  }
 
 
 

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageSurvivorsBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.06
+ * @version 1.05.20
  */
 class WpPageSurvivorsBean extends WpPageBean
 {
@@ -108,7 +108,7 @@ class WpPageSurvivorsBean extends WpPageBean
     while (!empty($arrValues) && $nb<$nbMax) {
       $value = array_shift($arrValues);
       $Survivor = $this->SurvivorServices->selectSurvivor($value);
-      $strReturned .= $Survivor->getBean()->getRowForSurvivorsPage();
+      $strReturned .= $Survivor->getBean()->getRowForPublicPage();
       $nb++;
     }
     return '<div id="page-selection-survivants">'.$strReturned.'</div>';
