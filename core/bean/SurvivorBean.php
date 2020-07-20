@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.19
+ * @version 1.07.20
  */
 class SurvivorBean extends LocalBean
 {
@@ -108,18 +108,18 @@ class SurvivorBean extends LocalBean
     $strSkills = '';
     $name = self::CST_SURVIVOR.'-skill-'.$this->Survivor->getId();
     if ($this->Survivor->isStandard()) {
-      $strProfiles .= '<li class="active">'.$this->getFormRadioBouton($name, 'survivant', self::LBL_SURVIVANT).'</li>';
+      $strProfiles .= '<li class="active">'.$this->getFormRadioBouton('survivant', self::LBL_SURVIVANT).'</li>';
       $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('', false, true), array(self::ATTR_CLASS=>'colSkills skills-survivant'));
     }
     if ($this->Survivor->isZombivor()) {
-      $strProfiles .= '<li>'.$this->getFormRadioBouton($name, 'zombivant', self::LBL_ZOMBIVANT).'</li>';
+      $strProfiles .= '<li>'.$this->getFormRadioBouton('zombivant', self::LBL_ZOMBIVANT).'</li>';
       $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('z', false, true), array(self::ATTR_CLASS=>'colSkills skills-zombivant'));
     }
     if ($this->Survivor->isUltimate()) {
-      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATE, self::LBL_ULTIMATE, self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= $this->getFormRadioBouton(self::CST_ULTIMATE, self::LBL_ULTIMATE, self::CST_CHANGEPROFILE, $checked);
     }
     if ($this->Survivor->isUltimatez()) {
-      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATEZ, self::LBL_ULTIMATEZOMBIVANT, self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= $this->getFormRadioBouton(self::CST_ULTIMATEZ, self::LBL_ULTIMATEZOMBIVANT, self::CST_CHANGEPROFILE, $checked);
     }
     //////////////////////////////////////////////////////////////////
 
@@ -176,10 +176,9 @@ class SurvivorBean extends LocalBean
 
 
   //////////////////////////////////////////////////////////////////////////
-  private function getFormRadioBouton($name, $value, $libelle)
+  private function getFormRadioBouton($value, $libelle)
   {
-    $str = '<div class="form-check badge badge-outline changeProfile" data-type="'.$value.'">'.$libelle.'</div>';
-    return $str;
+    return '<div class="form-check badge badge-outline changeProfile" data-type="'.$value.'">'.$libelle.'</div>';
   }
 
 

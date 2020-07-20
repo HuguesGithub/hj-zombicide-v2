@@ -6,13 +6,10 @@ if (!defined('ABSPATH')) {
  * Classe WpPageError404Bean
  * @author Hugues
  * @since 1.0.00
- * @version 1.0.00
+ * @version 1.07.20
  */
 class WpPageError404Bean extends WpPageBean
 {
-  public function __construct()
-  {}
-
   /**
    * @param WpPage $WpPage
    * @return string

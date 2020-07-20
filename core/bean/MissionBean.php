@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.19
+ * @version 1.07.20
  */
 class MissionBean extends LocalBean
 {
@@ -220,7 +220,7 @@ class MissionBean extends LocalBean
         $strObj[$rank] = vsprintf($this->strModelObjRules, array($WpPost->getPostTitle(), $WpPost->getPostContent()));
       }
     }
-    if (count($strObj)!=0) {
+    if (!empty($strObj)!=0) {
       ksort($strObj);
       return vsprintf($this->h5Ul, array($label, implode('', $strObj)));
     } else {

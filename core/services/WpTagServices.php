@@ -6,11 +6,9 @@ if (!defined('ABSPATH')) {
  * Classe WpTagServices
  * @author Hugues.
  * @since 1.04.16
- * @version 1.04.26
+ * @version 1.07.20
  */
 class WpTagServices extends GlobalServices {
-
-  public function __construct() { }
 
   public function getTagByName($name, $dbTag='wp_5')
   {

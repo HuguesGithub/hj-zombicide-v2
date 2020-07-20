@@ -6,13 +6,10 @@ if (!defined('ABSPATH')) {
  * Classe WpPostServices
  * @author Hugues
  * @since 1.04.00
- * @version 1.04.26
+ * @version 1.07.20
  */
 class WpPostServices extends GlobalServices implements ConstantsInterface
 {
-
-  public function __construct()
-  {}
 
   /**
    * @param array $params
