@@ -5,6 +5,7 @@
 @blanc : #ffffff;
 @bleu : #007bff;
 @grisClair : #dddddd;
+@grisSecondary : #868e96;
 @gris : #777777;
 @grisFonce : #303030;
 @orange : #ff9307;
@@ -229,10 +230,20 @@ label {
     background: #dddddd;
     background: rgba(0,0,0,.05);
   }
+  >article {
+    border-top: 1px solid @grisFonce;
+    margin: 0;
+    padding: 0;
+  }
+  >article:nth-child(2n) {
+    background: #dddddd;
+    background: rgba(0,0,0,.05);
+  }
   >div.tableHeader {
     background: @grisFonce;
     color: @grisClair;
     font-weight: bold;
+    margin: 0;
     &:first-child {
       border-radius: @radiusParDefaut @radiusParDefaut 0 0;
     }
@@ -257,9 +268,8 @@ label {
     &.news {
       .panel {
         .panel-body {
-          height: 294px;
           .slide-entry-excerpt {
-            height: 268px;
+            height: 283px;
             h2 {
               color: #ff9307;
               font-size: 24px;
@@ -272,6 +282,10 @@ label {
             p, li {
               font-size: 14px;
               line-height: 14px;
+            }
+            li {
+              list-style-type: disc;
+              margin: 3px 0 3px 20px;
             }
           }
         }
@@ -312,7 +326,6 @@ label {
           }
         }
         .slide-entry-excerpt {
-          height: 210px;
           overflow: auto;
           p {
             font-size: 14px;
@@ -345,6 +358,31 @@ label {
   border-radius: @radiusParDefaut;
   margin: 0 @marginParDefaut;
   padding: @paddingParDefaut;
+  position: relative;
+}
+.overlay {
+  background: @noir;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -5;
+  &.loading {
+    opacity: 0.75;
+    z-index: 99999;
+  }
+  .spinner {
+    background: url('./img/spinner.gif');
+    height: 400px;
+    left: 50%;
+    margin-top: -200px;
+    margin-left: -275px;
+    position: absolute;
+    top: 50%;
+    width: 550px;
+  }
 }
 
 /******************************
@@ -442,14 +480,13 @@ label {
   .tooltip {
     background-color: @blanc;
     border: 1px solid @noir;
-    display: none;
+    display: block;
     height: inherit;
-    left: -2000px;
-    opacity: 0;
-    position: absolute;
-    top: 80px;
+    left: 0;
+    opacity: 1;
+    position: inherit;
+    top: 0;
     white-space: normal;
-    width: 25%;
     z-index: 500;
     header {
       background: @grisClair;
@@ -457,20 +494,19 @@ label {
       font-weight: bold;
       padding: 5px;
     }
-    content {
+    div {
       padding: 5px;
-    }
-  }
-  &:hover {
-    .tooltip {
-      display: block;
-      left: 50px;
-      opacity: 1;
-      right: 50px;
     }
   }
 }
 article.mission {
+  &.wholeArticle {
+    .slide-content {
+      .blog-categories {
+        display: none;
+      }
+    }
+  }
   .article-mission-extract-image {
     border-color: #c2c2c2;
     border-radius: 3px;
@@ -519,13 +555,14 @@ article.mission {
   .mission_material {
     font-size: 12px;
     font-style: italic;
+    height: 51px;
     margin-bottom: 4px;
-    padding: 0;
   }
   .slide-entry-excerpt {
     height: 94px !important;
   }
 }
+
 .missionTitle {
   a {
     color: @orange;
@@ -554,132 +591,150 @@ article.survivor {
     overflow: hidden;
     position: relative;
     .slide-content {
-      height: 217px !important;
+      height: 215px !important;
+    }
+    .topCornerBandeau {
+      border: 1px solid #000000;
+      font-size: 14px;
+      font-weight: bold;
+      height: 20px;
+      position: absolute;
+      right: -30px;
+      text-align: center;
+      top: 40px;
+      transform: rotate(45deg);
+      width: 160px;
+      z-index: 5;
+    }
+    &.levelS1 .topCornerBandeau, &.levelS1Cre .topCornerBandeau { background-color: #f30b06; }
+    &.levelS1Opt .topCornerBandeau { background-color: #f27c07; }
+    &.levelS1Prm .topCornerBandeau { background-color: #ffcc00; }
+    &.levelTcm .topCornerBandeau {  background-color: #ff99cc; }
+    &.levelS2 .topCornerBandeau, &.levelS2Cre .topCornerBandeau { background-color: #008000; color: @blanc; }
+    &.levelS2Opt .topCornerBandeau { background-color: #339966; color: @blanc; }
+    &.levelS2Prm .topCornerBandeau { background-color: #99cc00; }
+    &.levelS2Gst .topCornerBandeau { background-color: #ccffcc; }
+    &.levelAn .topCornerBandeau { background-color: #cc99ff; }
+    &.levelS3 .topCornerBandeau, &.levelS3Cre .topCornerBandeau { background-color: #0000ff; color: @blanc; }
+    &.levelS3Opt .topCornerBandeau { background-color: #3366ff; color: @blanc; }
+    &.levelS3Prm .topCornerBandeau { background-color: #33cccc; }
+    &.levelS3Gst .topCornerBandeau { background-color: #99ccff; }
+    &.levelGnk .topCornerBandeau { background-color: #8585ad; }
+    &.levelSpec .topCornerBandeau { background-color: @blanc; }
+    &.levelWok .topCornerBandeau { background-color: @blanc; }
+    &.levelUs1 .topCornerBandeau { background-color: #800040; color: @blanc; }
+    &.levelFan .topCornerBandeau { background-color: #cccccc; }
+  }
+  &.publicSurvivorRow {
+    .panel {
+      .slide-content {
+        height: inherit !important;
+      }
     }
   }
-  .slide-entry-excerpt {
-    height: 83px !important;
-  }
-  .topCornerBandeau {
-    border: 1px solid #000000;
-    font-size: 14px;
-    font-weight: bold;
-    height: 20px;
-    position: absolute;
-    right: -30px;
-    text-align: center;
-    top: 40px;
-    transform: rotate(45deg);
-    width: 160px;
-    z-index: 5;
-    .levelS1 .topCornerBandeau, .levelS1Cre .topCornerBandeau { background-color: #f30b06; }
-  }
-  &.levelS1Opt .topCornerBandeau { background-color: #f27c07; }
-  &.levelS1Prm .topCornerBandeau { background-color: #ffcc00; }
-  &.levelTcm .topCornerBandeau {  background-color: #ff99cc; }
-  &.levelS2 .topCornerBandeau, &.levelS2Cre .topCornerBandeau { background-color: #008000; color: @blanc; }
-  &.levelS2Opt .topCornerBandeau { background-color: #339966; color: @blanc; }
-  &.levelS2Prm .topCornerBandeau { background-color: #99cc00; }
-  &.levelS2Gst .topCornerBandeau { background-color: #ccffcc; }
-  &.levelAn .topCornerBandeau { background-color: #cc99ff; }
-  &.levelS3 .topCornerBandeau, &.levelS3Cre .topCornerBandeau { background-color: #0000ff; color: @blanc; }
-  &.levelS3Opt .topCornerBandeau { background-color: #3366ff; color: @blanc; }
-  &.levelS3Prm .topCornerBandeau { background-color: #33cccc; }
-  &.levelS3Gst .topCornerBandeau { background-color: #99ccff; }
-  &.levelGnk .topCornerBandeau { background-color: #8585ad; }
-  &.levelSpec .topCornerBandeau { background-color: @blanc; }
-  &.levelWok .topCornerBandeau { background-color: @blanc; }
-  &.levelUs1 .topCornerBandeau { background-color: #800040; color: @blanc; }
-  &.levelFan .topCornerBandeau { background-color: #cccccc; }
-}
 
-.portrait-survivant {
-  display: none;
-}
-.portrait-zombivant {
-  display: none;
-}
-.portrait-ultimate {
-  display: none;
-}
-.skills-survivant {
-  display: none;
-}
-.skills-zombivant {
-  display: none;
-}
-.skills-ultimate {
-  display: none;
-}
-.survivant {
   .portrait-survivant {
-    display: inline-block;
+    display: none;
+  }
+  .portrait-zombivant {
+    display: none;
+  }
+  .portrait-ultimate {
+    display: none;
   }
   .skills-survivant {
-    display: block;
+    display: none;
   }
-  .portrait-ultimate,
+  .skills-zombivant {
+    display: none;
+  }
   .skills-ultimate {
     display: none;
   }
-  &.ultimate {
-    .portrait-survivant.portrait-ultimate {
+  .survivant {
+    .portrait-survivant {
       display: inline-block;
     }
-    .skills-survivant.skills-ultimate {
+    .skills-survivant {
       display: block;
     }
+    .portrait-ultimate,
+    .skills-ultimate {
+      display: none;
+    }
+    &.ultimate {
+      .portrait-survivant.portrait-ultimate {
+        display: inline-block;
+      }
+      .skills-survivant.skills-ultimate {
+        display: block;
+      }
+    }
   }
-}
-.zombivant {
-  .portrait-zombivant {
+  .zombivant {
+    .portrait-zombivant {
+      display: inline-block;
+    }
+    .skills-zombivant {
+      display: block;
+    }
+    .portrait-ultimate,
+    .skills-ultimate {
+      display: none;
+    }
+    &.ultimate {
+      .portrait-zombivant.portrait-ultimate {
+        display: inline-block;
+      }
+      .skills-zombivant.skills-ultimate {
+        display: block;
+      }
+    }
+  }
+  .ultimate {
+    .portrait-survivant,
+    .portrait-zombivant,
+    .skills-survivant,
+    .skills-zombivant {
+      display: none;
+    }
+  }
+  .skills-survivant > ul,
+  .skills-zombivant > ul,
+  .skills-ultimate > ul {
     display: inline-block;
+    vertical-align: top;
   }
-  .skills-zombivant {
-    display: block;
-  }
-  .portrait-ultimate,
-  .skills-ultimate {
-    display: none;
-  }
-  &.ultimate {
-    .portrait-zombivant.portrait-ultimate {
-      display: inline-block;
-    }
-    .skills-zombivant.skills-ultimate {
-      display: block;
-    }
-  }
-}
-.ultimate {
-  .portrait-survivant,
-  .portrait-zombivant,
-  .skills-survivant,
-  .skills-zombivant {
-    display: none;
-  }
-}
-.skills-survivant > ul,
-.skills-zombivant > ul,
-.skills-ultimate > ul {
-  display: inline-block;
-  vertical-align: top;
-}
 
-.survivorSkills,
-.survivorBackground {
-  padding-bottom: 5px;
-  padding-top: 5px;
-}
-.survivorRowName { font-size: 10px; font-weight: bold; transform: rotate(-45deg) translate(-15px, 20px); }
+  .survivorSkills,
+  .survivorBackground {
+    padding-bottom: 5px;
+    padding-top: 5px;
+  }
+  .survivorRowName { font-size: 10px; font-weight: bold; transform: rotate(-45deg) translate(-15px, 20px); }
 
-.survivorName {
-  a {
-    color: @orange;
-    &:hover {
+  .survivorName {
+    a {
       color: @orange;
+      &:hover {
+        color: @orange;
+      }
     }
   }
+  .survivor_version {
+    li {
+      div {
+        border: 1px solid transparent;
+        cursor: pointer;
+      }
+      &.active {
+        div {
+          border: 1px solid #000;
+        }
+      }
+    }
+  }
+
 }
 /******************************
  *** PAGE SKILLS
@@ -708,12 +763,53 @@ article.survivor {
   font-family: "Bungee",Arial,sans-serif;
   font-size: 12px;
   line-height: 11px;
+  margin: 5px auto;
   padding: 5px;
   &:hover {
     color: @orange;
   }
 }
+.publicSurvivorRow,
+.publicSkillRow {
+  .panel-body {
+    margin: 0;
+    padding: 2px;
+  }
+}
 
+/******************************
+ *** PAGINATION
+ ******************************/
+#page-tools {
+  background-color: @blanc;
+  border-radius: 10px;
+  margin: 0 10px;
+  padding: 10px;
+  .btn-toolbar {
+    border-bottom: 1px solid @grisSecondary;
+    border-top: 1px solid @grisSecondary;
+    width: 100%;
+    button {
+      &:first-child {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+      }
+      &:last-child {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+  }
+  .publicSurvivorRow {
+    button {
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+  }
+  .survivorBackground {
+    display: none;
+  }
+}
 
 /******************************
  *** PAGINATION

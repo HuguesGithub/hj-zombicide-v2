@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * SurvivorActions
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.14
+ * @version 1.07.19
  */
 class SurvivorActions extends LocalActions
 {
@@ -157,6 +157,7 @@ class SurvivorActions extends LocalActions
         self::WP_METAKEY      => self::FIELD_SURVIVORID,
         self::WP_METAVALUE    => $Survivor->getId(),
         self::WP_TAXQUERY     => array(),
+        self::WP_POSTSTATUS   => 'publish, future',
         self::WP_CAT          => self::WP_CAT_SURVIVOR_ID,
       );
       $WpPost = $this->WpPostServices->getArticles($args);

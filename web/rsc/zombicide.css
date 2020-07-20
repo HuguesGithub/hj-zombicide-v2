@@ -172,7 +172,7 @@ table.table thead .filter { cursor: pointer; }
 .batchArticles article .panel hr { margin-bottom: 5px; margin-top: 5px; }
 .batchArticles .slide-content { height: 125px; padding: 0; }
 .batchArticles .article-mission-extract-image { border-color: #c2c2c2; border-radius: 3px; box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.5), -1px 1px 3px 0 rgba(0, 0, 0, 0.5); display: block; margin: 0 auto 3px; max-height: 125px; overflow: hidden; width: 80%; }
-.batchArticles .article-mission-extract-image img { display: block; margin: 0 auto; max-height: 125px; width: 80%; }
+.batchArticles .article-mission-extract-image img { display: block; margin: 0 auto; }
 .batchArticles .blog-categories { display: block; font-weight: bold; text-align: center; }
 .batchArticles .blog-categories.minor-meta { font-size: 1.1em; }
 .batchArticles h3 { color: #c2c2c2; font-size: 1.2em; letter-spacing: 0; line-height: 1.3em; padding: 0 0 15px; text-align: center; text-transform: uppercase; }
@@ -183,7 +183,7 @@ table.table thead .filter { cursor: pointer; }
 
 .mission_params { height: 70px; }
 .batchArticles .mission_params span { background-color: #333; border-radius: 3px; color: #fff; display: block; font-size: 12px; margin-bottom: 6px; margin-right: 4px; text-align: center; }
-.batchArticles .mission_material { font-size: 12px; font-style: italic; margin-bottom: 4px; padding: 0; }
+.batchArticles .mission_material { font-size: 12px; font-style: italic; margin-bottom: 4px; }
 
 .batchArticles .slide-entry-excerpt { height: 210px; overflow: auto; }
 .batchArticles article.mission .slide-entry-excerpt { height: 102px; }

@@ -1,4 +1,5 @@
 <section id="page-missions">
+  <div class="overlay"><div class="spinner"></div></div>
   <section class="row">
     <div class="col-5">%2$s</div>
     <div class="col-7">%3$s</div>
@@ -10,7 +11,7 @@
       <span class="col-md-3">Extensions <i class="fas fa-filter float-right" style="margin-top:3px;"></i></span>
       <span class="col-md-2">Origine <i class="fas fa-filter float-right" style="margin-top:3px;"></i></span>
     </div>
-    <div class="publicSkillRow tableHeader row"  id="filters" style="border-radius:0;padding:10px;display:%4$s">
+    <div class="publicMissionRow tableHeader row"  id="filters" style="border-radius:0;padding:10px;display:%4$s">
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <label class="input-group-text" for="filter-title" class="filter-title">Titre</label>

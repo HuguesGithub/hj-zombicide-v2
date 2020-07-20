@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageSurvivorsBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.20
+ * @version 1.07.19
  */
 class WpPageSurvivorsBean extends WpPageBean
 {
@@ -91,7 +91,7 @@ class WpPageSurvivorsBean extends WpPageBean
     return $this->getRender($this->urlTemplate, $args);
   }
   private function getExpansionFilters($expansionId='')
-  { return parent::getBeanExpansionFilters($expansionId, self::FIELD_NBSURVIVANTS); }
+  { return parent::getBeanExpansionFilters($expansionId, self::FIELD_EXPANSIONID); }
 
   /**
    * @return string

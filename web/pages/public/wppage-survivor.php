@@ -1,8 +1,8 @@
 <section id="page-survivants" class="row survivant">
-  <div class="col-2">%1$s %4$s</div>
-  <div class="col-10">
-    <h3>%2$s</h3>
-    <p>%3$s</p>
+  <div class="col-12">
+    <h3>%1$s</h3>
+    <p>%2$s</p>
   </div>
-  <div class="col-10 offset-2">%5$s</div>
+  <div class="col-12 row">%3$s</div>
+  <div class="d-flex justify-content-between col-12" style="text-align:center;">%4$s</div>
 </section>

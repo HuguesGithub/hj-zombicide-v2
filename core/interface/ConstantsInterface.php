@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.12
+ * @version 1.07.19
  */
 interface ConstantsInterface
 {
@@ -123,6 +123,7 @@ interface ConstantsInterface
   const FIELD_DURATIONID       = 'durationId';
   const FIELD_EQUIPMENTCARDID  = 'equipmentCardId';
   const FIELD_EXPANSIONID      = 'expansionId';
+  const FIELD_HEIGHT           = 'height';
   const FIELD_KEYWORDID        = 'keywordId';
   const FIELD_LIVEABLE         = 'liveAble';
   const FIELD_LIVEID           = 'liveId';
@@ -153,6 +154,7 @@ interface ConstantsInterface
   const FIELD_TITLE            = 'title';
   const FIELD_ULTIMATE         = 'ultimate';
   const FIELD_WEAPONPROFILEID  = 'weaponProfileId';
+  const FIELD_WIDTH            = 'width';
   const FIELD_ZOMBIVOR         = 'zombivor';
 
   /////////////////////////////////////////////////

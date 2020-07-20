@@ -231,10 +231,22 @@ label.navigation-pagination {
   background: rgba(0, 0, 0, 0.05);
 }
 
+#listing > article {
+  border-top: 1px solid #303030;
+  margin: 0;
+  padding: 0;
+}
+
+#listing > article:nth-child(2n) {
+  background: #dddddd;
+  background: rgba(0, 0, 0, 0.05);
+}
+
 #listing > div.tableHeader {
   background: #303030;
   color: #dddddd;
   font-weight: bold;
+  margin: 0;
 }
 
 #listing > div.tableHeader:first-child {
@@ -260,12 +272,8 @@ label.navigation-pagination {
   margin-bottom: 10px;
 }
 
-.batchArticles article.news .panel .panel-body {
-  height: 294px;
-}
-
 .batchArticles article.news .panel .panel-body .slide-entry-excerpt {
-  height: 268px;
+  height: 283px;
 }
 
 .batchArticles article.news .panel .panel-body .slide-entry-excerpt h2 {
@@ -283,6 +291,11 @@ label.navigation-pagination {
 .batchArticles article.news .panel .panel-body .slide-entry-excerpt li {
   font-size: 14px;
   line-height: 14px;
+}
+
+.batchArticles article.news .panel .panel-body .slide-entry-excerpt li {
+  list-style-type: disc;
+  margin: 3px 0 3px 20px;
 }
 
 .batchArticles article .panel {
@@ -327,7 +340,6 @@ label.navigation-pagination {
 }
 
 .batchArticles article .panel .panel-body .slide-entry-excerpt {
-  height: 210px;
   overflow: auto;
 }
 
@@ -357,12 +369,50 @@ label.navigation-pagination {
   border-radius: 10px;
   margin: 0 10px;
   padding: 10px;
+  position: relative;
+}
+
+.overlay {
+  background: #000000;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -5;
+}
+
+.overlay.loading {
+  opacity: 0.75;
+  z-index: 99999;
+}
+
+.overlay .spinner {
+  background: url('img/spinner.gif');
+  height: 400px;
+  left: 50%;
+  margin-top: -200px;
+  margin-left: -275px;
+  position: absolute;
+  top: 50%;
+  width: 550px;
 }
 /******************************
  *** PAGE CARTES
  ******************************/
 #card-container {
   text-align: center;
+}
+
+#card-container .card {
+  margin: 10px;
+  max-width: 290px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.35);
+  background-color: transparent;
+  display: inline-block;
 }
 
 .card {
@@ -447,15 +497,14 @@ label.navigation-pagination {
 .hasTooltip .tooltip {
   background-color: #ffffff;
   border: 1px solid #000000;
-  display: none;
   height: inherit;
-  left: -2000px;
-  opacity: 0;
-  position: absolute;
-  top: 80px;
   white-space: normal;
-  width: 25%;
   z-index: 500;
+  opacity: 1;
+  display: block;
+  left: 0;
+  position: inherit;
+  top: 0;
 }
 
 .hasTooltip .tooltip header {
@@ -465,15 +514,12 @@ label.navigation-pagination {
   padding: 5px;
 }
 
-.hasTooltip .tooltip content {
+.hasTooltip .tooltip div {
   padding: 5px;
 }
 
-.hasTooltip:hover .tooltip {
-  display: block;
-  left: 50px;
-  opacity: 1;
-  right: 50px;
+article.mission.wholeArticle .slide-content .blog-categories {
+  display: none;
 }
 
 article.mission .article-mission-extract-image {
@@ -533,14 +579,16 @@ article.mission .slide-content a:hover {
 article.mission .mission_material {
   font-size: 12px;
   font-style: italic;
+  height: 51px;
   margin-bottom: 4px;
-  padding: 0;
 }
 
 article.mission .slide-entry-excerpt {
   height: 94px !important;
 }
-
+#page-mission article.mission .slide-entry-excerpt {
+    height: inherit !important;
+}
 .missionTitle a {
   color: #ff9307;
 }
@@ -569,14 +617,10 @@ article.survivor .panel {
 }
 
 article.survivor .panel .slide-content {
-  height: 217px !important;
+  height: 215px !important;
 }
 
-article.survivor .slide-entry-excerpt {
-  height: 83px !important;
-}
-
-article.survivor .topCornerBandeau {
+article.survivor .panel .topCornerBandeau {
   border: 1px solid #000000;
   font-size: 14px;
   font-weight: bold;
@@ -590,184 +634,197 @@ article.survivor .topCornerBandeau {
   z-index: 5;
 }
 
-article.survivor .topCornerBandeau .levelS1 .topCornerBandeau,
-article.survivor .topCornerBandeau .levelS1Cre .topCornerBandeau {
+article.survivor .panel.levelS1 .topCornerBandeau,
+article.survivor .panel.levelS1Cre .topCornerBandeau {
   background-color: #f30b06;
 }
 
-article.survivor.levelS1Opt .topCornerBandeau {
+article.survivor .panel.levelS1Opt .topCornerBandeau {
   background-color: #f27c07;
 }
 
-article.survivor.levelS1Prm .topCornerBandeau {
+article.survivor .panel.levelS1Prm .topCornerBandeau {
   background-color: #ffcc00;
 }
 
-article.survivor.levelTcm .topCornerBandeau {
+article.survivor .panel.levelTcm .topCornerBandeau {
   background-color: #ff99cc;
 }
 
-article.survivor.levelS2 .topCornerBandeau,
-article.survivor.levelS2Cre .topCornerBandeau {
+article.survivor .panel.levelS2 .topCornerBandeau,
+article.survivor .panel.levelS2Cre .topCornerBandeau {
   background-color: #008000;
   color: #ffffff;
 }
 
-article.survivor.levelS2Opt .topCornerBandeau {
+article.survivor .panel.levelS2Opt .topCornerBandeau {
   background-color: #339966;
   color: #ffffff;
 }
 
-article.survivor.levelS2Prm .topCornerBandeau {
+article.survivor .panel.levelS2Prm .topCornerBandeau {
   background-color: #99cc00;
 }
 
-article.survivor.levelS2Gst .topCornerBandeau {
+article.survivor .panel.levelS2Gst .topCornerBandeau {
   background-color: #ccffcc;
 }
 
-article.survivor.levelAn .topCornerBandeau {
+article.survivor .panel.levelAn .topCornerBandeau {
   background-color: #cc99ff;
 }
 
-article.survivor.levelS3 .topCornerBandeau,
-article.survivor.levelS3Cre .topCornerBandeau {
+article.survivor .panel.levelS3 .topCornerBandeau,
+article.survivor .panel.levelS3Cre .topCornerBandeau {
   background-color: #0000ff;
   color: #ffffff;
 }
 
-article.survivor.levelS3Opt .topCornerBandeau {
+article.survivor .panel.levelS3Opt .topCornerBandeau {
   background-color: #3366ff;
   color: #ffffff;
 }
 
-article.survivor.levelS3Prm .topCornerBandeau {
+article.survivor .panel.levelS3Prm .topCornerBandeau {
   background-color: #33cccc;
 }
 
-article.survivor.levelS3Gst .topCornerBandeau {
+article.survivor .panel.levelS3Gst .topCornerBandeau {
   background-color: #99ccff;
 }
 
-article.survivor.levelGnk .topCornerBandeau {
+article.survivor .panel.levelGnk .topCornerBandeau {
   background-color: #8585ad;
 }
 
-article.survivor.levelSpec .topCornerBandeau {
+article.survivor .panel.levelSpec .topCornerBandeau {
   background-color: #ffffff;
 }
 
-article.survivor.levelWok .topCornerBandeau {
+article.survivor .panel.levelWok .topCornerBandeau {
   background-color: #ffffff;
 }
 
-article.survivor.levelUs1 .topCornerBandeau {
+article.survivor .panel.levelUs1 .topCornerBandeau {
   background-color: #800040;
   color: #ffffff;
 }
 
-article.survivor.levelFan .topCornerBandeau {
+article.survivor .panel.levelFan .topCornerBandeau {
   background-color: #cccccc;
 }
 
-.portrait-survivant {
+article.survivor.publicSurvivorRow .panel .slide-content {
+  height: inherit !important;
+}
+
+article.survivor .portrait-survivant {
   display: none;
 }
 
-.portrait-zombivant {
+article.survivor .portrait-zombivant {
   display: none;
 }
 
-.portrait-ultimate {
+article.survivor .portrait-ultimate {
   display: none;
 }
 
-.skills-survivant {
+article.survivor .skills-survivant {
   display: none;
 }
 
-.skills-zombivant {
+article.survivor .skills-zombivant {
   display: none;
 }
 
-.skills-ultimate {
+article.survivor .skills-ultimate {
   display: none;
 }
 
-.survivant .portrait-survivant {
+article.survivor .survivant .portrait-survivant {
   display: inline-block;
 }
 
-.survivant .skills-survivant {
+article.survivor .survivant .skills-survivant {
   display: block;
 }
 
-.survivant .portrait-ultimate,
-.survivant .skills-ultimate {
+article.survivor .survivant .portrait-ultimate,
+article.survivor .survivant .skills-ultimate {
   display: none;
 }
 
-.survivant.ultimate .portrait-survivant.portrait-ultimate {
+article.survivor .survivant.ultimate .portrait-survivant.portrait-ultimate {
   display: inline-block;
 }
 
-.survivant.ultimate .skills-survivant.skills-ultimate {
+article.survivor .survivant.ultimate .skills-survivant.skills-ultimate {
   display: block;
 }
 
-.zombivant .portrait-zombivant {
+article.survivor .zombivant .portrait-zombivant {
   display: inline-block;
 }
 
-.zombivant .skills-zombivant {
+article.survivor .zombivant .skills-zombivant {
   display: block;
 }
 
-.zombivant .portrait-ultimate,
-.zombivant .skills-ultimate {
+article.survivor .zombivant .portrait-ultimate,
+article.survivor .zombivant .skills-ultimate {
   display: none;
 }
 
-.zombivant.ultimate .portrait-zombivant.portrait-ultimate {
+article.survivor .zombivant.ultimate .portrait-zombivant.portrait-ultimate {
   display: inline-block;
 }
 
-.zombivant.ultimate .skills-zombivant.skills-ultimate {
+article.survivor .zombivant.ultimate .skills-zombivant.skills-ultimate {
   display: block;
 }
 
-.ultimate .portrait-survivant,
-.ultimate .portrait-zombivant,
-.ultimate .skills-survivant,
-.ultimate .skills-zombivant {
+article.survivor .ultimate .portrait-survivant,
+article.survivor .ultimate .portrait-zombivant,
+article.survivor .ultimate .skills-survivant,
+article.survivor .ultimate .skills-zombivant {
   display: none;
 }
 
-.skills-survivant > ul,
-.skills-zombivant > ul,
-.skills-ultimate > ul {
+article.survivor .skills-survivant > ul,
+article.survivor .skills-zombivant > ul,
+article.survivor .skills-ultimate > ul {
   display: inline-block;
   vertical-align: top;
 }
 
-.survivorSkills,
-.survivorBackground {
+article.survivor .survivorSkills,
+article.survivor .survivorBackground {
   padding-bottom: 5px;
   padding-top: 5px;
 }
 
-.survivorRowName {
+article.survivor .survivorRowName {
   font-size: 10px;
   font-weight: bold;
   transform: rotate(-45deg) translate(-15px, 20px);
 }
 
-.survivorName a {
+article.survivor .survivorName a {
   color: #ff9307;
 }
 
-.survivorName a:hover {
+article.survivor .survivorName a:hover {
   color: #ff9307;
+}
+
+.survivor_version li div {
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.survivor_version li.active div {
+  border: 1px solid #000;
 }
 /******************************
  *** PAGE SKILLS
@@ -788,29 +845,60 @@ article.survivor.levelFan .topCornerBandeau {
   border-radius: 10px;
   width: 24px;
 }
+
 .adjacent-link {
   border: 2px solid #ff9307;
   border-radius: 10px;
-  color: #ff9307  ;
-  font-family: "Bungee";
+  color: #ff9307;
+  font-family: "Bungee", Arial, sans-serif;
   font-size: 12px;
   line-height: 11px;
+  margin: 5px auto;
   padding: 5px;
 }
-a.adjacent-link:hover {
-  color: #ff9307  ;
+
+.adjacent-link:hover {
+  color: #ff9307;
+}
+
+.publicSurvivorRow .panel-body,
+.publicSkillRow .panel-body {
+  margin: 0;
+  padding: 2px;
 }
 /******************************
- *** CARDS
+ *** PAGINATION
  ******************************/
-#card-container .card {
-  margin: 10px;
-  max-width: 290px;
+#page-tools {
+  background-color: #ffffff;
   border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.35);
-  background-color: transparent;
-  display: inline-block;
+  margin: 0 10px;
+  padding: 10px;
+}
+
+#page-tools .btn-toolbar {
+  border-bottom: 1px solid #868e96;
+  border-top: 1px solid #868e96;
+  width: 100%;
+}
+
+#page-tools .btn-toolbar button:first-child {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+#page-tools .btn-toolbar button:last-child {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#page-tools .publicSurvivorRow button {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+#page-tools .survivorBackground {
+  display: none;
 }
 /******************************
  *** PAGINATION

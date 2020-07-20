@@ -1,6 +1,6 @@
 <article class="mission %5$s">
   <div class="panel">
-    <div class="panel-body">
+    <div class="panel-body row">
       <div class="col-5">
         <a href="%6$s"><span class="article-mission-extract-image"><img src="%7$s" alt="%1$s"></span></a>
       </div>
@@ -22,10 +22,12 @@
           </div>
         </div>
       </div>
-        <div class="mission_material col-12">
-          Matériel requis : <em>%3$s </em><br>
-          Dalles requises : <em>%4$s </em>
-        </div>
+      <div class="mission_material col-12">
+        Matériel requis : <em>%3$s </em><br>
+        Dalles requises : <em>%4$s </em>
+      </div>
+      <div class="col-6 objectivesAndRules">%12$s</div>
+      <div class="col-6 objectivesAndRules">%13$s</div>
       <div class="col-12">
         <hr>
         <div itemprop="text" class="slide-entry-excerpt entry-content">%2$s</div>

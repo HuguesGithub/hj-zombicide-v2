@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * AdminPageMissionsBean
  * @author Hugues
  * @since 1.05.10
- * @version 1.05.14
+ * @version 1.07.19
  */
 class AdminPageMissionsBean extends AdminPageBean
 {
@@ -33,7 +33,7 @@ class AdminPageMissionsBean extends AdminPageBean
       $this->Mission = $this->MissionServices->selectMission($this->urlParams[self::FIELD_ID]);
     }
     if (isset($_POST)&&!empty($_POST)) {
-      //$this->dealWithPost();
+      $this->dealWithPost();
     }
     switch ($this->urlParams[self::CST_POSTACTION]) {
       case 'confirmEdit'  :
@@ -45,7 +45,14 @@ class AdminPageMissionsBean extends AdminPageBean
       break;
     }
   }
-
+  private function dealWithPost()
+  {
+    if ($this->urlParams[self::CST_POSTACTION]=='confirmEdit') {
+      $this->Mission->setWidth($this->urlParams[self::FIELD_WIDTH]);
+      $this->Mission->setHeight($this->urlParams[self::FIELD_HEIGHT]);
+      $this->MissionServices->updateMission($this->Mission);
+    }
+  }
   public function getListContentPage()
   {
     $strRows = '';
@@ -113,6 +120,10 @@ class AdminPageMissionsBean extends AdminPageBean
     $this->Mission->getWpPost()->getPostMeta('tileIds'),
     // Url de l'image de la map - 11
     $this->Mission->getThumbUrl(),
+    // Largeur de la Map - 12
+    $this->Mission->getWidth(),
+    // Hauteur de la Map - 13
+    $this->Mission->getHeight(),
       '', '', '', '', '', '', '', '', '', '', '', '', '',
     );
     // Puis on le restitue.

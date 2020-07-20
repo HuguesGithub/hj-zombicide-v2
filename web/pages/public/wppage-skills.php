@@ -1,4 +1,5 @@
 <section id="page-competences">
+  <div class="overlay"><div class="spinner"></div></div>
   <section class="row">
     <div class="col-5">%2$s</div>
     <div class="col-7">%3$s</div>
@@ -14,7 +15,7 @@
         <div class="input-group-prepend">
           <label class="input-group-text" for="filter-description" class="filter-description">Description</label>
         </div>
-        <input type="text" class="form-control" id="filter-description" placeholder="Rechercher dans la Description ou le nom" aria-label="Description" aria-describedby="filter-description" value="%5$s">
+        <input type="text" class="form-control" id="filter-description" placeholder="Rechercher dans la Description ou le Nom" aria-label="Description" aria-describedby="filter-description" value="%5$s">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary ajaxAction" data-ajaxaction="filter" type="button">Rechercher</button>
         </div>

@@ -1,9 +1,9 @@
 <article class="survivor %9$s">
   <div class="panel">
-    <div class="panel-body">
+    <div class="panel-body survivant">
       <div class="col-5">
         <a href="%1$s"><span class="article-survivor-extract-image"><img src="%2$s" alt="%4$s"></span></a>
-        <div class="survivor_version">%6$s</div>
+        <div class="publicSurvivorRow survivor_version">%6$s</div>
       </div>
       <div class="slide-content col-7">
         <header class="entry-content-header">
@@ -14,7 +14,7 @@
             <a href="%1$s">%4$s</a>
           </h3>
         </header>
-        <ul class="colSkills">%5$s</ul>
+        %5$s
       </div>
       <div class="col-12">
         <hr>

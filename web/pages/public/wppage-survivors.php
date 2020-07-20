@@ -1,4 +1,5 @@
 <section id="page-survivants">
+  <div class="overlay"><div class="spinner"></div></div>
   <section class="row">
     <div class="col-5">%2$s</div>
     <div class="col-7">%3$s</div>
@@ -7,11 +8,10 @@
     <div class="publicSurvivorRow tableHeader row">
       <span class="survivorPortraits col-12 col-md-1"></span>
       <span class="survivorName col-12 col-md-3">Nom <i class="fas fa-filter float-right" style="margin-top:3px;"></i></span>
-      <span class="col-md-2">Zombivor</span>
-      <span class="col-md-2">Ultimate</span>
+      <span class="col-md-4">Compétences <i class="fas fa-filter float-right" style="margin-top:3px;"></i></span>
       <span class="survivorExpansion col-md-4">Extension <i class="fas fa-filter float-right" style="margin-top:3px;"></i></span>
     </div>
-    <div class="publicSkillRow tableHeader row"  id="filters" style="border-radius:0;padding:10px;display:%4$s">
+    <div class="publicSurvivorRow tableHeader row"  id="filters" style="border-radius:0;padding:10px;display:%4$s">
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <label class="input-group-text" for="filter-name" class="filter-name">Nom</label>
@@ -41,8 +41,7 @@
     <div class="publicSurvivorRow tableHeader row">
       <span class="survivorPortraits col-12 col-md-1"></span>
       <span class="survivorName col-12 col-md-3">Nom</span>
-      <span class="col-md-2">Zombivor</span>
-      <span class="col-md-2">Ultimate</span>
+      <span class="col-md-4">Compétences</span>
       <span class="survivorExpansion col-md-4">Extension</span>
     </div>
   </section>

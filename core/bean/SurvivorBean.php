@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.20
+ * @version 1.07.19
  */
 class SurvivorBean extends LocalBean
 {
@@ -105,12 +105,15 @@ class SurvivorBean extends LocalBean
     // Liste des profils du Survivants.
     $checked = false;
     $strProfiles  = '';
+    $strSkills = '';
     $name = self::CST_SURVIVOR.'-skill-'.$this->Survivor->getId();
     if ($this->Survivor->isStandard()) {
-      $strProfiles .= $this->getFormRadioBouton($name, self::CST_SURVIVOR, self::LBL_SURVIVANT, self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= '<li class="active">'.$this->getFormRadioBouton($name, 'survivant', self::LBL_SURVIVANT).'</li>';
+      $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('', false, true), array(self::ATTR_CLASS=>'colSkills skills-survivant'));
     }
     if ($this->Survivor->isZombivor()) {
-      $strProfiles .= $this->getFormRadioBouton($name, self::CST_ZOMBIVOR, self::LBL_ZOMBIVANT, self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= '<li>'.$this->getFormRadioBouton($name, 'zombivant', self::LBL_ZOMBIVANT).'</li>';
+      $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('z', false, true), array(self::ATTR_CLASS=>'colSkills skills-zombivant'));
     }
     if ($this->Survivor->isUltimate()) {
       $strProfiles .= $this->getFormRadioBouton($name, self::CST_ULTIMATE, self::LBL_ULTIMATE, self::CST_CHANGEPROFILE, $checked);
@@ -132,9 +135,9 @@ class SurvivorBean extends LocalBean
       // Nom du Survivant - 4
       $this->Survivor->getName(),
       // Les Compétences du Survivant - 5
-      $this->Survivor->getUlSkills(),
+      $strSkills,
       // Liste des profils du Survivant - 6
-      $strProfiles,
+      '<ul>'.$strProfiles.'</ul>',
       // Plus utilisé - 7
       '',
       // Background du Survivant - 8
@@ -173,22 +176,10 @@ class SurvivorBean extends LocalBean
 
 
   //////////////////////////////////////////////////////////////////////////
-  private function getFormRadioBouton($name, $value, $libelle, $extraClass, &$checked)
+  private function getFormRadioBouton($name, $value, $libelle)
   {
-    $smallArgs = array(
-      // Name du radio bouton - 1
-      $name,
-      // Valeur du radio bouton (on s'en fout) - 2
-      $value,
-      // Checked ou pas - 3
-      (!$checked ? ' '.self::CST_CHECKED : ''),
-      // Libellé du bouton - 4
-      $libelle,
-      // Classe supplémentaire - 5
-      $extraClass,
-    );
-    $checked = true;
-    return $this->getRender($this->urlFormRadioBouton, $smallArgs);
+    $str = '<div class="form-check badge badge-outline changeProfile" data-type="'.$value.'">'.$libelle.'</div>';
+    return $str;
   }
 
 
@@ -229,6 +220,8 @@ class SurvivorBean extends LocalBean
     );
     return vsprintf(($this->Survivor->getWpPostUrl()=='#' ? $this->tplDisabledSkillBadge : $this->tplSkillBadge), $args);
   }
+  public function getPortrait($type='')
+  { return $this->getStrImgPortrait($this->Survivor->getPortraitUrl($type), 'Portrait', ''); }
   /**
    * @return string
    */
@@ -300,6 +293,8 @@ class SurvivorBean extends LocalBean
     );
     return $this->getBalise(self::TAG_IMG, '', $attributes);
   }
+  public function getSkills($type='')
+  { return $this->getSkillsBySurvivorType('row', $this->Survivor->getUlSkills($type, true)); }
   /**
    * @return string
    */

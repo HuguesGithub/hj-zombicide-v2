@@ -74,6 +74,18 @@
       </div>
 
       <div class="col">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Largeur</span>
+          </div>
+          <input type="text" class="form-control" placeholder="0" value="%12$s" name="width">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Hauteur</span>
+          </div>
+          <input type="text" class="form-control" placeholder="0" value="%13$s" name="height">
+        </div>
       </div>
     </div>
     <div class="row">

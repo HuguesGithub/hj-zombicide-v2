@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorSkillBean
  * @author Hugues.
  * @since 1.05.02
- * @version 1.05.07
+ * @version 1.07.19
  */
 class SurvivorSkillBean extends LocalBean
 {
@@ -24,9 +24,14 @@ class SurvivorSkillBean extends LocalBean
   {
     if ($linked) {
       $tag = self::TAG_A;
+      $href = '/page-competences/?skillId='.$this->SurvivorSkill->getSkill()->getId();
+      $WpPost = $this->SurvivorSkill->getSkill()->getWpPost();
+      if ($WpPost->getID()!='') {
+        $href = $WpPost->getPermaLink();
+      }
       $attributes = array(
         self::ATTR_CLASS => 'badge badge-'.$this->getColor().'-skill',
-        self::ATTR_HREF  => '/page-competences/?skillId='.$this->SurvivorSkill->getSkill()->getId(),
+        self::ATTR_HREF  => $href,
       );
     } else {
       $tag = self:: TAG_SPAN;

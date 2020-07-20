@@ -12,6 +12,7 @@ $hj(document).ready(function(){
       var offset = $hj('#homeSectionArticles article').length;
       addMoreNews(offset);
     });
+    addPageSurvivantAjaxActions();
   }
   /***************
    *** #02 - Compétences
@@ -70,6 +71,7 @@ function addMoreNews(offset) {
         } else {
           $hj('#more_news').remove();
         }
+        addPageSurvivantAjaxActions();
       } catch (e) {
         console.log("error: "+e);
         console.log(response);
@@ -135,9 +137,9 @@ function addPageSurvivantAjaxActions() {
 }
 function addPageSurvivantLocalActions(clicked) {
   var type = clicked.data('type');
-  if (type=='zombivant') { clicked.parent().parent().toggleClass('zombivant survivant'); }
-  if (type=='ultimate') { clicked.parent().parent().toggleClass('ultimate'); }
-  clicked.find('i').toggleClass('fa-square fa-check-square');
+  clicked.parent().parent().parent().parent().parent().removeClass('survivant zombivant ultimate ultimatez').addClass(type);
+  clicked.parent().siblings().removeClass('active');
+  clicked.parent().addClass('active');
 }
 function addPageCardEquipmentAjaxActions() {
   $hj('#filters select').unbind().change(function(){
@@ -429,6 +431,7 @@ function resolvePageSurvivantAjaxActions(clicked) {
 }
 
 function resolveCallAjax(data, idPage) {
+  $hj('.overlay').addClass('loading');
   $hj.post(
     ajaxurl,
     data,
@@ -449,6 +452,10 @@ function resolveCallAjax(data, idPage) {
         console.log("error: "+e);
         console.log(response);
       }
+    }
+  ).done(
+    function() {
+      $hj('.overlay').removeClass('loading');
     }
   );
 }
