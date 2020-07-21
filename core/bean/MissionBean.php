@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.20
+ * @version 1.07.21
  */
 class MissionBean extends LocalBean
 {
@@ -73,7 +73,7 @@ class MissionBean extends LocalBean
       // L'url pour accéder au détail de la Mission - 2
       $urlWpPost,
       // Le Titre de la Mission - 3
-      $this->Mission->getTitle(),
+      '['.$this->Mission->getCode().'] - '.$this->Mission->getTitle(),
       // La Difficulté, le nombre de Survivants et la Durée de la Mission - 4
       $this->Mission->getStrDifPlaDur(),
       // La liste des Extensions nécessaires à la Mission - 5

@@ -19,11 +19,12 @@ class AjaxActions extends LocalActions
   /**
    * Gère les actions Ajax
    * @version 1.04.30
-   * @version 1.05.09
+   * @version 1.07.21
    */
   public static function dealWithAjax()
   {
     switch ($_POST[self::CST_AJAXACTION]) {
+      case self::AJAX_GETEXPANSIONS  :
       case self::AJAX_EXPANSIONVERIF :
         $returned = ExpansionActions::dealWithStatic($_POST);
       break;

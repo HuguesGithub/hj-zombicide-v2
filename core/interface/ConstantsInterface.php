@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.19
+ * @version 1.07.21
  */
 interface ConstantsInterface
 {
@@ -15,6 +15,7 @@ interface ConstantsInterface
   const AJAX_CAROUT         = 'carOut';
   const AJAX_CARSWAP        = 'carSwap';
   const AJAX_ENDOFTURN      = 'endOfTurn';
+  const AJAX_GETEXPANSIONS  = 'getExpansions';
   const AJAX_EXPANSIONVERIF = 'expansion-verif';
   const AJAX_GETMISSIONS    = 'getMissions';
   const AJAX_GETRANDOMTEAM  = 'getRandomTeam';
@@ -196,6 +197,7 @@ interface ConstantsInterface
   // Allowed Pages :
   const PAGE_ONLINE            = 'online';
   const PAGE_EQUIPMENT         = 'page-equipmentcards';
+  const PAGE_EXTENSION         = 'page-extensions';
   const PAGE_MISSION           = 'page-missions';
   const PAGE_PISTE_DE_DES      = 'page-piste-de-des';
   const PAGE_SELECT_SURVIVORS  = 'page-selection-survivants';

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * WpPageBean
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.09
+ * @version 1.07.21
  */
 class WpPageBean extends MainPageBean
 {
@@ -40,6 +40,10 @@ class WpPageBean extends MainPageBean
     switch ($this->WpPage->getPostName()) {
       case self::PAGE_EQUIPMENT         :
         $Bean = new WpPageEquipmentsBean($this->WpPage);
+        $strReturned = $Bean->getContentPage();
+      break;
+      case self::PAGE_EXTENSION         :
+        $Bean = new WpPageExpansionsBean($this->WpPage);
         $strReturned = $Bean->getContentPage();
       break;
       case self::PAGE_MISSION           :

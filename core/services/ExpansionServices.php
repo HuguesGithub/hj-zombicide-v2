@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionServices
  * @author Hugues.
  * @since 1.04.00
- * @version 1.05.02
+ * @version 1.07.21
  */
 class ExpansionServices extends LocalServices
 {
@@ -31,6 +31,7 @@ class ExpansionServices extends LocalServices
   {
     $this->arrParams[self::SQL_WHERE] = array();
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_CODE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_NAME));
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_NBMISSIONS, 0));
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_NBSURVIVANTS, 0));
   }

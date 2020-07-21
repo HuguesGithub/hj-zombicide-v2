@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.05.12
+ * @version 1.07.21
  */
 class ExpansionBean extends LocalBean
 {
@@ -57,6 +57,23 @@ class ExpansionBean extends LocalBean
     return $this->getRender($this->urlRowAdmin, $args);
   }
 
+  /**
+   * @return string
+   */
+  public function getRowForPublicPage()
+  {
+    ///////////////////////////////////////////////////////////////
+    // On enrichi le template et on le retourne.
+    $args = array(
+      // Front Url de la Compétence - 1
+      $this->Expansion->getWpPostUrl(),
+      // Nom de la Compétence - 2
+      $this->Expansion->getName(),
+      // Identifiant de la Compétence - 3
+      $this->Expansion->getId(),
+    );
+    return $this->getRender($this->urlRowPublic, $args);
+  }
 
 
 

@@ -362,6 +362,7 @@ label.navigation-pagination {
  ******************************/
 #page-competences,
 #page-equipements,
+#page-extensions,
 #page-mission,
 #page-missions,
 #page-survivants {
@@ -827,6 +828,16 @@ article.survivor .survivorName a:hover {
   border: 1px solid #000;
 }
 /******************************
+ *** PAGE EXPANSIONS
+ ******************************/
+.expansionName a {
+  color: #ff9307;
+}
+
+.expansionName a:hover {
+  color: #ff9307;
+}
+/******************************
  *** PAGE SKILLS
  ******************************/
 .skillName a {
@@ -861,6 +872,7 @@ article.survivor .survivorName a:hover {
   color: #ff9307;
 }
 
+.publicExpansionRow .panel-body,
 .publicSurvivorRow .panel-body,
 .publicSkillRow .panel-body {
   margin: 0;

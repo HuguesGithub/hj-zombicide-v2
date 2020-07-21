@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * ExpansionActions
  * @author Hugues
  * @since 1.04.30
- * @version 1.05.12
+ * @version 1.07.21
  */
 class ExpansionActions extends LocalActions
 {
@@ -30,12 +30,30 @@ class ExpansionActions extends LocalActions
   {
     $returned = '';
     $Act = new ExpansionActions($post);
-    if ($post[self::CST_AJAXACTION]==self::AJAX_EXPANSIONVERIF) {
-      $returned = $Act->dealWithExpansionVerif(true);
-    } else {
-      $returned  = 'Erreur dans ExpansionActions > dealWithStatic, '.$_POST[self::CST_AJAXACTION].' inconnu.';
+    switch ($post[self::CST_AJAXACTION]) {
+      case self::AJAX_EXPANSIONVERIF :
+        $returned = $Act->dealWithExpansionVerif(true);
+      break;
+      case self::AJAX_GETEXPANSIONS  :
+        $returned = $Act->dealWithGetExpansions();
+      break;
+      default :
+        $returned  = 'Erreur dans ExpansionActions > dealWithStatic, '.$_POST[self::CST_AJAXACTION].' inconnu.';
+      break;
     }
     return $returned;
+  }
+
+  /**
+   * Récupération du contenu de la page via une requête Ajax.
+   * @param array $post
+   * @return string
+   */
+  public function dealWithGetExpansions()
+  {
+    $Bean = new WpPageExpansionsBean();
+    $Bean->setFilters($this->post);
+    return $this->jsonString($Bean->getListContentPage(), self::PAGE_EXTENSION, true);
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////

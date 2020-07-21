@@ -42,7 +42,7 @@ update="UPDATE wp_11_zombicide_equipment_weaponprofile SET equipmentCardId='%s',
 [Expansion]
 select="SELECT id, code, name, displayRank, nbSurvivants, nbMissions, official "
 from="FROM wp_11_zombicide_expansion "
-where="WHERE code LIKE '%s' AND nbMissions >= '%s' AND nbSurvivants >= '%s' "
+where="WHERE code LIKE '%s' AND name LIKE '%s' AND nbMissions >= '%s' AND nbSurvivants >= '%s' "
 insert="INSERT INTO wp_11_zombicide_expansion (code, name, displayRank, nbSurvivants, nbMissions, official) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');"
 update="UPDATE wp_11_zombicide_expansion SET code='%s', name='%s', displayRank='%s', nbSurvivants='%s', nbMissions='%s', official='%s' "
 [Keyword]

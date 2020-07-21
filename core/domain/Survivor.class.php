@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Survivor
  * @author Hugues.
  * @since 1.0.00
- * @version 1.07.19
+ * @version 1.07.21
  */
 class Survivor extends WpPostRelais
 {
@@ -343,6 +343,7 @@ class Survivor extends WpPostRelais
     if ($type=='' && !$this->isStandard() && $this->isUltimate()) {
       $type='u';
     }
+    $classExtra = 'col-12'.($isHome ? '' : ' col-sm-6 col-lg-3');
     $SurvivorSkills = $this->getSurvivorSkills();
     $str = '';
     $strTmp = '';
@@ -355,7 +356,7 @@ class Survivor extends WpPostRelais
           case 20 :
           case 30 :
           case 40 :
-            $str .= $this->getBean()->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS=>'col-12'.($isHome ? '' : ' col-sm-6 col-lg-3')));
+            $str .= $this->getBean()->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS=>$classExtra));
             $strTmp = '';
           break;
           default :
@@ -363,7 +364,7 @@ class Survivor extends WpPostRelais
         }
         $strTmp .= $this->getSkillLi($SurvivorSkill, $withLink);
       }
-      $str .= $this->getBean()->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS=>'col-12'.($isHome ? '' : ' col-sm-6 col-lg-3')));
+      $str .= $this->getBean()->getBalise(self::TAG_UL, $strTmp, array(self::ATTR_CLASS=>$classExtra));
     }
     return $str;
   }

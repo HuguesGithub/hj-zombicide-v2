@@ -49,6 +49,14 @@ $hj(document).ready(function(){
   if ($hj('#page-tools').length!=0 ) {
     addPageToolsAjaxActions();
   }
+  /***************
+   *** #05 - Extensions
+   *** Si on est sur la page du Listing des Extensions
+   ***************/
+  if ($hj('#page-extensions').length!=0 ) {
+    addPageExpansionAjaxActions();
+  }
+
 });
 
 /********
@@ -78,6 +86,23 @@ function addMoreNews(offset) {
       }
     }
   );
+}
+function addPageExpansionAjaxActions() {
+  // On ajoute une Action sur les actions Ajax
+  $hj('#page-extensions .ajaxAction').unbind().click(function(){
+    resolvePageExpansionAjaxActions($hj(this));
+    return false;
+  });
+  // On ajoute une Action sur le changement de nombre d'éléments à afficher par page
+  $hj('#displayedRows').change(function(){
+    resolvePageExpansionAjaxActions($hj(this));
+    return false;
+  });
+  // On ajoute une Action pour afficher/cacher le formulaire de filtre
+  $hj('i.fa-filter').unbind().click(function(){
+    $hj('#filters input').val('');
+    $hj('#filters').toggle();
+  });
 }
 function addPageCompetenceAjaxActions() {
   // On ajoute une Action sur les actions Ajax
@@ -318,7 +343,34 @@ function addSelectionSurvivantActions() {
   });
 }
 
+function resolvePageExpansionAjaxActions(clicked) {
+  var ajaxaction = clicked.data('ajaxaction');
+  var callAjax = true;
+  // On initialise les données de tri et de filtres.
+  var colsort = 'name';
+  var colorder = 'asc';
+  var paged = 1;
+  var nbPerPages = $hj('#displayedRows').val();
+  var filters = 'name='+$hj('#filter-name').val();
 
+  switch (ajaxaction) {
+    // On change le nombre d'éléments affichés
+    case 'display' :
+    case 'filter' :
+    break;
+    // On change la page affichée
+    case 'paged' :
+      paged = clicked.data('paged');
+    break;
+    default :
+      callAjax = false;
+    break;
+  }
+  if (callAjax) {
+    var data = {'action': 'dealWithAjax', 'ajaxAction': 'getExpansions', 'colsort': colsort, 'colorder': colorder, 'nbperpage': nbPerPages, 'paged': paged, 'filters': filters};
+    resolveCallAjax(data, 'page-extensions');
+  }
+}
 function resolvePageCompetenceAjaxActions(clicked) {
   var ajaxaction = clicked.data('ajaxaction');
   var callAjax = true;
@@ -445,6 +497,7 @@ function resolveCallAjax(data, idPage) {
             case 'page-missions'    : addPageMissionAjaxActions(); break;
             case 'page-selection-survivants' :
             case 'page-survivants'  : addPageSurvivantAjaxActions(); break;
+            case 'page-extensions'  : addPageExpansionAjaxActions(); break;
             default: break;
           }
         }

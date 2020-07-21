@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.20
+ * @version 1.07.21
  */
 class SurvivorBean extends LocalBean
 {
@@ -106,7 +106,6 @@ class SurvivorBean extends LocalBean
     $checked = false;
     $strProfiles  = '';
     $strSkills = '';
-    $name = self::CST_SURVIVOR.'-skill-'.$this->Survivor->getId();
     if ($this->Survivor->isStandard()) {
       $strProfiles .= '<li class="active">'.$this->getFormRadioBouton('survivant', self::LBL_SURVIVANT).'</li>';
       $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('', false, true), array(self::ATTR_CLASS=>'colSkills skills-survivant'));

@@ -5,16 +5,12 @@ if (!defined('ABSPATH')) {
 /**
  * Classe LocalBean
  * @author Hugues
- * @version 1.03.00
  * @since 1.00.00
+ * @version 1.07.21
  */
 class LocalBean extends UtilitiesBean implements ConstantsInterface
 {
-  /**
-   */
-  public function __construct()
-  {
-  }
+
   /**
    * @param array $addArg
    * @param array $remArg

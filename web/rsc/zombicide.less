@@ -351,6 +351,7 @@ label {
 
 #page-competences,
 #page-equipements,
+#page-extensions,
 #page-mission,
 #page-missions,
 #page-survivants {
@@ -737,6 +738,17 @@ article.survivor {
 
 }
 /******************************
+ *** PAGE EXPANSIONS
+ ******************************/
+.expansionName {
+  a {
+    color: @orange;
+    &:hover {
+      color: @orange;
+    }
+  }
+}
+/******************************
  *** PAGE SKILLS
  ******************************/
 .skillName {
@@ -769,6 +781,9 @@ article.survivor {
     color: @orange;
   }
 }
+
+
+.publicExpansionRow,
 .publicSurvivorRow,
 .publicSkillRow {
   .panel-body {

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * MissionActions
  * @author Hugues
  * @since 1.02.00
- * @version 1.05.14
+ * @version 1.07.21
  */
 class MissionActions extends LocalActions
 {
@@ -97,24 +97,6 @@ class MissionActions extends LocalActions
       $this->WpPost = array_shift($this->WpPostMissions);
       $this->checkWpPostMission();
     }
-
-    /*
-    // Puis, on regarde les données en base et on vérifie que des articles ont été créés pour elles.
-    while (!empty($this->Missions)) {
-      // On récupère l'extension.
-      $Mission = array_shift($this->Missions);
-      $args = array(
-        self::WP_METAKEY      => self::FIELD_MISSIONID,
-        self::WP_METAVALUE    => $Mission->getId(),
-        self::WP_TAXQUERY     => array(),
-        self::WP_CAT          => self::WP_CAT_MISSION_ID,
-      );
-      $WpPost = $this->WpPostServices->getArticles($args);
-      if (empty($WpPost)) {
-        $this->strBilan .= '<br>Article à créer pour une Mission : '.$Mission->getTitle().' ['.$Mission->toJson().'].';
-      }
-    }
-    */
     if ($this->strBilan=='') {
       $this->strBilan = 'Il semblerait que tout aille à la perfection. Aucune anomalie remontée.';
     }
