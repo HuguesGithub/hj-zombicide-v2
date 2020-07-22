@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPostExpansionBean
  * @author Hugues
  * @since 1.07.21
- * @version 1.07.21
+ * @version 1.07.22
  */
 class WpPostExpansionBean extends WpPostBean
 {
@@ -31,37 +31,6 @@ class WpPostExpansionBean extends WpPostBean
    */
   public function getContentPage()
   {
-    /*
-    //////////////////////////////////////////////////////////////////
-    // On enrichi les tableaux de données nécessaires.
-    $arrF = array(self::FIELD_SKILLID => $this->Skill->getId());
-    $arrTags = array(
-      self::COLOR_BLUE   => array(10, 11),
-      self::COLOR_YELLOW => array(20),
-      self::COLOR_ORANGE => array(30, 31),
-      self::COLOR_RED    => array(40, 41, 42),
-    );
-    //////////////////////////////////////////////////////////////////
-    // On construit le tableau nécessaire au listing des Survivants
-    foreach ($arrTags as $key => $value) {
-      while (!empty($value)) {
-        $val = array_shift($value);
-        $arrF[self::FIELD_TAGLEVELID] = $val;
-        foreach ($this->arrLvls as $k => $v) {
-          $arrF[self::FIELD_SURVIVORTYPEID] = $k;
-          $SurvivorSkills = $this->SurvivorSkillServices->getSurvivorSkillsWithFilters($arrF);
-          foreach ($SurvivorSkills as $SurvivorSkill) {
-            $Survivor = $SurvivorSkill->getSurvivor();
-            $this->skills[$key][$k][$Survivor->getNiceName()] = $Survivor;
-          }
-          if (!empty($this->skills[$key][$k])) {
-            ksort($this->skills[$key][$k]);
-          }
-        }
-      }
-    }
-
-    */
     //////////////////////////////////////////////////////////////////
     // On enrichi le template puis on le restitue.
     $args = array(

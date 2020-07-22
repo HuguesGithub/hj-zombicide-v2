@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.07.21
+ * @version 1.07.22
  */
 class ExpansionBean extends LocalBean
 {
@@ -19,6 +19,9 @@ class ExpansionBean extends LocalBean
   {
     parent::__construct();
     $this->Expansion = ($Expansion==null ? new Expansion() : $Expansion);
+    $this->ExpansionServices = new ExpansionServices();
+    $this->EquipmentExpansionServices = new EquipmentExpansionServices();
+    $this->SpawnServices = new SpawnServices();
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -71,13 +74,74 @@ class ExpansionBean extends LocalBean
       $this->Expansion->getName(),
       // Identifiant de la Compétence - 3
       $this->Expansion->getId(),
+      // Nb de Survivants / Dalles / Missions - 4
+      $this->getExpansionDetails(),
+      // Détails des Zombies - 5
+      $this->getZombiesDetails(),
+      // Cartes Equipement et Spawn - 6
+      $this->getCardsDetails(),
+      // Officiel ou non - 7
+      ($this->Expansion->isOfficial() ? 'Officielle' : 'Custom'),
     );
     return $this->getRender($this->urlRowPublic, $args);
   }
 
+  private function getCardsDetails()
+  {
+    $arr = array();
+    $EquipmentCards = $this->EquipmentExpansionServices->getEquipmentExpansionsWithFilters(array(self::FIELD_EXPANSIONID=>$this->Expansion->getId()));
+    if (!empty($EquipmentCards)) {
+      $sum = 0;
+      while (!empty($EquipmentCards)) {
+        $EquipmentCard = array_shift($EquipmentCards);
+        $sum += $EquipmentCard->getQuantity();
+      }
+      array_push($arr, $sum.' Cartes Équipement');
+    }
+    $SpawnCards = $this->SpawnServices->getSpawnsWithFilters(array(self::FIELD_EXPANSIONID=>$this->Expansion->getId()), self::FIELD_SPAWNNUMBER);
+    if (!empty($SpawnCards)) {
+      $First = array_shift($SpawnCards);
+      $Last = array_pop($SpawnCards);
+      array_push($arr, 'Cartes Spawns : #'.str_pad($First->getSpawnNumber(), 3, '0', STR_PAD_LEFT).' à #'.str_pad($Last->getSpawnNumber(), 3, '0', STR_PAD_LEFT));
+    }
+    return implode('<br>', $arr);
+  }
 
+  private function getZombiesDetails()
+  { return 'WIP'; }
 
-
+  private function getExpansionDetails()
+  {
+    $arr = array();
+    /////////////////////////////////////////////////////////////////////////////
+    // On affiche le nombre de Survivants si nécessaire
+    if ($this->Expansion->getNbSurvivants()!=0) {
+      array_push($arr, $this->Expansion->getNbSurvivants().' Survivants');
+    }
+    /////////////////////////////////////////////////////////////////////////////
+    // On affiche le nombre de Dalles si nécessaire
+    if (self::isAdmin()) {
+      $Tiles = $this->Expansion->getTiles();
+      if (count($Tiles)!=$this->Expansion->getNbDalles()) {
+        $this->Expansion->setNbDalles(count($Tiles));
+        $this->ExpansionServices->updateExpansion($this->Expansion);
+      }
+    }
+    if ($this->Expansion->getNbDalles()!=0) {
+      array_push($arr, $this->Expansion->getNbDalles().' Dalles');
+    }
+    /////////////////////////////////////////////////////////////////////////////
+    // On met à jour le nombre de Missions si nécessaire puis on le restitue
+    $Missions = $this->Expansion->getMissions();
+    if (count($Missions)!=$this->Expansion->getNbMissions() && !empty($Missions)) {
+      $this->Expansion->setNbMissions(count($Missions));
+      $this->ExpansionServices->updateExpansion($this->Expansion);
+    }
+    if ($this->Expansion->getNbMissions()!=0) {
+      array_push($arr, $this->Expansion->getNbMissions().' Missions');
+    }
+    return implode('<br>', $arr);
+  }
 
 
 

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * MissionActions
  * @author Hugues
  * @since 1.02.00
- * @version 1.07.21
+ * @version 1.07.22
  */
 class MissionActions extends LocalActions
 {
@@ -250,7 +250,7 @@ class MissionActions extends LocalActions
   private function addStrBilan($type, $name)
   { $this->strBilan .=  '<br><strong>'.$type.'</strong> <em>'.$name.'</em>.';
   }
-  // Fin du bloc relatif à la vérification des compétences sur la Home Admin.
+  // Fin du bloc relatif à la vérification des Missions sur la Home Admin.
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////

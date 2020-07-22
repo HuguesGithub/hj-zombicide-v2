@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Tile
  * @author Hugues.
  * @since 1.04.07
- * @version 1.05.02
+ * @version 1.07.22
  */
 class Tile extends LocalDomain
 {
@@ -16,15 +16,17 @@ class Tile extends LocalDomain
    */
   protected $id;
   /**
-   * Code de la Dalle
-   * @var string $code
-   */
-  protected $code;
-  /**
    * Id technique de l'Expansion
    * @var int $expansionId
    */
   protected $expansionId;
+  /**
+   * Code de la Dalle
+   * @var string $code
+   */
+  protected $code;
+  protected $coordPoly;
+  protected $zoneType;
   /**
    * Sans doute à virer...
    * @var string $zoneAcces
@@ -34,12 +36,13 @@ class Tile extends LocalDomain
    * La Dalle est elle active ?
    * @var int $active
    */
-  protected $active;
-  /**
-   * La Dalle est-elle officielle ?
-   * @var int $officielle
-   */
-  protected $officielle;
+  protected $activeTile;
+  protected $oCode;
+  protected $top;
+  protected $right;
+  protected $bottom;
+  protected $left;
+
   /**
    * @return int
    */

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe Expansion
  * @author Hugues.
  * @since 1.04.00
- * @version 1.05.12
+ * @version 1.07.22
  */
 class Expansion extends WpPostRelais
 {
@@ -40,6 +40,11 @@ class Expansion extends WpPostRelais
    * @var int $nbMissions
    */
   protected $nbMissions;
+  /**
+   * Nombre de Dalles
+   * @var int $nbDalles
+   */
+  protected $nbDalles;
   /**
    * Est officielle ?
    * @var boolean $official;
@@ -83,6 +88,12 @@ class Expansion extends WpPostRelais
   public function getNbMissions()
   { return $this->nbMissions; }
   /**
+   * Getter nbDalles
+   * @return int
+   */
+  public function getNbDalles()
+  { return $this->nbDalles; }
+  /**
    * Getter official
    * @return boolean
    */
@@ -118,6 +129,11 @@ class Expansion extends WpPostRelais
    */
   public function setNbMissions($nbMissions)
   { $this->nbMissions = $nbMissions; }
+  /**
+   * @param int $nbDalles
+   */
+  public function setNbDalles($nbDalles)
+  { $this->nbDalles = $nbDalles; }
   /**
    * @param boolean $official
    */
@@ -179,6 +195,13 @@ class Expansion extends WpPostRelais
     return $Obj;
   }
 
+  public function getTiles()
+  {
+    if ($this->Tiles==null) {
+      $this->Tiles = $this->TileServices->getTilesWithFilters(array(self::FIELD_EXPANSIONID=>$this->getId()));
+    }
+    return $this->Tiles;
+  }
   public function getMissions()
   {
     if ($this->Missions==null) {
