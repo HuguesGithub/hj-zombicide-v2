@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * MissionActions
  * @author Hugues
  * @since 1.02.00
- * @version 1.07.22
+ * @version 1.07.25
  */
 class MissionActions extends LocalActions
 {
@@ -21,8 +21,10 @@ class MissionActions extends LocalActions
     $this->DurationServices = new DurationServices();
     $this->LevelServices    = new LevelServices();
     $this->MissionServices  = new MissionServices();
+    $this->MissionTileServices = new MissionTileServices();
     $this->OrigineServices  = new OrigineServices();
     $this->PlayerServices   = new PlayerServices();
+    $this->TileServices     = new TileServices();
   }
   /**
    * Point d'entrée des méthodes statiques.
@@ -119,6 +121,7 @@ class MissionActions extends LocalActions
     $this->checkPlayer();
     $this->checkDuration();
     $this->checkOrigine();
+    $this->checkTiles();
 
     if (!$this->areDataOkay) {
       $this->strBilan .= '<br>Analyse de l article WpPost <a href="'.$this->href.'">'.$this->postTitle.'</a> terminée, des données ne sont pas renseignées.<br>';
@@ -130,21 +133,6 @@ class MissionActions extends LocalActions
         $this->MissionServices->updateMission($this->Mission);
       }
       $this->strBilan .= '<br>Analyse de l article WpPost <a href="'.$this->href.'">'.$this->postTitle.'</a> terminée, avec anomalie.<br>';
-    }
-
-  }
-  private function checkCode()
-  {
-    // On checke le code
-    $postCode = $this->WpPost->getPostMeta(self::FIELD_CODE);
-    if ($postCode=='') {
-      $this->addStrBilan('Code', $this->Mission->getCode());
-      update_post_meta($this->WpPost->getID(), self::FIELD_CODE, $this->Mission->getCode());
-      $this->areDataOkay = false;
-    } elseif ($postCode!=$this->Mission->getCode()) {
-      $this->strBilan .= '<br><strong>Code</strong> à mettre à jour.';
-      $this->Mission->setCode($postCode);
-      $this->doUpdate = true;
     }
   }
   private function initMission()
@@ -164,9 +152,22 @@ class MissionActions extends LocalActions
       }
     }
   }
+  private function checkCode()
+  {
+    // On checke le code
+    $postCode = $this->WpPost->getPostMeta(self::FIELD_CODE);
+    if ($postCode=='') {
+      $this->addStrBilan('Code', $this->Mission->getCode());
+      update_post_meta($this->WpPost->getID(), self::FIELD_CODE, $this->Mission->getCode());
+      $this->areDataOkay = false;
+    } elseif ($postCode!=$this->Mission->getCode()) {
+      $this->strBilan .= '<br><strong>Code</strong> à mettre à jour.';
+      $this->Mission->setCode($postCode);
+      $this->doUpdate = true;
+    }
+  }
   private function checkLevel()
   {
-
     // On checke le levelId
     $levelId = $this->WpPost->getPostMeta(self::FIELD_LEVELID);
     $Levels = $this->LevelServices->getLevelsWithFilters(array(self::FIELD_NAME=>$levelId));
@@ -233,7 +234,11 @@ class MissionActions extends LocalActions
     // On checke le origineId
     $origineId = $this->WpPost->getPostMeta(self::FIELD_ORIGINEID);
     $Origines = $this->OrigineServices->getOriginesWithFilters(array(self::FIELD_NAME=>$origineId));
-    $Origine = array_shift($Origines);
+    if (!empty($Origines)) {
+      $Origine = array_shift($Origines);
+    } else {
+      $Origine = new Origine();
+    }
     if ($origineId=='') {
       $this->addStrBilan('Origine', $this->Mission->getOrigine()->getName());
       update_post_meta($this->WpPost->getID(), self::FIELD_ORIGINEID, $this->Mission->getOrigine()->getName());
@@ -249,6 +254,39 @@ class MissionActions extends LocalActions
   }
   private function addStrBilan($type, $name)
   { $this->strBilan .=  '<br><strong>'.$type.'</strong> <em>'.$name.'</em>.';
+  }
+
+  private function checkTiles()
+  {
+    $missionId = $this->Mission->getId();
+    $MissionTiles = $this->MissionTileServices->getMissionTilesWithFilters(array(self::FIELD_MISSIONID=>$missionId));
+    if (!empty($MissionTiles)) {
+      return;
+    }
+    $tileIds = $this->WpPost->getPostMeta('tileIds');
+    if ($tileIds=='') {
+      return;
+    }
+    $arrTileIds = explode(', ', str_replace(' &', ',', $tileIds));
+    $width = $this->Mission->getWidth();
+    $height = $this->Mission->getHeight();
+    // On initialise le MissionTile qu'on va devoir insérer en base.
+    $MissionTile = new MissionTile();
+    $MissionTile->setMissionId($missionId);
+    $MissionTile->setOrientation('?');
+    // On doit insérer chaque Dalle.
+    for ($row=0; $row<$height; $row++) {
+      $MissionTile->setCoordY($row+1);
+      for ($col=0; $col<$width; $col++) {
+        $MissionTile->setCoordX($col+1);
+        $Tiles = $this->TileServices->getTilesWithFilters(array(self::FIELD_CODE=>$arrTileIds[$row*$width+$col]));
+        if (!empty($Tiles)) {
+          $Tile = array_shift($Tiles);
+          $MissionTile->setTileId($Tile->getId());
+          $this->MissionTileServices->insertMissionTile($MissionTile);
+        }
+      }
+    }
   }
   // Fin du bloc relatif à la vérification des Missions sur la Home Admin.
   //////////////////////////////////////////////////////////////////////////////////////////////////////

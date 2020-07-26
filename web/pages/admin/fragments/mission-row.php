@@ -9,4 +9,5 @@
     </td>
     <td>%6$s</td>
     <td><img src="%7$s" alt="%2$s"/></td>
+    <td>%8$s</td>
 </tr>

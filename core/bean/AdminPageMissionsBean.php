@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * AdminPageMissionsBean
  * @author Hugues
  * @since 1.05.10
- * @version 1.07.19
+ * @version 1.07.25
  */
 class AdminPageMissionsBean extends AdminPageBean
 {
@@ -60,7 +60,11 @@ class AdminPageMissionsBean extends AdminPageBean
     $curPage = $this->initVar(self::WP_CURPAGE, 1);
     $orderby = $this->initVar(self::WP_ORDERBY, self::FIELD_TITLE);
     $order = $this->initVar(self::WP_ORDER, self::ORDER_ASC);
-    $Missions = $this->MissionServices->getMissionsWithFilters(array(), $orderby, $order);
+    $filters = array();
+    if (isset($this->urlParams[self::FIELD_ORIGINEID])) {
+      $filters[self::FIELD_ORIGINEID] = $this->urlParams[self::FIELD_ORIGINEID];
+    }
+    $Missions = $this->MissionServices->getMissionsWithFilters($filters, $orderby, $order);
     $nbElements = count($Missions);
     $nbPages = ceil($nbElements/$nbPerPage);
     $curPage = max(1, min($curPage, $nbPages));
@@ -90,6 +94,8 @@ class AdminPageMissionsBean extends AdminPageBean
       '',
       // Pagination - 5
       $strPagination,
+      // Filtre Extensions - 6
+      OrigineBean::getStaticSelect(self::FIELD_ORIGINEID, $this->urlParams[self::FIELD_ORIGINEID]),
     );
     return $this->getRender($this->urlMissionListing, $args);
   }

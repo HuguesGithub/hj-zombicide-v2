@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.21
+ * @version 1.07.25
  */
 class SurvivorBean extends LocalBean
 {
@@ -107,18 +107,20 @@ class SurvivorBean extends LocalBean
     $strProfiles  = '';
     $strSkills = '';
     if ($this->Survivor->isStandard()) {
-      $strProfiles .= '<li class="active">'.$this->getFormRadioBouton('survivant', self::LBL_SURVIVANT).'</li>';
+      $strProfiles .= $this->getBalise(self::TAG_LI, $this->getFormRadioBouton('survivant', self::LBL_SURVIVANT), array(self::FIELD_CLASS=>self::CST_ACTIVE));
       $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('', false, true), array(self::ATTR_CLASS=>'colSkills skills-survivant'));
     }
     if ($this->Survivor->isZombivor()) {
-      $strProfiles .= '<li>'.$this->getFormRadioBouton('zombivant', self::LBL_ZOMBIVANT).'</li>';
+      $strProfiles .= $this->getBalise(self::TAG_LI, $this->getFormRadioBouton('zombivant', self::LBL_ZOMBIVANT));
       $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('z', false, true), array(self::ATTR_CLASS=>'colSkills skills-zombivant'));
     }
     if ($this->Survivor->isUltimate()) {
-      $strProfiles .= $this->getFormRadioBouton(self::CST_ULTIMATE, self::LBL_ULTIMATE, self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= $this->getBalise(self::TAG_LI, $this->getFormRadioBouton('ultimate', self::LBL_ULTIMATE));
+      $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('u', false, true), array(self::ATTR_CLASS=>'colSkills skills-ultimate'));
     }
     if ($this->Survivor->isUltimatez()) {
-      $strProfiles .= $this->getFormRadioBouton(self::CST_ULTIMATEZ, self::LBL_ULTIMATEZOMBIVANT, self::CST_CHANGEPROFILE, $checked);
+      $strProfiles .= $this->getBalise(self::TAG_LI, $this->getFormRadioBouton('ultimatez', self::LBL_ULTIMATEZOMBIVANT));
+      $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('uz', false, true), array(self::ATTR_CLASS=>'colSkills skills-ultimatez'));
     }
     //////////////////////////////////////////////////////////////////
 

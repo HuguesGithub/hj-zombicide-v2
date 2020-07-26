@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionTileServices
  * @author Hugues.
  * @since 1.04.07
- * @version 1.04.27
+ * @version 1.07.25
  */
 class MissionTileServices extends LocalServices
 {
@@ -47,4 +47,6 @@ class MissionTileServices extends LocalServices
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
 
+  public function insertMissionTile($MissionTile)
+  { return $this->insert(__FILE__, __LINE__, $MissionTile); }
 }

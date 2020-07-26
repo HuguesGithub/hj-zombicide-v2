@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.21
+ * @version 1.07.25
  */
 class MissionBean extends LocalBean
 {
@@ -54,6 +54,8 @@ class MissionBean extends LocalBean
       $this->Mission->getHeight().'x'.$this->Mission->getWidth(),
       // Url de la Map - 7
       $this->Mission->getThumbUrl(),
+      // Nb d'Objectifs et Règles Spéciales - 8
+      $this->getObjRules()
     );
     ///////////////////////////////////////////////////////////////
     // Puis on le retourne
@@ -180,7 +182,23 @@ class MissionBean extends LocalBean
   // Fin des extras pour l'affichage d'un article de la Home
   ///////////////////////////////////////////////////////////////
 
-
+  public function getObjRules()
+  {
+    $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_MISSIONID, $this->Mission->getWpPost()->getID());
+    while (!empty($WpPosts)) {
+      $WpPost = array_shift($WpPosts);
+      $WpCategories = $WpPost->getCategories();
+      while (!empty($WpCategories)) {
+        $WpCategory = array_shift($WpCategories);
+        if ($WpCategory->getTermTaxonomyId()==self::WP_CAT_OBJECTIVE_ID) {
+          $nbObjs++;
+        } elseif ($WpCategory->getTermTaxonomyId()==self::WP_CAT_RULE_ID) {
+          $nbRules++;
+        }
+      }
+    }
+    return ($nbObjs+0).' Objectifs<br>'.($nbRules+0).' Règles Spéciales';
+  }
 
 
 

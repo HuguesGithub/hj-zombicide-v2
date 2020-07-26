@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/wp-content/plugins/mycommon/web/rsc/css/bootstrap-4.min.css" type="text/css" media="all" />
 <style>
   #wpwrap {background-color:#f1f1f1;}
   .tab-pane {    background: #fff;    padding: 5px;}

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPostMissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.19
+ * @version 1.07.25
  */
 class WpPostMissionBean extends WpPostBean
 {
@@ -44,7 +44,7 @@ class WpPostMissionBean extends WpPostBean
     // On enrichit le template puis on le restitue.
     $args = array(
       // On affiche la Mission demandée - 1
-      self::isAdmin() ? $this->getArticlePage(true) : '',
+      $this->getArticlePage(true),
       // Liens de navigation - 2
       $this->getNavLinks(),
       // Contenu additionnel en bas de page - 3
@@ -137,48 +137,6 @@ class WpPostMissionBean extends WpPostBean
 
   public function getMission()
   { return $this->Mission; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

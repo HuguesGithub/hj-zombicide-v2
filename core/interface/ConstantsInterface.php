@@ -2,7 +2,7 @@
 /**
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.21
+ * @version 1.07.25
  */
 interface ConstantsInterface
 {
@@ -44,6 +44,9 @@ interface ConstantsInterface
   const ATTR_CLASS             = 'class';
   const ATTR_HEIGHT            = 'height';
   const ATTR_HREF              = 'href';
+  const ATTR_ID                = 'id';
+  const ATTR_NAME              = 'name';
+  const ATTR_SELECTED          = 'selected';
   const ATTR_SRC               = 'src';
   const ATTR_TITLE             = 'title';
   const ATTR_TYPE              = 'type';
@@ -220,6 +223,7 @@ interface ConstantsInterface
   const TAG_IMG                = 'img';
   const TAG_LI                 = 'li';
   const TAG_OPTION             = 'option';
+  const TAG_SELECT             = 'select';
   const TAG_SPAN               = 'span';
   const TAG_UL                 = 'ul';
 

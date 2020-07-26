@@ -11,12 +11,16 @@
 
   <form action="#" method="post" id="post-filters">
     <div class="tablenav top">
-      <div class="alignleft actions bulkactions" style="display: inline; float: none;">
+      <div class="alignleft actions bulkactions">
         <select name="action" id="bulk-action-selector-top" class="custom-select custom-select-sm filters">
           <option value="-1">Actions groupées</option>
           <option value="trash">Déplacer dans la corbeille</option>
         </select>
         <input id="doaction" class="button action" value="Appliquer" type="submit" name="postAction">
+      </div>
+      <div class="alignleft actions">
+        %6$s
+        <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">
       </div>
       <div class="tablenav-pages" style="height: 34px;">%5$s</div>
       <br class="clear">
@@ -28,6 +32,7 @@
           <th scope="col" id="infosWpPost" class="manage-column">Infos WpPost</th>
           <th scope="col" id="dimensions" class="manage-column column-date">Dimensions</th>
           <th scope="col" id="map" class="manage-column">Map</th>
+          <th scope="col" id="map" class="manage-column">Objectifs &amp; Règles</th>
         </tr>
       </thead>
       <tbody id="the-list">%1$s</tbody>
@@ -37,6 +42,7 @@
           <th scope="col" class="manage-column">Infos WpPost</th>
           <th scope="col" class="manage-column">Dimensions</th>
           <th scope="col" class="manage-column">Map</th>
+          <th scope="col" class="manage-column">Objectifs &amp; Règles</th>
         </tr>
       </tfoot>
     </table>
