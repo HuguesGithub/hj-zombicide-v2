@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe SurvivorBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.25
+ * @version 1.07.26
  */
 class SurvivorBean extends LocalBean
 {
@@ -103,7 +103,6 @@ class SurvivorBean extends LocalBean
   {
     //////////////////////////////////////////////////////////////////
     // Liste des profils du Survivants.
-    $checked = false;
     $strProfiles  = '';
     $strSkills = '';
     if ($this->Survivor->isStandard()) {

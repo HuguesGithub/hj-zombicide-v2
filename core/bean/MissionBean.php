@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MissionBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.07.25
+ * @version 1.07.26
  */
 class MissionBean extends LocalBean
 {
@@ -185,6 +185,8 @@ class MissionBean extends LocalBean
   public function getObjRules()
   {
     $WpPosts = $this->WpPostServices->getWpPostsByCustomField(self::FIELD_MISSIONID, $this->Mission->getWpPost()->getID());
+    $nbObjs = 0;
+    $nbRules = 0;
     while (!empty($WpPosts)) {
       $WpPost = array_shift($WpPosts);
       $WpCategories = $WpPost->getCategories();
@@ -197,7 +199,7 @@ class MissionBean extends LocalBean
         }
       }
     }
-    return ($nbObjs+0).' Objectifs<br>'.($nbRules+0).' Règles Spéciales';
+    return $nbObjs.' Objectifs<br>'.$nbRules.' Règles Spéciales';
   }
 
 
