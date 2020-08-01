@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageSkillsBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.05.01
+ * @version 1.08.01
  */
 class WpPageSkillsBean extends WpPageBean
 {
@@ -85,6 +85,12 @@ class WpPageSkillsBean extends WpPageBean
    * @param array $post
    */
   public function setFilters($post=null)
-  { parent::setBeanFilters($post, self::FIELD_NAME); }
+  {
+    $pattern = "/description=(.*)/";
+    if (preg_match($pattern, $post[self::CST_FILTERS], $matches)) {
+      $post[self::CST_FILTERS] .= '&name='.$matches[1];
+    }
+    parent::setBeanFilters($post, self::FIELD_NAME);
+  }
 
 }

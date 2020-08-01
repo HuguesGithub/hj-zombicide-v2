@@ -197,10 +197,10 @@ function addPageToolsAjaxActions() {
 function addThrowDiceActions() {
   $hj('#proceedThrowDice').unbind().click(function() {
     var params = '';
-    params  = 'nbDice=10';
-    params += '&seuil=4';
-    params += '&modif=0';
-    params += '&surunsix=0';
+    params  = 'nbDice='+$hj('#diceNumber').val();
+    params += '&seuil='+$hj('#accuracy').val();
+    params += '&modif='+$hj('#plusAuDe').val();
+    params += '&surunsix='+$hj('#surUnSix').val();
     params += '&dual=0';
     params += '&barbauto=0';
     var data = {'action': 'dealWithAjax', 'ajaxAction': 'getThrowDice', 'params': params};
@@ -238,11 +238,9 @@ function addSelectionSurvivantActions() {
       });
     }
     $hj('#nbSelected').html($hj('#listing .fa-check-square').length);
-    /*
     var nb = 0;
-    $hj('#listing button').each(function(){ if ($hj(this).is(':visible')) nb++;});
+    $hj('#listing button.btn-survivor').each(function(){ if ($hj(this).is(':visible')) nb++;});
     $hj('#nbDisplayed').html(nb);
-    */
     return false;
   });
   // Actions sur la case à cocher du bouton d'un Survivant.
@@ -294,8 +292,8 @@ function addSelectionSurvivantActions() {
   });
   $hj('#loadOwnTeam').unbind().click(function(){
     // On supprime toute sélection précédente
-    $hj('#listing button').addClass('hidden');
-    $hj('#listing i').removeClass('fa-check-square').addClass('fa-square');
+    $hj('#listing button.btn-survivor').addClass('hidden');
+    $hj('#listing button.btn-survivor i').removeClass('fa-check-square').addClass('fa-square');
     // On récupère la sélection soumise
     var teamLoader = $hj('#teamLoader').val();
     var arr = teamLoader.split(',');
@@ -305,7 +303,7 @@ function addSelectionSurvivantActions() {
       var subArr = arr[i].split('-');
       if (subArr.length==1) {
         // un Survivant spécifique
-        $hj('button[data-survivor-id="'+arr[0]+'"]').removeClass('hidden').click();
+        $hj('button[data-survivor-id="'+subArr[0]+'"]').removeClass('hidden').click();
       } else {
         for (var j=subArr[0]; j<=subArr[1]; j++) {
           // Un intervalle de Survivants
@@ -313,6 +311,9 @@ function addSelectionSurvivantActions() {
         }
       }
     }
+    var nb = 0;
+    $hj('#listing button.btn-survivor').each(function(){ if ($hj(this).is(':visible')) nb++;});
+    $hj('#nbDisplayed').html(nb);
   });
   $hj('#saveOwnTeam').unbind().click(function(e){
     var strSave = '';

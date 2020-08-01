@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe MainPageBean
  * @author Hugues
  * @since 1.00.00
- * @version 1.04.26
+ * @version 1.08.01
  */
 class MainPageBean extends UtilitiesBean implements ConstantsInterface
 {
@@ -35,65 +35,87 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
    */
   public function __construct()
   { $this->WpPostServices = new WpPostServices(); }
+
   /**
    * @return string
    */
   public function displayPublicFooter()
   {
     $args = array(admin_url('admin-ajax.php'));
-    $str = file_get_contents(PLUGIN_PATH.'web/pages/public/public-main-footer.php');
-    return vsprintf($str, $args);
+    return $this->getRender(self::$tplMainFooterContent, $args);
   }
+  /////////////////////////// Fin gestion PublicFooter ///////////////////////////
+
   /**
    * @return string
    */
   public function displayPublicHeader()
   {
-    if ($this->WpPostServices==null) {
-      $this->WpPostServices = new WpPostServices();
-    }
-    $WpPosts = $this->WpPostServices->getArticles(array('post_type'=>'page', 'orderby'=>'menu_order', 'tax_query'=>array()), false, 'WpPage');
-    $strPages = '<a href="'.get_site_url().'"><span>Accueil</span></a>';
+    //////////////////////////////////////////////////////////////////////////////////
+    // Récupération des pages devant être affichées dans le menu du Header
+    $args = array(
+      self::WP_POSTTYPE => 'page',
+      self::WP_ORDERBY  => 'menu_order',
+      self::WP_TAXQUERY => array(),
+      'post_parent'     => 0,
+    );
+    $WpPosts = $this->WpPostServices->getArticles($args, false, 'WpPage');
+    // On construit le lien vers l'accueil
+    $label = $this->getBalise(self::TAG_SPAN, 'Accueil');
+    $strPages = $this->getBalise(self::TAG_A, $label, array(self::ATTR_HREF=>get_site_url()));
+    // Pour chaque page, si le parent ne vaut pas 0, on passe au suivant...
     while (!empty($WpPosts)) {
       $WpPost = array_shift($WpPosts);
-      if ($WpPost->getPostParent()!=0) {
-        continue;
-      }
       $strPages .= $this->addWpPageToMenu($WpPost);
     }
-
-    if ($this->showHeaderAndFooter) {
-      $args = array(
-          '',
-          '',
-          $strPages
+    //////////////////////////////////////////////////////////////////////////////////
+    // On enrichi le Template et on le restitue.
+    $args = array(
+      // Plus d'actualité - 1
+      '',
+      // Plus d'actualité - 2
+      '',
+      // Contenu du Menu à afficher, mais pas tout le temps (pleine page) - 3
+      ($this->showHeaderAndFooter ? $strPages : '')
     );
-    } else {
-      $args = array('', '', '');
-    }
-    $str = file_get_contents(PLUGIN_PATH.'web/pages/public/public-main-header.php');
-    return vsprintf($str, $args);
+    return $this->getRender(self::$tplMainHeaderContent, $args);
   }
+  /**
+   * @param WpPage $WpPost
+   * @return string
+   */
   private function addWpPageToMenu($WpPost)
   {
     $strMenu = '';
+    // On récupère la WpPage qu'on veut afficher.
     $WpPage = new WpPage($WpPost->getID());
+    $labelParent = $this->getBalise(self::TAG_SPAN, $WpPage->getPostTitle());
+    // On vérifie la présence d'enfants éventuels.
     $Children = $WpPage->hasChildren();
     if (empty($Children)) {
-      $strMenu .= '<a href="'.$WpPage->getPermalink().'"><span>'.$WpPage->getPostTitle().'</span></a>';
+      // S'il n'y en a pas, c'est un siple lien.
+      $strMenu = $this->getBalise(self::TAG_A, $labelParent, array(self::ATTR_HREF => $WpPage->getPermalink()));
     } else {
-      $strMenu .= '<span class="hasDropDown"><a href="#"><span>'.$WpPage->getPostTitle().'</span></a><ul>';
+      // Sinon, on doit construire la liste des enfants pour le sous menu
+      $strSubMenus = '';
       while (!empty($Children)) {
         $Child = array_shift($Children);
         if ($Child->getMenuOrder()==0) {
+          // On n'affiche que les enfants ayant un OrderMenu différent de 0
           continue;
         }
-        $strMenu .= '<li><a href="'.$Child->getPermalink().'"><span>'.$Child->getPostTitle().'</span></a></li>';
+        $childLabel   = $this->getBalise(self::TAG_SPAN, $Child->getPostTitle());
+        $childLink    = $this->getBalise(self::TAG_A, $childLabel, array(self::ATTR_HREF=>$Child->getPermalink()));
+        $strSubMenus .= $this->getBalise(self::TAG_LI, $childLink);
       }
-      $strMenu .= '</ul></span>';
+      $parentLink    = $this->getBalise(self::TAG_A, $labelParent, array(self::ATTR_HREF=>'#'));
+      $listChildren  = $this->getBalise(self::TAG_UL, $strSubMenus);
+      $strMenu      .= $this->getBalise(self::TAG_SPAN, $parentLink.$listChildren, array(self::ATTR_CLASS => 'hasDropDown'));
     }
     return $strMenu;
   }
+  /////////////////////////// Fin gestion PublicHeader ///////////////////////////
+
   /**
    * @return Bean
    */

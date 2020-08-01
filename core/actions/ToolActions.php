@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * ExpansionActions
  * @author Hugues
  * @since 1.05.09
- * @version 1.05.10
+ * @version 1.08.01
  */
 class ToolActions extends LocalActions
 {
@@ -70,6 +70,7 @@ class ToolActions extends LocalActions
         $dice = min(6,max(1,$dice+$this->modif));
         if ($dice>=6) {
           $color = self::COLOR_BLUE;
+          $this->nbDice += $this->surunsix;
         } elseif ($dice>=$this->seuil) {
           $color = self::COLOR_YELLOW;
         } else {
@@ -88,7 +89,7 @@ class ToolActions extends LocalActions
       $num = array_shift($arrDice);
       $result .= '['.$num.']';
     }
-    $result = '<section id="page-piste-de-des">'.$result.'</section>';
+    $result = '<section id="page-piste-de-des">Tirage '.date('d-m-Y H:i:s').' : '.$result.'</section>';
     return $this->jsonString($result, self::PAGE_PISTE_DE_DES, true);
   }
 

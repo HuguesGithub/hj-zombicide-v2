@@ -9,50 +9,52 @@
 <section id="page-tools">
   <div class="selectionContainer row">
     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-      <div class="form-group">
-        <label for="exampleFormControlSelect1">Example select</label>
-        <select class="form-control" id="exampleFormControlSelect1">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-      </div>
+      <div class="btn-group-vertical team-selection" role="group">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text badge-dark">Nombre de dés</span>
+          </div>
+          <input type="number" id="diceNumber" name="diceNumber" class="form-control" placeholder="0" min="1" value="1">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text badge-dark">Seuil de Réussite</span>
+          </div>
+          <input type="number" id="accuracy" name="accuracy" class="form-control" placeholder="4+" min="1" max="6" value="4">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text badge-dark">Sur un 6 : </span>
+          </div>
+          <select class="custom-select" id="surUnSix" name="surUnSix">
+            <option value="0">+0 dé</option>
+            <option value="1">+1 dé</option>
+            <option value="2">+2 dé</option>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <select class="custom-select" id="plusAuDe" name="plusAuDe">
+            <option value="0">+0</option>
+            <option value="1">+1</option>
+            <option value="2">+2</option>
+          </select>
+          <div class="input-group-append">
+            <label class="input-group-text badge-dark"> au résultat du dé</label>
+          </div>
+        </div>
 
-      <div class="form-group">
-        <label for="exampleFormControlSelect1">Example select</label>
-        <select class="form-control" id="exampleFormControlSelect1">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
+        <div type="button" class="btn btn-primary btn-expansion-group" id="proceedThrowDice">
+          <span><i class="far fa-check-circle"></i></span> Lancer
+        </div>
       </div>
-
-      <div class="form-check">
-        <label class="form-check-label" for="defaultCheck1">Default checkbox</label>
-        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-      </div>
-
-      <div class="form-check">
-        <label class="form-check-label" for="defaultCheck1">Default checkbox</label>
-        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-      </div>
-
-      <div class="form-group">
-        <label for="formGroupExampleInput">Example label</label>
-        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example input">
-      </div>
-
-      <div type="button" class="btn btn-primary" id="proceedThrowDice">
-        <span><i class="far fa-check-circle"></i></span> Lancer
-      </div>
-
     </div>
-    <div class="col-12 col-sm-6 col-md-8 col-log-9">
-      <section id="page-piste-de-des"></section>
+
+    <div class="col-12 col-sm-6 col-md-8 col-lg-9">
+      <section id="listing">
+        <div class="publicSurvivorRow tableHeader row"><span class="survivorPortraits col-12">Résultat du lancer de dés</div>
+        <section id="page-piste-de-des" class="row">&nbsp;</section>
+        <div class="publicSurvivorRow tableHeader row">&nbsp;</div>
+      </section>
     </div>
   </div>
 </section>

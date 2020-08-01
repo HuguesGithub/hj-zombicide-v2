@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPostExpansionBean
  * @author Hugues
  * @since 1.07.21
- * @version 1.07.22
+ * @version 1.08.01
  */
 class WpPostExpansionBean extends WpPostBean
 {
@@ -31,6 +31,13 @@ class WpPostExpansionBean extends WpPostBean
    */
   public function getContentPage()
   {
+    if ($this->Expansion->isOfficial()) {
+      $label = 'Officielle';
+      $color = 'success';
+    } else {
+      $label = 'Custom';
+      $color = 'danger';
+    }
     //////////////////////////////////////////////////////////////////
     // On enrichi le template puis on le restitue.
     $args = array(
@@ -40,6 +47,12 @@ class WpPostExpansionBean extends WpPostBean
       $this->WpPost->getPostContent(),
       // Lien de navigation - 3
       '',//$this->getNavLinks(),
+      // Infos sur les Survivants / Dalles / Missions... - 4
+      $this->Expansion->getBean()->getExpansionDetails(),
+      // Mais aussi les cartes Equipements et Invasion... - 5
+      $this->Expansion->getBean()->getCardsDetails(),
+      // Badge officiel ou Custom - 6
+      $this->getBalise(self::TAG_SPAN, $label, array(self::ATTR_CLASS=>'badge badge-'.$color)),
     );
     return $this->getRender($this->urlTemplate, $args);
   }

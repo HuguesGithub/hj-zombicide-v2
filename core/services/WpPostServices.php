@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPostServices
  * @author Hugues
  * @since 1.04.00
- * @version 1.07.20
+ * @version 1.08.01
  */
 class WpPostServices extends GlobalServices implements ConstantsInterface
 {
@@ -75,17 +75,22 @@ class WpPostServices extends GlobalServices implements ConstantsInterface
    * @param int $limit
    * @return array
    */
-  public function getChildPagesByParentId($pageId, $limit = -1)
+  public function getChildPagesByParentId($pageId, $limit = -1, $params=array())
   {
     global $post;
     $pages = array();
     $args = array(
-      'orderby'=> 'name',
-      'order'=>'ASC',
-      'post_type' => 'page',
-      'post_parent' => $pageId,
-      'posts_per_page' => $limit
-   );
+      self::WP_ORDERBY      => self::FIELD_NAME,
+      self::WP_ORDER        => self::ORDER_ASC,
+      self::WP_POSTTYPE     => 'page',
+      'post_parent'         => $pageId,
+      self::WP_POSTSPERPAGE => $limit
+    );
+    if ( !empty($params) ) {
+      foreach ( $params as $key=>$value ) {
+        $args[$key] = $value;
+      }
+    }
     $the_query = new WP_Query($args);
     while ($the_query->have_posts()) {
       $the_query->the_post();

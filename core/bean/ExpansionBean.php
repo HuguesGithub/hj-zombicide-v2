@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe ExpansionBean
  * @author Hugues
  * @since 1.04.24
- * @version 1.07.22
+ * @version 1.08.01
  */
 class ExpansionBean extends LocalBean
 {
@@ -86,7 +86,7 @@ class ExpansionBean extends LocalBean
     return $this->getRender($this->urlRowPublic, $args);
   }
 
-  private function getCardsDetails()
+  public function getCardsDetails()
   {
     $arr = array();
     $EquipmentCards = $this->EquipmentExpansionServices->getEquipmentExpansionsWithFilters(array(self::FIELD_EXPANSIONID=>$this->Expansion->getId()));
@@ -110,7 +110,7 @@ class ExpansionBean extends LocalBean
   private function getZombiesDetails()
   { return 'WIP'; }
 
-  private function getExpansionDetails()
+  public function getExpansionDetails()
   {
     $arr = array();
     /////////////////////////////////////////////////////////////////////////////

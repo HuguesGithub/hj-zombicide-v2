@@ -191,7 +191,7 @@ update="UPDATE wp_11_zombicide_rule SET setting='%s', code='%s', description='%s
 [Skill]
 select="SELECT DISTINCT s.id AS id, code, name, description, expansionId "
 from="FROM wp_11_zombicide_skill s "
-where="WHERE code LIKE '%s' AND name LIKE '%s' AND description LIKE '%s' AND expansionId LIKE '%s' "
+where="WHERE code LIKE '%s' AND (name LIKE '%s' OR description LIKE '%s') AND expansionId LIKE '%s' "
 insert="INSERT INTO wp_11_zombicide_skill (code, name, description, expansionId) VALUES ('%s', '%s', '%s', '%s');"
 update="UPDATE wp_11_zombicide_skill SET code='%s', name='%s', description='%s', expansionId='%s' "
 [Spawn]

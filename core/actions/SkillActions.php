@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * SkillActions
  * @author Hugues
  * @since 1.04.00
- * @version 1.05.12
+ * @version 1.08.01
  */
 class SkillActions extends LocalActions
 {
@@ -70,8 +70,8 @@ class SkillActions extends LocalActions
       $this->checkSkills();
       $strBilan = $this->jsonString($this->strBilan, self::AJAX_SKILLVERIF, true);
     } elseif ($nbWpPostSkills!=$nbSkills) {
-      $strBilan  = "Le nombre d'articles ($nbWpPostSkills) ne correspond pas au nombre de compétences en base ($nbSkills).";
-      $strBilan .= "<br>Une vérification est vivement conseillée.";
+      $strBilan  = "Le nombre d'articles ($nbWpPostSkills) ne correspond pas au nombre de compétences en base ($nbSkills).<br>";
+      $strBilan .= "Une vérification est vivement conseillée.";
     } else {
       $strBilan = "Le nombre d'articles ($nbWpPostSkills) correspond au nombre de compétences en base.";
     }
@@ -79,51 +79,71 @@ class SkillActions extends LocalActions
   }
   private function checkSkills()
   {
-    // On regarde les articles créés et on vérifie les données en base, si elles existent et si elles sont cohérentes entre elles.
+    $hasErrors = false;
+    $strErrors = '';
+    $this->strBilan  = "Début de l'analyse des données relatives aux Compétences.<br>";
+    $this->strBilan .= "Il y a ".count($this->WpPostSkills)." articles de Compétences.<br>";
+    $this->strBilan .= "Il y a ".count($this->Skills)." entrées en base.<br>";
+    /////////////////////////////////////////////////////////////////////
+    // On va réorganiser les Skills pour les retrouver facilement
+    $arrSkills = array();
+    while (!empty($this->Skills)) {
+      $Skill = array_shift($this->Skills);
+      if (isset($arrSkills[$Skill->getCode()])) {
+        $strErrors .= "Le code <em>".$Skill->getCode()."</em> semble être utilisé deux fois dans la base de données.<br>";
+        $hasErrors = true;
+      }
+      $arrSkills[$Skill->getCode()] = $Skill;
+    }
+    /////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////
     while (!empty($this->WpPostSkills)) {
+      // On regarde les articles créés et on vérifie les données en base, si elles existent et si elles sont cohérentes entre elles.
       // On récupère le WpPost et ses données
       $this->WpPost = array_shift($this->WpPostSkills);
       $name = $this->WpPost->getPostTitle();
       $code = $this->WpPost->getPostMeta(self::FIELD_CODE);
-      // On recherche un Skill dans la base de données qui correspond.
-      $Skills       = $this->SkillServices->getSkillsWithFilters(array(self::FIELD_CODE=>$code));
-      if (empty($Skills)) {
-        // Si on n'en a pas, on doit créer une entrée correspondante.
+      if (!isset($arrSkills[$code])) {
+        // A priori l'article n'a pas de code associé en base. Il faut donc en créé un qui corresponde
         $Skill = new Skill();
         $Skill->setCode($code);
         $Skill->setName($name);
         $description  = $this->WpPost->getPostContent();
-        $description  = substr($description, 25, -27);
         $Skill->setDescription($description);
-        $expansionId  = $this->getExpansionId();
+        $expansionId = $this->getExpansionId();
         $Skill->setExpansionId($expansionId);
+        // On insère la donnée et on log dans le bilan
         $this->SkillServices->insertSkill($Skill);
-        $this->strBilan .= '<br>Compétence créée en base : '.$name.'.';
-      } else {
-        // Si on en a juste une, c'est tranquille.
-        $Skill = array_shift($Skills);
-        $this->checkSkill($Skill);
+        $this->strBilan .= "L'article <em>".$name."</em> a été créé en base.<br>";
+        continue;
       }
+      $Skill = $arrSkills[$code];
+      unset($arrSkills[$code]);
+      $this->checkSkill($Skill);
     }
-    // Puis, on regarde les données en base et on vérifie que des articles ont été créés pour elles.
-    while (!empty($this->Skills)) {
-      // On récupère l'extension.
-      $Skill = array_shift($this->Skills);
-      $Wp_post = get_page_by_title($Skill->getName(), OBJECT, self::WP_POST);
-      $WpPost = WpPost::convertElement($Wp_post);
-      if ($WpPost->getID()=='') {
+    /////////////////////////////////////////////////////////////////////
+    // On vérifie que la totalité des Compétences en base ont été utilisées. Si ce n'est pas le cas, il faut créer des articles correspondants.
+    if (!empty($arrSkills)) {
+      $this->strBilan .= "On a des données en base qui n'ont pas d'article correspondant.<br>";
+      while (!empty($arrSkills)) {
+        $Skill = array_shift($arrSkills);
         $this->strBilan .= '<br>Article à créer pour une Compétence  : '.$Skill->getName().' ['.$Skill->toJson().'].';
       }
     }
-    if ($this->strBilan=='') {
-      $this->strBilan = 'Il semblerait que tout aille à la perfection. Aucune anomalie remontée.';
+    /////////////////////////////////////////////////////////////////////
+    $this->strBilan .= "Fin de l'analyse des données relatives aux Compétences.<br>";
+    if ($hasErrors) {
+      $this->strBilan .= "Anomalies constatées :<br>".$strErrors;
+    } else {
+      $this->strBilan .= "Aucune anomalie constatée.";
     }
   }
   private function getExpansionId()
   {
-    $postId        = $this->WpPost->getPostMeta(self::FIELD_EXPANSIONID);
+    $postId  = $this->WpPost->getPostMeta(self::FIELD_EXPANSIONID);
     $Wp_post = get_post($postId);
-    $WpPost = WpPost::convertElement($Wp_post);
+    $WpPost  = WpPost::convertElement($Wp_post);
     $codeExpansion = $WpPost->getPostMeta(self::FIELD_CODE);
     $Expansions = $this->ExpansionServices->getExpansionsWithFilters(array(self::FIELD_CODE=>$codeExpansion));
     $Expansion = array_shift($Expansions);
@@ -131,35 +151,33 @@ class SkillActions extends LocalActions
   }
   private function checkSkill($Skill)
   {
-    // On initialise les données
     $doUpdate = false;
+    // On initialise les données de l'article
     $code          = $this->WpPost->getPostMeta(self::FIELD_CODE);
     $name          = $this->WpPost->getPostTitle();
     $description   = $this->WpPost->getPostContent();
-    $description   = substr($description, 25, -27);
     $expansionId   = $this->getExpansionId();
     // On vérifie si la donnée en base correspond à l'article.
-    if ($Skill->getCode()!=$code) {
-      $Skill->setCode($code);
-      $doUpdate = true;
-    }
+    $strError = '';
     if ($Skill->getName()!=$name) {
       $Skill->setName($name);
       $doUpdate = true;
+      $strError .= "Le Nom a été mis à jour.<br>";
     }
     if ($Skill->getDescription()!=$description) {
       $Skill->setDescription($description);
       $doUpdate = true;
+      $strError .= "La description a été mise à jour.<br>";
     }
     if ($Skill->getExpansionId()!=$expansionId) {
       $Skill->setExpansionId($expansionId);
-      $this->strBilan .= 'Compétence mise à jour au niveau de l extension : '.$name.' - '.$expansionId.'.<br>';
       $doUpdate = true;
+      $strError .= "L'extension a été mise à jour.<br>";
     }
     if ($doUpdate) {
       // Si nécessaire, on update en base.
       $this->SkillServices->updateSkill($Skill);
-      $this->strBilan .= 'Compétence mise à jour : '.$name.'.<br>';
+      $this->strBilan .= "Les données de la Compétence <em>".$name."</em> ont été mises à jour.<br>".$strError;
     }
   }
   // Fin du bloc relatif à la vérification des compétences sur la Home Admin.
