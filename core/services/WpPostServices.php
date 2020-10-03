@@ -47,8 +47,8 @@ class WpPostServices extends GlobalServices implements ConstantsInterface
     if (!empty($posts_array)) {
       foreach ($posts_array as $post) {
         $tags = wp_get_post_tags($post->ID);
-        $wpPostType = $this->getPostTypeFromTags($tags);
-        $WpPosts[] = WpPost::convertElement($post, $wpPostType);
+        $localWpPostType = $this->getPostTypeFromTags($tags);
+        $WpPosts[] = WpPost::convertElement($post, $localWpPostType);
       }
     }
     return $WpPosts;

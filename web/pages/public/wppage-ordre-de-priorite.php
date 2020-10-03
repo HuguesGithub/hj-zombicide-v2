@@ -3,7 +3,7 @@
   <div class="selectionContainer row">
     <div class="col-12">%2$s</div>
     <div class="col-12">
-      <table class="table table-striped table-bordered table-sm">
+      <table class="table table-striped table-bordered table-sm" aria-describedby="Ordre de Priorité">
         <thead>
           <tr>
             <th scope="col">#</th>

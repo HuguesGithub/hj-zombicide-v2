@@ -395,22 +395,21 @@ class ToolActions extends LocalActions
   {
     switch ($this->orientation) {
       case 'top' :
-        $nextOrientation = 'right';
+        $this->orientation = 'right';
       break;
       case 'right' :
-        $nextOrientation = 'bottom';
+        $this->orientation = 'bottom';
       break;
       case 'bottom' :
-        $nextOrientation = 'left';
+        $this->orientation = 'left';
       break;
       case 'left' :
-        $nextOrientation = 'top';
+        $this->orientation = 'top';
       break;
       default :
-        $nextOrientation = $this->getRandomOrientation();
+        $this->getRandomOrientation();
       break;
     }
-    $this->orientation = $nextOrientation;
   }
   private function getRandomOrientation()
   {
