@@ -29,7 +29,9 @@ class WpPageHomeBean extends WpPageBean
     $strContent .= $this->addMoreNews();
     $strContent .= '</section>';
     $strContent .= '<section class="col-xs-4 col-xs-offset-4">';
-    $strContent .= '<div class="text-center"><div id="more_news" class="special_buttons">Plus de news</div></div>';
+    $strContent .= '<div class="text-center"><div id="more_news" class="special_buttons">';
+    $strContent .= ($this->lang=='en' ? 'More news' : 'Plus de news');
+    $strContent .= '</div></div>';
     $strContent .= '</section>';
     return $strContent.'<div class="clearfix"></div>';
   }

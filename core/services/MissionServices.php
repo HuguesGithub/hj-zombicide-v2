@@ -22,6 +22,7 @@ class MissionServices extends LocalServices
   {
     parent::__construct();
     $this->Dao = new MissionDaoImpl();
+    $this->MissionExpansionServices = new MissionExpansionServices();
   }
 
   /**
@@ -31,6 +32,7 @@ class MissionServices extends LocalServices
   {
     $this->arrParams[self::SQL_WHERE] = array();
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayWideFilter($arrFilters, self::FIELD_TITLE));
+    array_push($this->arrParams[self::SQL_WHERE], $this->addFilter($arrFilters, self::FIELD_CODE));
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_LEVELID));
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_DURATIONID));
     array_push($this->arrParams[self::SQL_WHERE], $this->addNonArrayFilter($arrFilters, self::FIELD_PLAYERID));
@@ -70,10 +72,10 @@ class MissionServices extends LocalServices
   public function getMissionsByExpansionId($expansionId)
   {
     $Missions = array();
-    $Ids = $this->Dao->selectMissionsByExpansionId($expansionId);
-    while (!empty($Ids)) {
-      $Id = array_shift($Ids);
-      array_push($Missions, $this->selectMission($Id->missionId));
+    $MissionExpansions = $this->MissionExpansionServices->getMissionExpansionsWithFilters(array(self::FIELD_EXPANSIONID=>$expansionId));
+    while (!empty($MissionExpansions)) {
+      $MissionExpansion = array_shift($MissionExpansions);
+      array_push($Missions, $this->selectMission($MissionExpansion->getMissionId()));
     }
     return $Missions;
   }

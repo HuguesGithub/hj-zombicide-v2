@@ -37,6 +37,9 @@ class WpPostBean extends MainPageBean
   public function getBean()
   {
     $this->WpCategs = $this->WpPost->getCategories();
+      if (self::isAdmin()) {
+        print_r($this->WpCategs);
+      }
     if (!empty($this->WpCategs)) {
       $this->WpCateg = array_shift($this->WpCategs);
       switch ($this->WpCateg->getCatID()) {

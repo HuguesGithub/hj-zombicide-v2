@@ -11,6 +11,9 @@ if (!defined('ABSPATH')) {
 class LocalBean extends UtilitiesBean implements ConstantsInterface
 {
 
+  public function __construct()
+  {}
+
   /**
    * @param array $addArg
    * @param array $remArg
@@ -21,7 +24,7 @@ class LocalBean extends UtilitiesBean implements ConstantsInterface
     $addArg['page'] = 'hj-zombicide/admin_manage.php';
     $remArg[] = 'form';
     $remArg[] = 'id';
-    return add_query_arg($addArg, remove_query_arg($remArg, 'http://zombicidev2.jhugues.fr/wp-admin/admin.php'));
+    return add_query_arg($addArg, remove_query_arg($remArg, 'http://zombicide.jhugues.fr/wp-admin/admin.php'));
   }
   /**
    * @param array $addArg
@@ -29,7 +32,7 @@ class LocalBean extends UtilitiesBean implements ConstantsInterface
    * @param string $url
    * @return string
    */
-  public function getFrontQueryArg($addArg, $remArg=array(), $url='http://zombicidev2.jhugues.fr/')
+  public function getFrontQueryArg($addArg, $remArg=array(), $url='http://zombicide.jhugues.fr/')
   { return add_query_arg($addArg, remove_query_arg($remArg, $url)); }
   /**
    * @return bool

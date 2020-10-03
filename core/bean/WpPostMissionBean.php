@@ -26,9 +26,12 @@ class WpPostMissionBean extends WpPostBean
     $this->MissionServices = new MissionServices();
     if ($missionId instanceof WpPost) {
       $this->WpPost = $missionId;
-      $missionId = $this->WpPost->getPostMeta(self::FIELD_MISSIONID);
+      $code = $this->WpPost->getPostMeta(self::FIELD_CODE);
+      $Missions = $this->MissionServices->getMissionsWithFilters(array(self::FIELD_CODE=>$code));
+      $this->Mission = array_shift($Missions);
+    } else {
+      $this->Mission = $this->MissionServices->selectMission($missionId);
     }
-    $this->Mission = $this->MissionServices->selectMission($missionId);
   }
   /**
    * @return string

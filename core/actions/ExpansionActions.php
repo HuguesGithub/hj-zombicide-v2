@@ -133,7 +133,7 @@ class ExpansionActions extends LocalActions
       $this->checkExpansion($Expansion);
     }
     /////////////////////////////////////////////////////////////////////
-    // On vérifie que la totalité des Compétences en base ont été utilisées. Si ce n'est pas le cas, il faut créer des articles correspondants.
+    // On vérifie que la totalité des Extensions en base ont été utilisées. Si ce n'est pas le cas, il faut créer des articles correspondants.
     if (!empty($arrExpansions)) {
       $this->strBilan .= "On a des données en base qui n'ont pas d'article correspondant.<br>";
       while (!empty($arrExpansions)) {
@@ -180,14 +180,29 @@ class ExpansionActions extends LocalActions
       $strError .= "Le Nombre de Survivants a été mis à jour.<br>";
       $doUpdate = true;
     }
-    /*
-    // On vérifie si la donnée en base correspond à l'article.
-    // On vérifie si la donnée en base correspond à l'article.
+    // Vérifions le nombre de Dalles
+    $Tiles = $Expansion->getTiles();
+    // On exclus les sets de Dalles. Parce que une Dalle est rattachée à une Extension, et les sets de Dalles proposent les mêmes Dalles pour une autre Extension.
+    $doNotCheckTilesForExpansions = array(59, 60, 61, 62, 40);
+    if ($Expansion->getNbDalles()!=count($Tiles) && !in_array($Expansion->getId(), $doNotCheckTilesForExpansions)) {
+      $this->strBilan .= "Le nombre de Dalles pour l'Extension <em>".$name."</em> ne correspond pas. Nb dans le champ : ".$Expansion->getNbDalles().". Nb donnés par la requête : ".count($Tiles).".<br>";
+      // Note : On ne met à jour que si la requête renvoie plus que la donnée du champ.
+      if ($Expansion->getNbDalles()<count($Tiles)) {
+        $Expansion->setNbDalles(count($Tiles));
+        $doUpdate = true;
+      }
+    }
+    // Vérifions le nombre de Missions
+    // TODO : Données à mettre à jour dans les articles. Les champs "Dalles" des WpPost de type Missions doivent être renseignés
     $Missions = $Expansion->getMissions();
     if ($Expansion->getNbMissions()!=count($Missions)) {
-      // TODO : Données à mettre à jour avant de perdre plein d'infos à la con.
+      //$this->strBilan .= "Le nombre de Missions pour l'Extension <em>".$name."</em> ne correspond pas. Nb dans le champ : ".$Expansion->getNbMissions().". Nb donnés par la requête : ".count($Missions).".<br>";
+      // Note : On ne met à jour que si la requête renvoie plus que la donnée du champ.
+      if ($Expansion->getNbMissions()<count($Missions)) {
+        $Expansion->setNbMissions(count($Missions));
+        $doUpdate = true;
+      }
     }
-    */
     if ($doUpdate) {
       // Si nécessaire, on update en base.
       $this->ExpansionServices->updateExpansion($Expansion);

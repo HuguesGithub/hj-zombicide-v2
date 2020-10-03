@@ -153,7 +153,6 @@ class SkillActions extends LocalActions
   {
     $doUpdate = false;
     // On initialise les données de l'article
-    $code          = $this->WpPost->getPostMeta(self::FIELD_CODE);
     $name          = $this->WpPost->getPostTitle();
     $description   = $this->WpPost->getPostContent();
     $expansionId   = $this->getExpansionId();

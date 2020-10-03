@@ -29,4 +29,9 @@ class LocalActions extends GlobalActions implements ConstantsInterface
     $content = '"'.$id.'":'.json_encode($msg);
     return ($directReturn ? '{'.$content.'}' : $content);
   }
+  /**
+   * @return bool
+   */
+  public static function isAdmin()
+  { return current_user_can('manage_options'); }
 }

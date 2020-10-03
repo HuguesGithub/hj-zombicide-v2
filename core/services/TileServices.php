@@ -47,4 +47,11 @@ class TileServices extends LocalServices
     $this->buildFilters($arrFilters);
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
+
+  public function getTilesWithFiltersIn($arrFilters=array(), $orderby=self::FIELD_CODE, $order=self::ORDER_ASC)
+  {
+    $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
+    $this->buildFilters($arrFilters);
+    return $this->Dao->selectEntriesWithFiltersIn($this->arrParams, $arrFilters);
+  }
 }

@@ -17,10 +17,12 @@ interface ConstantsInterface
   const AJAX_ENDOFTURN      = 'endOfTurn';
   const AJAX_GETEXPANSIONS  = 'getExpansions';
   const AJAX_EXPANSIONVERIF = 'expansion-verif';
+  const AJAX_GETRANDOMMAP   = 'getRandomMap';
   const AJAX_GETMISSIONS    = 'getMissions';
   const AJAX_GETRANDOMTEAM  = 'getRandomTeam';
   const AJAX_GETSKILLS      = 'getSkills';
   const AJAX_GETSURVIVORS   = 'getSurvivants';
+  const AJAX_GETTILES       = 'getTiles';
   const AJAX_MAKENOISE      = 'makeNoise';
   const AJAX_MELEEATTACK    = 'meleeAttack';
   const AJAX_MISSIONVERIF   = 'mission-verif';
@@ -201,12 +203,15 @@ interface ConstantsInterface
   const PAGE_ONLINE            = 'online';
   const PAGE_EQUIPMENT         = 'page-equipmentcards';
   const PAGE_EXTENSION         = 'page-extensions';
+  const PAGE_GENERATION_MAP    = 'page-generation-map';
   const PAGE_MISSION           = 'page-missions';
+  const PAGE_ORDRE_PRIORITE    = 'page-ordre-de-priorite';
   const PAGE_PISTE_DE_DES      = 'page-piste-de-des';
   const PAGE_SELECT_SURVIVORS  = 'page-selection-survivants';
   const PAGE_SKILL             = 'page-competences';
   const PAGE_SPAWN             = 'page-spawncards';
   const PAGE_SURVIVOR          = 'page-survivants';
+  const PAGE_TILE              = 'page-dalles';
 
   /////////////////////////////////////////////////
   // Session
@@ -230,6 +235,7 @@ interface ConstantsInterface
   /////////////////////////////////////////////////
   // Wordpress
   const WP_CAT                 = 'cat';
+  /*
   const WP_CAT_EXPANSION_ID    = 77;
   const WP_CAT_MISSION_ID      = 2;
   const WP_CAT_NEWS_ID         = 54;
@@ -237,6 +243,14 @@ interface ConstantsInterface
   const WP_CAT_RULE_ID         = 72;
   const WP_CAT_SKILL_ID        = 75;
   const WP_CAT_SURVIVOR_ID     = 58;
+   */
+  const WP_CAT_EXPANSION_ID    = 111;
+  const WP_CAT_MISSION_ID      = 114;
+  const WP_CAT_NEWS_ID         = 117;
+  const WP_CAT_OBJECTIVE_ID    = 115;
+  const WP_CAT_RULE_ID         = 116;
+  const WP_CAT_SKILL_ID        = 110;
+  const WP_CAT_SURVIVOR_ID     = 119;
   const WP_CURPAGE             = 'cur_page';
   const WP_FIELD               = 'field';
   const WP_METAKEY             = 'meta_key';

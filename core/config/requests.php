@@ -40,7 +40,7 @@ where="WHERE equipmentCardId LIKE '%s' AND weaponProfileId LIKE '%s' "
 insert="INSERT INTO wp_11_zombicide_equipment_weaponprofile (equipmentCardId, weaponProfileId, noisy) VALUES ('%s', '%s', '%s');"
 update="UPDATE wp_11_zombicide_equipment_weaponprofile SET equipmentCardId='%s', weaponProfileId='%s', noisy='%s' "
 [Expansion]
-select="SELECT id, code, name, displayRank, nbSurvivants, nbMissions, official "
+select="SELECT id, code, name, displayRank, nbSurvivants, nbMissions, nbDalles, official "
 from="FROM wp_11_zombicide_expansion "
 where="WHERE code LIKE '%s' AND name LIKE '%s' AND nbMissions >= '%s' AND nbSurvivants >= '%s' "
 insert="INSERT INTO wp_11_zombicide_expansion (code, name, displayRank, nbSurvivants, nbMissions, nbDalles, official) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');"
@@ -125,7 +125,7 @@ update="UPDATE wp_11_zombicide_message_model SET code='%s', model_fr='%s' "
 [Mission]
 select="SELECT m.id AS id, title, m.code AS code, levelId, playerId, durationId, origineId, width, height, published, liveAble "
 from="FROM wp_11_zombicide_mission AS m "
-where="WHERE title LIKE '%s' AND levelId LIKE '%s' AND durationId LIKE '%s' AND playerId LIKE '%s' AND origineId LIKE '%s' AND published LIKE '%s' AND liveAble LIKE '%s' "
+where="WHERE title LIKE '%s' AND code LIKE '%s' AND levelId LIKE '%s' AND durationId LIKE '%s' AND playerId LIKE '%s' AND origineId LIKE '%s' AND published LIKE '%s' AND liveAble LIKE '%s' "
 insert="INSERT INTO wp_11_zombicide_mission (title, code, levelId, playerId, durationId, origineId, width, height, published, liveAble) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');"
 update="UPDATE wp_11_zombicide_mission SET title='%s', code='%s', levelId='%s', playerId='%s', durationId='%s', origineId='%s', width='%s', height='%s', published='%s', liveAble='%s' "
 [MissionExpansion]
@@ -219,7 +219,7 @@ where="WHERE survivorId LIKE '%s' AND skillId LIKE '%s' AND survivorTypeId LIKE 
 insert="INSERT INTO wp_11_zombicide_survivor_skill (survivorId, skillId, survivorTypeId, tagLevelId) VALUES ('%s', '%s', '%s', '%s');"
 update="UPDATE wp_11_z_survivor_skill SET survivorId='%s', skillId='%s', survivorTypeId='%s', tagLevelId='%s' "
 [Tile]
-select="SELECT id, expansionId, code, coordPoly, zoneType, zoneAcces, activeTile "
+select="SELECT id, expansionId, code, coordPoly, zoneType, zoneAcces, activeTile, oCode, side_top, side_right, side_bottom, side_left "
 from="FROM wp_11_zombicide_tile "
 where="WHERE code LIKE '%s' AND expansionId LIKE '%s' AND activeTile LIKE '%s' "
 insert="INSERT INTO wp_11_zombicide_tile (expansionId, code, coordPoly, zoneType, zoneAcces, activeTile) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');"

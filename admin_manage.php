@@ -4,7 +4,7 @@
  * @since 1.00.00
  * @version 1.07.25
  */
-  define('ZOMB_SITE_URL', 'http://zombicidev2.jhugues.fr/');
+  define('ZOMB_SITE_URL', 'http://zombicide.jhugues.fr/');
   define('PLUGINS_MYCOMMON', ZOMB_SITE_URL.'wp-content/plugins/mycommon');
   define('PLUGINS_ZOMBICIDE', ZOMB_SITE_URL.'wp-content/plugins/hj-zombicide');
 ?>

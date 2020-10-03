@@ -25,10 +25,12 @@ class WpPageBean extends MainPageBean
     if ($post=='') {
       $post = get_post();
     }
-    if (get_class($post)=='WpPost') {
-      $this->WpPage = $post;
-    } else {
-      $this->WpPage = WpPost::convertElement($post);
+    if ($post!='') {
+      if (get_class($post)=='WpPost') {
+        $this->WpPage = $post;
+      } else {
+        $this->WpPage = WpPost::convertElement($post);
+      }
     }
     parent::__construct();
   }
@@ -46,9 +48,21 @@ class WpPageBean extends MainPageBean
         $Bean = new WpPageExpansionsBean($this->WpPage);
         $strReturned = $Bean->getContentPage();
       break;
+      case 'page-travaux'    :
+        $Bean = new WpPageToolsBean($this->WpPage);
+        $strReturned = $Bean->getTravaux();
+      break;
+      case self::PAGE_GENERATION_MAP    :
+        $Bean = new WpPageToolsBean($this->WpPage);
+        $strReturned = $Bean->getRandomMapV2();
+      break;
       case self::PAGE_MISSION           :
         $Bean = new WpPageMissionsBean($this->WpPage);
         $strReturned = $Bean->getContentPage();
+      break;
+      case self::PAGE_ORDRE_PRIORITE    :
+        $Bean = new WpPageToolsBean($this->WpPage);
+        $strReturned = $Bean->getPriorityOrderContent();
       break;
       case self::PAGE_PISTE_DE_DES      :
         $Bean = new WpPageToolsBean($this->WpPage);
@@ -59,6 +73,7 @@ class WpPageBean extends MainPageBean
         $strReturned = $Bean->getSelectSurvivorsContent();
       break;
       case self::PAGE_SKILL             :
+      case 'page-skills'                :
         $Bean = new WpPageSkillsBean($this->WpPage);
         $strReturned = $Bean->getContentPage();
       break;
@@ -68,6 +83,10 @@ class WpPageBean extends MainPageBean
       break;
       case self::PAGE_SURVIVOR          :
         $Bean = new WpPageSurvivorsBean($this->WpPage);
+        $strReturned = $Bean->getContentPage();
+      break;
+      case self::PAGE_TILE              :
+        $Bean = new WpPageTilesBean($this->WpPage);
         $strReturned = $Bean->getContentPage();
       break;
       default                          :

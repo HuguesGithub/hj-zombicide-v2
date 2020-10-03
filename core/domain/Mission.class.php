@@ -202,7 +202,7 @@ class Mission extends WpPostRelais
    * @return string
    */
   public function getWpPost()
-  { return $this->getMainWpPost(self::FIELD_MISSIONID, $this->id, self::WP_CAT_MISSION_ID); }
+  { return $this->getMainWpPost(self::FIELD_CODE, $this->code, self::WP_CAT_MISSION_ID); }
 
 
 

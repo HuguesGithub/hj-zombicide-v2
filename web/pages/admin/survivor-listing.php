@@ -11,12 +11,16 @@
 
   <form action="#" method="post" id="post-filters">
     <div class="tablenav top">
-      <div class="alignleft actions bulkactions" style="display: inline; float: none;">
+      <div class="alignleft actions bulkactions">
         <select name="action" id="bulk-action-selector-top" class="custom-select custom-select-sm filters">
           <option value="-1">Actions groupées</option>
           <option value="trash">Déplacer dans la corbeille</option>
         </select>
         <input id="doaction" class="button action" value="Appliquer" type="submit" name="postAction">
+      </div>
+      <div class="alignleft actions">
+        %2$s
+        <input type="submit" name="filter_action" class="button" value="Filtrer">
       </div>
       <div class="tablenav-pages" style="height: 34px;">%5$s</div>
       <br class="clear">

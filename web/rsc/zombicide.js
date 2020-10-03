@@ -50,11 +50,18 @@ $hj(document).ready(function(){
     addPageToolsAjaxActions();
   }
   /***************
-   *** #05 - Extensions
+   *** #07 - Extensions
    *** Si on est sur la page du Listing des Extensions
    ***************/
   if ($hj('#page-extensions').length!=0 ) {
     addPageExpansionAjaxActions();
+  }
+  /***************
+   *** #08 - Dalles
+   *** Si on est sur la page du Listing des Dalles
+   ***************/
+  if ($hj('#page-dalles').length!=0 ) {
+    addPageTileAjaxActions();
   }
 
 });
@@ -86,6 +93,22 @@ function addMoreNews(offset) {
       }
     }
   );
+}
+function addPageTileAjaxActions() {
+  $hj('button[data-ajaxaction="reset"]').unbind().click(function(){
+    $hj('#filter-expansionId').val('');
+    $hj('#tile-container').html("");
+  });
+  $hj('#filter-expansionId').unbind().change(function(){
+    var idSet = $hj(this).val().substr(4);
+    if (idSet=='') {
+      $hj('#tile-container').html("");
+      return false;
+    } else {
+      var data = {'action': 'dealWithAjax', 'ajaxAction': 'getTiles', 'idSet': idSet};
+      resolveCallAjax(data, 'tile-container');
+    }
+  });
 }
 function addPageExpansionAjaxActions() {
   // On ajoute une Action sur les actions Ajax
@@ -193,7 +216,314 @@ function addPageCardEquipmentAjaxActions() {
 function addPageToolsAjaxActions() {
   addSelectionSurvivantActions();
   addThrowDiceActions();
+  addGenerationMapActions();
 }
+function addDownloadMap() {
+  $hj('.fa-camera').unbind().click(function(){
+    $hj('.overlay').addClass('loading');
+    $hj('.fa-unlock').removeClass('fa-unlock').addClass('fa-lock');
+    var params = lauchBuildingMapv2();
+    var data = {'action': 'dealWithAjax', 'ajaxAction': 'getImageMap', 'params': params};
+    $hj.post(
+      ajaxurl,
+      data,
+      function(response) {
+        try {
+          var win = window.open('http://zombicide.jhugues.fr'+response, '_blank');
+          console.log('http://zombicide.jhugues.fr'+response);
+          if (win) {
+            win.focus();
+          }
+        } catch (e) {
+          console.log("error: "+e);
+          console.log(response);
+        }
+      }
+    ).done(
+      function() {
+        $hj('.overlay').removeClass('loading');
+      }
+    );
+  });
+}
+function turnFaSquareToCheckBox() {
+  $hj('.displayMap i.fakeCb').unbind().click(function(){
+    $hj(this).toggleClass('fa-square fa-check-square');
+  });
+}
+function addLockUnlockEffect() {
+  $hj('.displayMap i.fakeLock').unbind().click(function(){
+    $hj(this).toggleClass('fa-unlock fa-lock');
+  });
+}
+function addCogAction() {
+  $hj('.displayMap i.fa-cog').unbind().click(function(){
+    var params = '';
+    // Liste des extensions sélectionnées
+    var expansionIds = $hj('#expansionIds').val();
+    if (expansionIds==undefined) {
+      params += '&version=2';
+      expansionIds = '';
+      $hj('.btn-expansion i.fa-check-square').each(function(){
+        if (expansionIds!='') {
+          expansionIds += ',';
+        }
+        expansionIds += $hj(this).parent().parent().data('expansion-id');
+      });
+    }
+    params += '&expansionIds='+expansionIds;
+    // Liste des Dalles déjà placées
+    var locks = '';
+    $hj('.displayMap i.fakeLock').each(function() {
+      if (locks!='') {
+        locks += ',';
+      }
+      locks += $hj(this).attr('data-lock');
+    });
+    params += '&locks='+locks;
+    // Et on ajoute la case courante
+    var current = $hj(this).siblings('.fakeLock').data('lock');
+    params += '&current='+current;
+    var data = {'action': 'dealWithAjax', 'ajaxAction': 'getNonUsedTiles', 'params': params};
+
+    $hj('.overlay').addClass('loading');
+    var idPage = 'page-generation-map';
+    $hj.post(
+      ajaxurl,
+      data,
+      function(response) {
+        try {
+          var obj = JSON.parse(response);
+          if (obj[idPage] != '' ) {
+            $hj('#'+idPage).prepend(obj[idPage]);
+
+            $hj('.proposals img').unbind().click(function(){
+              var row = $hj(this).data('row')*1;
+              var col = $hj(this).data('col')*1;
+              var orientation = $hj(this).data('orientation');
+              var src = $hj(this).data('src');
+              var code = $hj(this).data('code');
+              $hj('.displayMap .row:nth-child('+(row+1)+') .cell:nth-child('+(col+1)+') img').attr('class', orientation).attr('src', src);
+              $hj('.displayMap .row:nth-child('+(row+1)+') .cell:nth-child('+(col+1)+') .fakeLock').attr('data-lock', 'cell_'+row+'_'+col+'_'+code+'_'+orientation);
+              $hj('.proposals').remove();
+            })
+          }
+        } catch (e) {
+          console.log("error: "+e);
+          console.log(response);
+        }
+      }
+    ).done(
+      function() {
+        $hj('.overlay').removeClass('loading');
+      }
+    );
+  });
+}
+function addRotateAction() {
+  $hj('.displayMap i.fa-undo').unbind().click(function(){
+    var orientation = $hj(this).parent().siblings('img').attr('class');
+    var newOrientation = '';
+    switch (orientation) {
+      case 'top' : newOrientation = 'left'; break;
+      case 'left' : newOrientation = 'bottom'; break;
+      case 'bottom' : newOrientation = 'right'; break;
+      case 'right' : newOrientation = 'top'; break;
+      default : newOrientation = orientation; break;
+    }
+    var strToReplace = $hj(this).siblings('.fakeLock').data('lock');
+    $hj(this).siblings('.fakeLock').attr('data-lock', strToReplace.replace(orientation, newOrientation));
+    $hj(this).parent().siblings('img').attr('class', newOrientation);
+  });
+  $hj('.displayMap i.fa-redo').unbind().click(function(){
+    var orientation = $hj(this).parent().siblings('img').attr('class');
+    var newOrientation = '';
+    switch (orientation) {
+      case 'top' : newOrientation = 'right'; break;
+      case 'left' : newOrientation = 'top'; break;
+      case 'bottom' : newOrientation = 'left'; break;
+      case 'right' : newOrientation = 'bottom'; break;
+      default : newOrientation = orientation; break;
+    }
+    var strToReplace = $hj(this).siblings('.fakeLock').data('lock');
+    $hj(this).siblings('.fakeLock').attr('data-lock', strToReplace.replace(orientation, newOrientation));
+    $hj(this).parent().siblings('img').attr('class', newOrientation);
+  });
+}
+function lauchBuildingMapv2() {
+  var params = '';
+  // Largeur et Hauteur
+  params  = 'width='+$hj('#width').val();
+  params += '&height='+$hj('#height').val();
+  // Liste des extensions sélectionnées
+  var expansionIds = $hj('#expansionIds').val();
+  if (expansionIds==undefined) {
+    params += '&version=2';
+    expansionIds = '';
+    $hj('.btn-expansion i.fa-check-square').each(function(){
+      if (expansionIds!='') {
+        expansionIds += ',';
+      }
+      expansionIds += $hj(this).parent().parent().data('expansion-id');
+    });
+  }
+  params += '&expansionIds='+expansionIds;
+  // Liste des CheckBoxes non sélectionnées
+  var cells = '';
+  $hj('.displayMap i.fa-square').each(function() {
+    if (cells!='') {
+      cells += ',';
+    }
+    cells += $hj(this).data('cell');
+  });
+  params += '&cells='+cells;
+  // Liste des Dalles déjà placées
+  var locks = '';
+  $hj('.displayMap i.fa-lock').each(function() {
+    if (locks!='') {
+      locks += ',';
+    }
+    locks += $hj(this).attr('data-lock');
+  });
+  params += '&locks='+locks;
+  return params;
+}
+function addChangeMapSize() {
+  if ($hj('.displayMap').length==0) {
+    $hj('#proceedRandomMap').trigger('click');
+  } else {
+    var actualHeight = $hj('.displayMap .row').length;
+    var actualWidth = $hj('.displayMap .row:first-child .cell').length;
+    var height = $hj('#height').val();
+    var width = $hj('#width').val();
+    var cellModel = $hj('.cellModel').clone();
+    $hj('.displayMap').removeClass('map'+actualWidth+'x'+actualHeight+' mapWidth'+actualWidth);
+    $hj('.displayMap').addClass('map'+width+'x'+height+' mapWidth'+width);
+    if (height<actualHeight) {
+      $hj('.displayMap .row:last-child').remove();
+    } else if (width<actualWidth) {
+      $hj('.displayMap .row .cell:last-child').remove();
+    } else if (height>actualHeight) {
+      $hj('.displayMap').append('<div class="row"></div>');
+      for (var cpt=0; cpt<width; cpt++) {
+        cellModel = $hj('.cellModel').clone();
+        cellModel.removeClass('hidden cellModel');
+        cellModel.find('i.fakeCb').attr('data-cell', 'cell_'+(height-1)+'_'+cpt);
+        cellModel.find('i.fakeLock').attr('data-lock', 'cell_'+(height-1)+'_'+cpt);
+        $hj('.displayMap .row:last-child').append(cellModel);
+      }
+    } else if (width>actualWidth) {
+      for (var cpt=0; cpt<height; cpt++) {
+        cellModel = $hj('.cellModel').clone();
+        cellModel.removeClass('hidden cellModel');
+        cellModel.find('i.fakeCb').attr('data-cell', 'cell_'+cpt+'_'+(width-1));
+        cellModel.find('i.fakeLock').attr('data-lock', 'cell_'+cpt+'_'+(width-1));
+        $hj('.displayMap .row:nth-child('+(cpt+1)+')').append(cellModel);
+      }
+    }
+  }
+}
+function addGenerationMapActions() {
+  addDownloadMap();
+  $hj('#proceedRandomMap').unbind().click(function() {
+    var params = lauchBuildingMapv2();
+    var data = {'action': 'dealWithAjax', 'ajaxAction': 'getRandomMap', 'params': params};
+    resolveCallAjax(data, 'page-generation-map');
+  });
+
+  $hj('#width').unbind().change(function(){
+    addChangeMapSize();
+  });
+  $hj('#height').unbind().change(function(){
+    addChangeMapSize();
+  });
+  /*
+  $hj('#width').unbind().change(function(){
+    var actualWidth = $hj('.displayMap .row .cell').length;
+    var width = $hj(this).val();
+    var height = $hj('#height').val();
+    if ($hj('.displayMap').length==0) {
+      $hj('#proceedRandomMap').trigger('click');
+    } else if (width<actualWidth) {
+      $hj('.displayMap').removeClass('map'+actualWidth+'x'+height+' mapWidth'+actualWidth).addClass('map'+width+'x'+height+' mapWidth'+width);
+      for (var cpt=0; cpt<height; cpt++) {
+        $hj('.displayMap .row .cell:last-child').remove();
+      }
+    } else {
+      $hj('.overlay').addClass('loading');
+      var data = {'action': 'dealWithAjax', 'ajaxAction': 'getEmptyCell'};
+      $hj.post(
+        ajaxurl,
+        data,
+        function(response) {
+          try {
+            $hj('.displayMap').removeClass('map'+actualWidth+'x'+height+' mapWidth'+actualWidth).addClass('map'+width+'x'+height+' mapWidth'+width);
+            var obj = JSON.parse(response);
+            var emptyCell = obj['empty-cell'];
+            for (var cpt=0; cpt<height; cpt++) {
+              var newCell = emptyCell.replace('cell_0_0', 'cell_'+cpt+'_'+(width-1));
+              newCell = newCell.replace('cell_0_0', 'cell_'+cpt+'_'+(width-1));
+              $hj('.displayMap .row:nth-child('+(cpt+1)+')').append(newCell);
+            }
+          } catch (e) {
+            console.log("error: "+e);
+            console.log(response);
+          }
+        }
+      ).done(
+        function() {
+          $hj('.overlay').removeClass('loading');
+          turnFaSquareToCheckBox();
+          addLockUnlockEffect();
+          addCogAction();
+        }
+      );
+    }
+  });
+  $hj('#height').unbind().change(function(){
+    var actualHeight = $hj('.displayMap .row').length;
+    var width = $hj('#width').val();
+    var height = $hj(this).val();
+    if ($hj('.displayMap').length==0) {
+      $hj('#proceedRandomMap').trigger('click');
+    } else if (height<actualHeight) {
+      $hj('.displayMap').removeClass('map'+width+'x'+actualHeight).addClass('map'+width+'x'+height);
+      $hj('.displayMap .row:last-child').remove();
+    } else {
+      $hj('.overlay').addClass('loading');
+      var data = {'action': 'dealWithAjax', 'ajaxAction': 'getEmptyCell'};
+      $hj.post(
+        ajaxurl,
+        data,
+        function(response) {
+          try {
+            $hj('.displayMap').removeClass('map'+width+'x'+actualHeight).addClass('map'+width+'x'+height);
+            $hj('.displayMap').append('<div class="row"></div>');
+            var obj = JSON.parse(response);
+            var emptyCell = obj['empty-cell'];
+            for (var cpt=0; cpt<width; cpt++) {
+              var newCell = emptyCell.replace('cell_0_0', 'cell_'+(height-1)+'_'+cpt);
+              newCell = newCell.replace('cell_0_0', 'cell_'+(height-1)+'_'+cpt);
+              $hj('.displayMap .row:last-child').append(newCell);
+            }
+          } catch (e) {
+            console.log("error: "+e);
+            console.log(response);
+          }
+        }
+      ).done(
+        function() {
+          $hj('.overlay').removeClass('loading');
+          turnFaSquareToCheckBox();
+          addLockUnlockEffect();
+          addCogAction();
+        }
+      );
+    }
+  });
+  */
+}
+
 function addThrowDiceActions() {
   $hj('#proceedThrowDice').unbind().click(function() {
     var params = '';
@@ -311,11 +641,12 @@ function addSelectionSurvivantActions() {
         }
       }
     }
-    var nb = 0;
+    nb = 0;
     $hj('#listing button.btn-survivor').each(function(){ if ($hj(this).is(':visible')) nb++;});
     $hj('#nbDisplayed').html(nb);
   });
   $hj('#saveOwnTeam').unbind().click(function(e){
+    $hj('#saveOwnTeam .tooltip').addClass('visible');
     var strSave = '';
     $hj('#listing i.fa-check-square').each(function(){
       strSave += $hj(this).parent().attr('data-survivor-id')+',';
@@ -341,6 +672,10 @@ function addSelectionSurvivantActions() {
       console.error('Fallback: Oops, unable to copy', err);
     }
     document.body.removeChild(textArea);
+  });
+  $hj('#saveOwnTeam .tooltip').hover(function(e) {
+  }, function(e) {
+    $hj('#saveOwnTeam .tooltip').removeClass('visible');
   });
 }
 
@@ -499,6 +834,13 @@ function resolveCallAjax(data, idPage) {
             case 'page-selection-survivants' :
             case 'page-survivants'  : addPageSurvivantAjaxActions(); break;
             case 'page-extensions'  : addPageExpansionAjaxActions(); break;
+            case 'page-generation-map' :
+              $hj('.displayMap .cell').each(function(){ $hj(this).height($hj(this).width()+'px'); });
+              turnFaSquareToCheckBox();
+              addLockUnlockEffect();
+              addRotateAction();
+              addCogAction();
+            break;
             default: break;
           }
         }

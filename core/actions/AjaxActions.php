@@ -44,8 +44,16 @@ class AjaxActions extends LocalActions
       case self::AJAX_SURVIVORVERIF  :
         $returned = SurvivorActions::dealWithStatic($_POST);
       break;
+      case self::AJAX_GETRANDOMMAP   :
       case self::AJAX_GETTHROWDICE   :
+      case 'getBuildingMap'          :
+      case 'getNonUsedTiles'         :
+      case 'getEmptyCell'            :
+      case 'getImageMap'             :
         $returned = ToolActions::dealWithStatic($_POST);
+      break;
+      case self::AJAX_GETTILES       :
+        $returned = TileActions::dealWithStatic($_POST);
       break;
       default :
         $returned  = 'Erreur dans le $_POST['.self::CST_AJAXACTION.'] : '.$_POST[self::CST_AJAXACTION].'<br>';

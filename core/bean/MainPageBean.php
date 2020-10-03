@@ -34,7 +34,10 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
    * Class Constructor
    */
   public function __construct()
-  { $this->WpPostServices = new WpPostServices(); }
+  {
+    $this->lang = (substr($_SERVER['REQUEST_URI'], 0, 3) == '/en' ? 'en' : 'fr');
+    $this->WpPostServices = new WpPostServices();
+  }
 
   /**
    * @return string
@@ -61,8 +64,13 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
     );
     $WpPosts = $this->WpPostServices->getArticles($args, false, 'WpPage');
     // On construit le lien vers l'accueil
-    $label = $this->getBalise(self::TAG_SPAN, 'Accueil');
-    $strPages = $this->getBalise(self::TAG_A, $label, array(self::ATTR_HREF=>get_site_url()));
+    if ($this->lang=='fr') {
+      $label = $this->getBalise(self::TAG_SPAN, 'Accueil');
+      $strPages = $this->getBalise(self::TAG_A, $label, array(self::ATTR_HREF=>get_site_url()));
+    } else {
+      $label = $this->getBalise(self::TAG_SPAN, 'Home');
+      $strPages = $this->getBalise(self::TAG_A, $label, array(self::ATTR_HREF=>get_site_url().'/en/'));
+    }
     // Pour chaque page, si le parent ne vaut pas 0, on passe au suivant...
     while (!empty($WpPosts)) {
       $WpPost = array_shift($WpPosts);
@@ -100,7 +108,7 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
       $strSubMenus = '';
       while (!empty($Children)) {
         $Child = array_shift($Children);
-        if ($Child->getMenuOrder()==0) {
+        if ($Child->getMenuOrder()==0 && !self::isAdmin()) {
           // On n'affiche que les enfants ayant un OrderMenu différent de 0
           continue;
         }
@@ -162,7 +170,7 @@ class MainPageBean extends UtilitiesBean implements ConstantsInterface
     $addArg['page'] = 'hj-zombicide/admin_manage.php';
     $remArg[] = 'form';
     $remArg[] = 'id';
-    return add_query_arg($addArg, remove_query_arg($remArg, 'http://zombicidev2.jhugues.fr/wp-admin/admin.php'));
+    return add_query_arg($addArg, remove_query_arg($remArg, 'http://zombicide.jhugues.fr/wp-admin/admin.php'));
   }
   /**
    * @return bool

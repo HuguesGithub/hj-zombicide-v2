@@ -22,8 +22,9 @@ class AdminPageSurvivorsBean extends AdminPageBean
     $this->urlParams = $urlParams;
     parent::__construct(self::CST_SURVIVOR);
     $this->title = 'Survivants';
-    $this->SkillServices = new SkillServices();
-    $this->SurvivorServices  = new SurvivorServices();
+    $this->ExpansionServices     = new ExpansionServices();
+    $this->SkillServices         = new SkillServices();
+    $this->SurvivorServices      = new SurvivorServices();
     $this->SurvivorSkillServices = new SurvivorSkillServices();
   }
   /**
@@ -69,14 +70,21 @@ class AdminPageSurvivorsBean extends AdminPageBean
   }
   public function getListContentPage()
   {
+    //////////////////////////////////////////////////////////////////
+    // On récupère les filtres éventuels.
+    $argFilters = array();
+    $this->expansionId = isset($_POST[self::FIELD_EXPANSIONID]) ? $_POST[self::FIELD_EXPANSIONID] : '';
+    $argFilters[self::FIELD_EXPANSIONID] = $this->expansionId;
+
+    //////////////////////////////////////////////////////////////////
     $strRows = '';
     $nbPerPage = 10;
-    $curPage = $this->initVar(self::WP_CURPAGE, 1);
     $orderby = $this->initVar(self::WP_ORDERBY, self::FIELD_NAME);
     $order = $this->initVar(self::WP_ORDER, self::ORDER_ASC);
-    $Survivors = $this->SurvivorServices->getSurvivorsWithFilters(array(), $orderby, $order);
+    $Survivors = $this->SurvivorServices->getSurvivorsWithFilters($argFilters, $orderby, $order);
     $nbElements = count($Survivors);
     $nbPages = ceil($nbElements/$nbPerPage);
+    $curPage = $this->initVar(self::WP_CURPAGE, 1);
     $curPage = max(1, min($curPage, $nbPages));
     $DisplayedSurvivors = array_slice($Survivors, ($curPage-1)*$nbPerPage, $nbPerPage);
     while (!empty($DisplayedSurvivors)) {
@@ -88,18 +96,37 @@ class AdminPageSurvivorsBean extends AdminPageBean
       self::WP_ORDERBY => $orderby,
       self::WP_ORDER   => $order
     );
+    //////////////////////////////////////////////////////////////////
+    // Construction des filtres utilisés
+    $lstFiltres = '';
+    $Expansions = $this->ExpansionServices->getExpansionsWithFilters();
+    $lstFiltres .= '<select name="expansionId"><option value="">Toutes les extensions</option>';
+    while (!empty($Expansions)) {
+      $Expansion = array_shift($Expansions);
+      if ($Expansion->getNbSurvivants()==0) {
+        continue;
+      }
+      $lstFiltres .= '<option value="'.$Expansion->getId().'" '.($this->expansionId==$Expansion->getId() ? 'selected' : '').'>'.$Expansion->getName().'</option>';
+    }
+    $lstFiltres .= '</select>';
+
+
+    //////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////
     // Pagination
     $strPagination = $this->getPagination($queryArg, $post_status, $curPage, $nbPages, $nbElements);
     // Tris
     $queryArg[self::WP_ORDERBY] = self::FIELD_NAME;
     $queryArg[self::WP_ORDER] = ($orderby==self::FIELD_NAME && $order==self::ORDER_ASC ? self::ORDER_DESC : self::ORDER_ASC);
     $urlSortTitle = $this->getQueryArg($queryArg);
+    //////////////////////////////////////////////////////////////////
 
     $args = array(
       // Liste des survivants affichés - 1
       $strRows,
-      // 2
-      '',
+      // Liste des Filtres utilisés - 2
+      $lstFiltres,
       // Lien pour ajouter un nouveau Survivant - 3
       '/wp-admin/post-new.php',
       // 4

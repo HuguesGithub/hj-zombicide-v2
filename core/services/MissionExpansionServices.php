@@ -46,4 +46,9 @@ class MissionExpansionServices extends LocalServices
     $this->buildFilters($arrFilters);
     return $this->Dao->selectEntriesWithFilters(__FILE__, __LINE__, $this->arrParams);
   }
+
+  public function deleteMissionExpansion($MissionExpansion)
+  { $this->delete(__FILE__, __LINE__, $MissionExpansion); }
+  public function insertMissionExpansion($MissionExpansion)
+  { $this->insert(__FILE__, __LINE__, $MissionExpansion); }
 }

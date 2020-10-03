@@ -38,10 +38,10 @@ class Tile extends LocalDomain
    */
   protected $activeTile;
   protected $oCode;
-  protected $top;
-  protected $right;
-  protected $bottom;
-  protected $left;
+  protected $side_top;
+  protected $side_right;
+  protected $side_bottom;
+  protected $side_left;
 
   /**
    * @return int
@@ -63,16 +63,18 @@ class Tile extends LocalDomain
    */
   public function getZoneAcces()
   { return $this->zoneAcces; }
-  /**
-   * @return int
-   */
-  public function isActive()
-  { return ($this->active==1); }
-  /**
-   * @return int
-   */
-  public function isOfficielle()
-  { return ($this->officielle==1); }
+
+  public function getOCode()
+  { return $this->oCode; }
+  public function getSideTop()
+  { return $this->side_top; }
+  public function getSideRight()
+  { return $this->side_right; }
+  public function getSideBottom()
+  { return $this->side_bottom; }
+  public function getSideLeft()
+  { return $this->side_left; }
+
   /**
    * @param int $id
    */
@@ -94,16 +96,6 @@ class Tile extends LocalDomain
   public function setZoneAcces($zoneAcces)
   { $this->zoneAcces=$zoneAcces; }
   /**
-   * @param int $active
-   */
-  public function setActive($active)
-  { $this->active=$active; }
-  /**
-   * @param int $officielle
-   */
-  public function setOfficielle($officielle)
-  { $this->officielle=$officielle; }
-  /**
    * @return array
    */
   public function getClassVars()
@@ -120,7 +112,7 @@ class Tile extends LocalDomain
    * @return string
    */
   public function getImgUrl()
-  { return '/wp-content/plugins/zomb/web/rsc/img/tiles/'.$this->code.'-500px.png'; }
+  { return '/wp-content/plugins/hj-zombicide/web/rsc/img/tiles/'.$this->code.'-500px.png'; }
   /**
    * @return string
    */

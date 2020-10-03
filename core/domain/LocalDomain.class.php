@@ -120,6 +120,6 @@ class LocalDomain extends GlobalDomain implements ConstantsInterface
     $addArg['page'] = 'hj-zombicide/admin_manage.php';
     $remArg[] = 'form';
     $remArg[] = 'id';
-    return add_query_arg($addArg, remove_query_arg($remArg, 'http://zombicidev2.jhugues.fr/wp-admin/admin.php'));
+    return add_query_arg($addArg, remove_query_arg($remArg, 'http://zombicide.jhugues.fr/wp-admin/admin.php'));
   }
 }

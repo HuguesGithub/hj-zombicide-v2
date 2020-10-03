@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
  * Classe WpPageTagBean
  * @author Hugues
  * @since 1.04.16
- * @version 1.04.16
+ * @version 1.08.02
  */
 class WpPageTagBean extends WpPageBean
 {
@@ -20,9 +20,10 @@ class WpPageTagBean extends WpPageBean
     $arr = explode('/', $scriptUrl);
     $tag = $arr[2];
     // On défini les Services
-    $this->WpTagServices    = new WpTagServices();
     $this->DurationServices = new DurationServices();
     $this->LevelServices    = new LevelServices();
+    $this->WpPostServices   = new WpPostServices();
+    $this->WpTagServices    = new WpTagServices();
     // On initialise le Tag
     $this->WpTag = $this->WpTagServices->getTagBySlug($tag);
   }

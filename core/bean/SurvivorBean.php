@@ -106,7 +106,7 @@ class SurvivorBean extends LocalBean
     $strProfiles  = '';
     $strSkills = '';
     if ($this->Survivor->isStandard()) {
-      $strProfiles .= $this->getBalise(self::TAG_LI, $this->getFormRadioBouton('survivant', self::LBL_SURVIVANT), array(self::FIELD_CLASS=>self::CST_ACTIVE));
+      $strProfiles .= $this->getBalise(self::TAG_LI, $this->getFormRadioBouton('survivant', self::LBL_SURVIVANT), array(self::ATTR_CLASS=>self::CST_ACTIVE));
       $strSkills   .= $this->getBalise(self::TAG_UL, $this->Survivor->getUlSkills('', false, true), array(self::ATTR_CLASS=>'colSkills skills-survivant'));
     }
     if ($this->Survivor->isZombivor()) {

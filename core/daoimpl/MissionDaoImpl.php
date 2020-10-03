@@ -86,12 +86,19 @@ class MissionDaoImpl extends LocalDaoImpl
 
   public function selectMissionsByExpansionId($expansionId)
   {
+    $request  = "SELECT DISTINCT zm.id FROM `wp_11_zombicide_tile` zt ";
+    $request .= "INNER JOIN wp_11_zombicide_mission_tile zmt ON zmt.tileId = zt.id ";
+    $request .= "INNER JOIN wp_11_zombicide_mission zm ON zmt.missionId = zm.id ";
+    $request .= "WHERE zt.expansionId='$expansionId' ";
+    $request .= "ORDER BY zm.title ASC;";
+    /*
     $request  = "SELECT DISTINCT missionId FROM wp_11_zombicide_mission_tile ";
     $request .= "INNER JOIN wp_11_zombicide_mission zm ON missionId=zm.id ";
     $request .= "INNER JOIN wp_11_zombicide_tile zt ON tileId=zt.id ";
     $request .= "INNER JOIN wp_11_zombicide_expansion ze ON zt.expansionId=ze.id ";
     $request .= "WHERE ze.id = '$expansionId' ";
     $request .= "ORDER BY zm.title ASC;";
+    */
     return MySQL::wpdbSelect($request);
   }
 

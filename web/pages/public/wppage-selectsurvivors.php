@@ -33,7 +33,10 @@
         <div class="publicSurvivorRow tableHeader row">
           <span class="survivorPortraits col-12 col-md-8"><span id="nbSelected">0</span> Survivants sélectionnés</span>
           <div class="col-12 col-md-4" style="float:right;">
-            <button class="btn btn-sm btn-outline-secondary" type="button" id="saveOwnTeam"><i class="fas fa-download"></i></span> Sauvegarder</button>
+            <button class="btn btn-sm btn-outline-secondary" type="button" id="saveOwnTeam" style="width: 185px;">
+              <i class="fas fa-download"></i></span> Sauvegarder
+              <span class="tooltip saveOwnTeamBtn">Copié dans le presse-papier</span>
+            </button>
           </div>
         </div>
       </section>
