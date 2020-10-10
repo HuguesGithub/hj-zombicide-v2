@@ -39,87 +39,68 @@ class LiveMissionActions extends LocalActions
     return $returned;
   }
 
-  private function updateDoor($chip)
+  private function buildChipToken($classe, $chip, $width, $height)
   {
-    $chip->attributes()['status'] = $this->status;
-    $tokenName = 'door_'.strtolower($chip['color'][0]).'_'.strtolower($this->status);
     $args = array(
-      self::ATTR_CLASS  => $this->chipToken.' '.$chip['orientation'][0],
+      self::ATTR_CLASS  => $classe,
       self::ATTR_ID     => $this->id,
-      'data-type'       => $chip['type'][0],
-      'data-coordx'     => $chip['coordX'][0],
-      'data-coordy'     => $chip['coordY'][0],
-      'data-orientation'=> $chip['orientation'][0],
-      'data-color'      => $chip['color'][0],
-      'data-status'     => $chip['status'][0],
       'data-width'      => 56,
       'data-height'     => 56,
       'style'           => sprintf($this->strTokenStyle, $tokenName),
     );
+    if (isset($chip['type'][0])) {
+      $args['data-type'] = $chip['type'][0];
+    }
+    if (isset($chip['coordX'][0])) {
+      $args['data-coordx'] = $chip['coordX'][0];
+    }
+    if (isset($chip['coordY'][0])) {
+      $args['data-coordy'] = $chip['coordY'][0];
+    }
+    if (isset($chip['orientation'][0])) {
+      $args['data-orientation'] = $chip['orientation'][0];
+    }
+    if (isset($chip['color'][0])) {
+      $args['data-color'] = $chip['color'][0];
+    }
+    if (isset($chip['status'][0])) {
+      $args['data-status'] = $chip['status'][0];
+    }
     $Bean = new LocalBean();
     $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
     return $this->jsonString($returned, 'lstElements', true);
+  }
+  private function updateDoor($chip)
+  {
+    $chip->attributes()['status'] = $this->status;
+    $tokenName = 'door_'.strtolower($chip['color'][0]).'_'.strtolower($this->status);
+    $classe = $this->chipToken.' '.$chip['orientation'][0];
+    $style = sprintf($this->strTokenStyle, $tokenName);
+    return $this->buildChipToken($classe, $chip, 56, 56, $style);
   }
   private function updateExit($chip)
   {
     $chip->attributes()['status'] = $this->status;
     $tokenName = 'exit';
-    $args = array(
-      self::ATTR_CLASS  => $this->chipToken.' '.$chip['orientation'][0].' '.strtolower($this->status),
-      self::ATTR_ID     => $this->id,
-      'data-type'       => $chip['type'][0],
-      'data-coordx'     => $chip['coordX'][0],
-      'data-coordy'     => $chip['coordY'][0],
-      'data-orientation'=> $chip['orientation'][0],
-      'data-status'     => $chip['status'][0],
-      'data-width'      => 100,
-      'data-height'     => 50,
-      'style'           => sprintf($this->strTokenStyle, $tokenName),
-    );
-    $Bean = new LocalBean();
-    $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
-    return $this->jsonString($returned, 'lstElements', true);
+    $classe = $this->chipToken.' '.$chip['orientation'][0].' '.strtolower($this->status);
+    $style = sprintf($this->strTokenStyle, $tokenName);
+    return $this->buildChipToken($classe, $chip, 100, 50, $style);
   }
   private function updateObjective($chip)
   {
     $chip->attributes()['status'] = $this->status;
     $tokenName = 'objective_'.strtolower($chip['color'][0]);
-    $args = array(
-      self::ATTR_CLASS  => $this->chipToken,
-      self::ATTR_ID     => $this->id,
-      'data-type'       => $chip['type'][0],
-      'data-coordx'     => $chip['coordX'][0],
-      'data-coordy'     => $chip['coordY'][0],
-      'data-color'      => $chip['color'][0],
-      'data-status'     => $this->status,
-      'data-width'      => 50,
-      'data-height'     => 50,
-      'style'           => sprintf($this->strTokenStyle, $tokenName),
-    );
-    $Bean = new LocalBean();
-    $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
-    return $this->jsonString($returned, 'lstElements', true);
+    $classe = $this->chipToken;
+    $style = sprintf($this->strTokenStyle, $tokenName);
+    return $this->buildChipToken($classe, $chip, 50, 50, $style);
   }
   private function updateSpawn($chip)
   {
     $chip->attributes()['status'] = $this->status;
     $tokenName = 'spawn_'.strtolower($chip['color'][0]);
-    $args = array(
-      self::ATTR_CLASS  => $this->chipToken.' '.$chip['orientation'][0].' '.strtolower($this->status),
-      self::ATTR_ID     => $this->id,
-      'data-type'       => $chip['type'][0],
-      'data-coordx'     => $chip['coordX'][0],
-      'data-coordy'     => $chip['coordY'][0],
-      'data-orientation'=> $chip['orientation'][0],
-      'data-color'      => $chip['color'][0],
-      'data-status'     => $this->status,
-      'data-width'      => 100,
-      'data-height'     => 50,
-      'style'           => sprintf($this->strTokenStyle, $tokenName),
-    );
-    $Bean = new LocalBean();
-    $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
-    return $this->jsonString($returned, 'lstElements', true);
+    $classe = $this->chipToken.' '.$chip['orientation'][0].' '.strtolower($this->status);
+    $style = sprintf($this->strTokenStyle, $tokenName);
+    return $this->buildChipToken($classe, $chip, 100, 50, $style);
   }
   private function updateSurvivor()
   {
@@ -226,6 +207,8 @@ class LiveMissionActions extends LocalActions
     $args = array(
       self::ATTR_SRC    => '/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/'.$this->post['type'].'.png',
       // TODO : Construction du Title à améliorer plus tard quand on aura des trucs un peu plus spécifique.
+      // Notamment pour les Crawlers, Skinners... Dont les noms ne sont pas composés.
+      // Faudra aussi reprendre le pattern.
       self::ATTR_TITLE  => $matches[1].' '.$matches[2].' x1',
     );
     $content  = $Bean->getPublicBalise(self::TAG_IMG, '', $args);
@@ -263,32 +246,24 @@ class LiveMissionActions extends LocalActions
     $survivor->addAttribute('level', 'Blue');
     ///////////////////////////////////////////////////////
 
-    /*
-
     $Bean = new LocalBean();
     /////////////////////////////////////////////////////////
     // On prépare le Template pour retourner le visuel à afficher.
     $args = array(
-      self::ATTR_SRC    => '/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/'.$this->post['type'].'.png',
-      // TODO : Construction du Title à améliorer plus tard quand on aura des trucs un peu plus spécifique.
-      self::ATTR_TITLE  => $matches[1].' '.$matches[2].' x1',
+      self::ATTR_SRC    => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/'.$src.'.jpg',
     );
     $content  = $Bean->getPublicBalise(self::TAG_IMG, '', $args);
-    $content .= $Bean->getPublicBalise(self::TAG_DIV, 1, array(self::ATTR_CLASS=>'badge'));
     $args = array(
-      self::ATTR_CLASS  => 'chip zombie '.$matches[2],
-      self::ATTR_ID     => 'z'.$maxId,
-      'data-type'       => 'Zombie',
-      'data-coordx'     => $this->post['coordx'],
-      'data-coordy'     => $this->post['coordy'],
+      self::ATTR_CLASS  => 'chip survivor Blue',
+      self::ATTR_ID     => $this->post['survivorId'],
+      'data-type'       => 'Survivor',
+      'data-coordx'     => 975,
+      'data-coordy'     => 475,
       'data-width'      => 50,
-      'data-height'     => 50,
-      'data-quantity'   => 1,
+      'data-height'     => 50
     );
-    $returned = array('z'.$maxId, $Bean->getPublicBalise(self::TAG_DIV, $content, $args));
+    $returned = array($this->post['survivorId'], $Bean->getPublicBalise(self::TAG_DIV, $content, $args));
     return $this->jsonString($returned, 'lstElements', true);
-    */
-    return $this->jsonString('', 'lstElements', true);
   }
   private function dealWithInsertChip()
   {
