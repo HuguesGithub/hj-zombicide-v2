@@ -14,10 +14,10 @@
         <span aria-hidden="true">&times;</span>
       </button>
       <nav>
-        <div class="chip zombie Standard" data-type="zWalkerStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zWalkerStandard.png"></div>
-        <div class="chip zombie Standard" data-type="zRunnerStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zRunnerStandard.png"></div>
-        <div class="chip zombie Standard" data-type="zFattyStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zFattyStandard.png"></div>
-        <div class="chip zombie Standard" data-type="zAbominationStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zAbominationStandard.png"></div>
+        <div class="chip zombie Standard" data-type="zWalkerStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zWalkerStandard.png" alt="Walker Standard"></div>
+        <div class="chip zombie Standard" data-type="zRunnerStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zRunnerStandard.png" alt="Runner Standard"></div>
+        <div class="chip zombie Standard" data-type="zFattyStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zFattyStandard.png" alt="Fatty Standard"></div>
+        <div class="chip zombie Standard" data-type="zAbominationStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zAbominationStandard.png" alt="Abomination Standard"></div>
       </nav>
     </section>
   </section>
@@ -59,12 +59,12 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <nav>
-      <div class="chip survivor" data-survivorid="s1" data-src="pamy"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pamy.jpg"></div>
-      <div class="chip survivor" data-survivorid="s2" data-src="pdoug"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pdoug.jpg"></div>
-      <div class="chip survivor" data-survivorid="s3" data-src="pjosh"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pjosh.jpg"></div>
-      <div class="chip survivor" data-survivorid="s4" data-src="pned"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pned.jpg"></div>
-      <div class="chip survivor" data-survivorid="s5" data-src="pphil"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pphil.jpg"></div>
-      <div class="chip survivor" data-survivorid="s6" data-src="pwanda"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pwanda.jpg"></div>
+      <div class="chip survivor" data-survivorid="s1" data-src="pamy"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pamy.jpg" alt="Amy"></div>
+      <div class="chip survivor" data-survivorid="s2" data-src="pdoug"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pdoug.jpg" alt="Doug"></div>
+      <div class="chip survivor" data-survivorid="s3" data-src="pjosh"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pjosh.jpg" alt="Josh"></div>
+      <div class="chip survivor" data-survivorid="s4" data-src="pned"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pned.jpg" alt="Ned"></div>
+      <div class="chip survivor" data-survivorid="s5" data-src="pphil"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pphil.jpg" alt="Phil"></div>
+      <div class="chip survivor" data-survivorid="s6" data-src="pwanda"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pwanda.jpg" alt="Wanda"></div>
     </nav>
   </section>
 </section>

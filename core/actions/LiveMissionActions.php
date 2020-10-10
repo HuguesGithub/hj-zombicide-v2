@@ -299,7 +299,8 @@ class LiveMissionActions extends LocalActions
   private function formatErrorMessage($msgError)
   {
     // TODO
-    echo "[[$msgError]]";
+    return "[[$msgError]]";
+
   }
   /**
    * @return string

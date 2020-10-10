@@ -36,6 +36,7 @@ class WpPageMissionOnlineBean extends WpPageBean
         //AnJwMKqNkXba2suQ
         $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $strCode = substr(str_shuffle($str), 0, 16);
+        // TODO : Vérifier l'intégrité de $_POST['selectMission'].
         copy(PLUGIN_PATH.$this->urlDirMissions.$_POST['selectMission'].".mission.xml", PLUGIN_PATH.$this->urlDirLiveMissions.$strCode.".mission.xml");
         $_SESSION['zombieKey'] = $strCode;
         $this->msgError = '<em>Attention</em>, la Mission sélectionnée existe.';
@@ -93,15 +94,6 @@ class WpPageMissionOnlineBean extends WpPageBean
     // On initialise quelques variables :
     $this->arrLstPortraits = array();
     $this->arrLstSurvivorDetail = array();
-
-    // On récupère les Zones pour les délimiter
-    $zones = $this->map['zones']['zone'];
-    $lstZones = '';
-    foreach ($zones as $zone) {
-      $coords = $tile['@attributes']['coords'];
-      $starting = isset($tile['@attributes']['starting']);
-      $lstZones .= '';
-    }
 
     $Missions = $this->MissionServices->getMissionsWithFilters(array(self::FIELD_CODE=>'AJ01'));
     $Mission = array_shift($Missions);
