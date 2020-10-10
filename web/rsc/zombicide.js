@@ -413,7 +413,7 @@ function addChangeMapSize() {
         $hj('.displayMap .row:last-child').append(cellModel);
       }
     } else if (width>actualWidth) {
-      for (var cpt=0; cpt<height; cpt++) {
+      for (cpt=0; cpt<height; cpt++) {
         cellModel = $hj('.cellModel').clone();
         cellModel.removeClass('hidden cellModel');
         cellModel.find('i.fakeCb').attr('data-cell', 'cell_'+cpt+'_'+(width-1));

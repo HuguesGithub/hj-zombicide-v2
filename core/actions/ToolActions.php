@@ -90,8 +90,7 @@ class ToolActions extends LocalActions
     $result  = '<div class="cell hidden cellModel"><img alt="Non définie">';
     $result .= '<nav class="hoverActions nav nav-fill nav-pills"><i class="nav-item far fa-check-square fakeCb" data-cell="cell_0_0"></i>';
     $result .= '<i class="nav-item fas fa-unlock fakeLock" data-lock="cell_0_0"></i><i class="nav-item fas fa-cog"></i>';
-    $result .= '<i class="nav-item fas fa-undo"></i><i class="nav-item fas fa-redo"></i></nav></div>';
-    return $result;
+    return $result.'<i class="nav-item fas fa-undo"></i><i class="nav-item fas fa-redo"></i></nav></div>';
   }
   public function getEmptyCell()
   { return $this->jsonString($this->getStrEmptyCell(), 'empty-cell', true); }
@@ -150,10 +149,7 @@ class ToolActions extends LocalActions
       if (in_array($Tile->getCode(), $this->lockedOCodes)) {
         continue;
       }
-      // TODO : la Tile est-elle compatible avec les Tiles adjacentes ? Pour chacune des orientations ?
-      $this->orientation = 'top';
-      $MapTile = new MapTile($Tile, $this->orientation);
-      $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
+      // On défini les paramètres de base des différentes balises.
       $argsDiv = array(
         self::ATTR_CLASS   => 'cell',
         'style'            => 'display: inline-block;',
@@ -161,38 +157,20 @@ class ToolActions extends LocalActions
       $args = array(
         'data-row'         => $row,
         'data-col'         => $col,
-        'data-orientation' => $this->orientation,
         'data-src'         => $Tile->getImgUrl(),
         'data-code'        => $Tile->getCode(),
-        self::ATTR_CLASS   => $this->orientation,
         'src'              => $Tile->getImgUrl(),
       );
-      if ($isCompatible) {
-        $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
-      }
-      $this->getNextOrientation();
-      $MapTile = new MapTile($Tile, $this->orientation);
-      $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
-      if ($isCompatible) {
-        $args['data-orientation'] = $this->orientation;
-        $args[self::ATTR_CLASS]   = $this->orientation;
-        $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
-      }
-      $this->getNextOrientation();
-      $MapTile = new MapTile($Tile, $this->orientation);
-      $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
-      if ($isCompatible) {
-        $args['data-orientation'] = $this->orientation;
-        $args[self::ATTR_CLASS]   = $this->orientation;
-        $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
-      }
-      $this->getNextOrientation();
-      $MapTile = new MapTile($Tile, $this->orientation);
-      $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
-      if ($isCompatible) {
-        $args['data-orientation'] = $this->orientation;
-        $args[self::ATTR_CLASS]   = $this->orientation;
-        $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
+      // On affiche les 4 positions
+      for ($i=0; $i<4; $i++) {
+        $this->getNextOrientation();
+        $MapTile = new MapTile($Tile, $this->orientation);
+        $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
+        if ($isCompatible) {
+          $args['data-orientation'] = $this->orientation;
+          $args[self::ATTR_CLASS]   = $this->orientation;
+          $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
+        }
       }
     }
     $result = '<section class="displayMap proposals" style="width:500px;">'.$lstTiles.'</section>';
@@ -293,7 +271,6 @@ class ToolActions extends LocalActions
       for ($j=0; $j<$this->width; $j++) {
         if (isset($this->MapTiles[$i][$j])) {
           $MapTile = $this->MapTiles[$i][$j];
-          //print_r($MapTile);
           $Tile = $MapTile->getTile();
           $orientation = $MapTile->getOrientation();
           $result .= '<img class="'.$orientation.'" src="'.$Tile->getImgUrl().'">';
@@ -313,7 +290,6 @@ class ToolActions extends LocalActions
     $result .= $content.'</section>';
 
     $result  = '<section id="page-generation-map" class="row">'.$result;
-    //$result .= '<article>'.$this->debug.'</article>';
     $result .= '</section>';
 
     return $this->jsonString($result, self::PAGE_GENERATION_MAP, true);
@@ -356,17 +332,6 @@ class ToolActions extends LocalActions
       $this->debug .= 'Testing '.$Tile->getCode().'/'.$this->orientation.' ['.$this->nbTests.']<br>';
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////
       // Début des contrôles pour ajouter la Tile à la Map.
-      // Si on n'est pas sur la première colonne, on doit vérifier avec celle de gauche.
-      /*
-      if ($this->col!=0) {
-        //$isCompatible = $MapTile->isCompatible($this->MapTiles, $this->row, $this->col-1);
-        $isCompatible = $MapTile->isCompatible($this->MapTiles[$this->row][$this->col-1], 'left');
-      }
-      // Si on n'est pas sur la première ligne, on doit vérifier avec celle au-dessus.
-      if ($isCompatible && $this->row!=0) {
-        $isCompatible = $MapTile->isCompatible($this->MapTiles[$this->row-1][$this->col], 'top');
-      }
-      */
       $isCompatible = $MapTile->isCompatibleV2($this->MapTiles, $this->row, $this->col);
       $this->nbTests++;
       if ($this->nbTests==4) {
