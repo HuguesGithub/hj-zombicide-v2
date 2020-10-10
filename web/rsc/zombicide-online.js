@@ -116,15 +116,8 @@ function updateLiveMissionXml(data) {
 function setObjectiveChipActions(obj) {
   obj.unbind().click(function(){
     var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    console.log(dataStatus + 'Objective clicked');
     var newStatus = (dataStatus=='Unveiled' ? 'Unactive' : 'Picked');
-    var data = {
-      'action': 'dealWithAjax',
-      'ajaxAction': 'updateLiveMission',
-      'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'id': $hj(this).attr('id'),
-      'status': newStatus
-    };
+    var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': newStatus};
     updateLiveMissionXml(data);
     if (newStatus=='Picked') {
       $hj(this).remove();
@@ -140,15 +133,7 @@ function setObjectiveChipActions(obj) {
 function setExitChipActions(obj) {
   obj.unbind().click(function(){
     var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    console.log('Exit clicked');
-    var newStatus = (dataStatus=='Unactive' ? 'Active' : 'Unactive');
-    var data = {
-      'action': 'dealWithAjax',
-      'ajaxAction': 'updateLiveMission',
-      'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'id': $hj(this).attr('id'),
-      'status': newStatus
-    };
+    var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': (dataStatus=='Unactive' ? 'Active' : 'Unactive')};
     updateLiveMissionXml(data);
   });
 }
@@ -161,15 +146,7 @@ function setExitChipActions(obj) {
 function setDoorChipActions(obj) {
   obj.unbind().click(function(){
     var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    console.log(dataStatus + ' Door clicked');
-    var newStatus = (dataStatus=='Closed' ? 'Opened' : 'Closed');
-    var data = {
-      'action': 'dealWithAjax',
-      'ajaxAction': 'updateLiveMission',
-      'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'id': $hj(this).attr('id'),
-      'status': newStatus
-    };
+    var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': (dataStatus=='Closed' ? 'Opened' : 'Closed')};
     updateLiveMissionXml(data);
   });
 }
@@ -182,15 +159,8 @@ function setDoorChipActions(obj) {
 function setSpawnChipActions(obj) {
   obj.unbind().on('contextmenu', function(event){
     var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    console.log(dataStatus + ' Spawn Right Click');
     var newStatus = (dataStatus=='Unactive' ? 'Picked' : 'Unactive');
-    var data = {
-      'action': 'dealWithAjax',
-      'ajaxAction': 'updateLiveMission',
-      'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'id': $hj(this).attr('id'),
-      'status': newStatus
-    };
+    var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': newStatus};
     updateLiveMissionXml(data);
     if (newStatus=='Picked') {
       $hj(this).remove();
@@ -199,16 +169,9 @@ function setSpawnChipActions(obj) {
     return false;
   }).click(function(event){
     var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    console.log(dataStatus + ' Spawn Left Click');
     // Le Left Click sur un Spawn permet de le rendre actif s'il est inactif. Ou d'ajouter des Zombies s'il est actif.
     if (dataStatus=='Unactive') {
-      var data = {
-        'action': 'dealWithAjax',
-        'ajaxAction': 'updateLiveMission',
-        'uniqid': $hj('#page-mission-online').data('uniqid'),
-        'id': $hj(this).attr('id'),
-        'status': 'Active'
-      };
+      var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': 'Active'};
       updateLiveMissionXml(data);
     } else {
       var posX = event.clientX;

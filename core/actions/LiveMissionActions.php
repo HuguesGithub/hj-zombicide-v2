@@ -39,14 +39,14 @@ class LiveMissionActions extends LocalActions
     return $returned;
   }
 
-  private function buildChipToken($classe, $chip, $width, $height)
+  private function buildChipToken($classe, $chip, $width, $height, $style)
   {
     $args = array(
       self::ATTR_CLASS  => $classe,
       self::ATTR_ID     => $this->id,
-      'data-width'      => 56,
-      'data-height'     => 56,
-      'style'           => sprintf($this->strTokenStyle, $tokenName),
+      'data-width'      => $width,
+      'data-height'     => $height,
+      'style'           => $style,
     );
     if (isset($chip['type'][0])) {
       $args['data-type'] = $chip['type'][0];
