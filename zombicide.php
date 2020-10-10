@@ -90,12 +90,11 @@ function zombisite_menu()
   }
 }
 add_action('admin_menu', 'zombisite_menu');
-/**
-#######################################################################################
-### Ajout d'une action Ajax
-### Description: Entrance point for Ajax Interaction.
-#######################################################################################
-*/
+
+//#######################################################################################
+//### Ajout d'une action Ajax
+//### Description: Entrance point for Ajax Interaction.
+//#######################################################################################
 add_action('wp_ajax_dealWithAjax', 'dealWithAjax_callback');
 add_action('wp_ajax_nopriv_dealWithAjax', 'dealWithAjax_callback');
 function dealWithAjax_callback()

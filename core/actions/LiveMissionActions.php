@@ -48,23 +48,11 @@ class LiveMissionActions extends LocalActions
       'data-height'     => $height,
       'style'           => $style,
     );
-    if (isset($chip['type'][0])) {
-      $args['data-type'] = $chip['type'][0];
-    }
-    if (isset($chip['coordX'][0])) {
-      $args['data-coordx'] = $chip['coordX'][0];
-    }
-    if (isset($chip['coordY'][0])) {
-      $args['data-coordy'] = $chip['coordY'][0];
-    }
-    if (isset($chip['orientation'][0])) {
-      $args['data-orientation'] = $chip['orientation'][0];
-    }
-    if (isset($chip['color'][0])) {
-      $args['data-color'] = $chip['color'][0];
-    }
-    if (isset($chip['status'][0])) {
-      $args['data-status'] = $chip['status'][0];
+    $arrAttributes = array('type', 'coordX', 'coordY', 'orientation', 'color', 'status');
+    foreach ($arrAttributes as $attribute) {
+      if (isset($chip[$attribute][0])) {
+        $args['data-'.strtolower($attribute)] = $chip[$attribute][0];
+      }
     }
     $Bean = new LocalBean();
     $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));

@@ -140,6 +140,7 @@ class ToolActions extends LocalActions
     $arrTmp = array_keys($this->lockedOCodes, $oCode);
     unset($this->lockedOCodes[$arrTmp[0]]);
 
+    $Bean = new LocalBean();
     //////////////////////////////////////////////////////////////////////
     // On récupère les Dalles que l'on veut pouvoir utiliser..
     $Tiles = $this->TileServices->getTilesWithFiltersIn(array(self::FIELD_EXPANSIONID=>$this->expansionIds));
@@ -153,26 +154,45 @@ class ToolActions extends LocalActions
       $this->orientation = 'top';
       $MapTile = new MapTile($Tile, $this->orientation);
       $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
+      $argsDiv = array(
+        self::ATTR_CLASS   => 'cell',
+        'style'            => 'display: inline-block;',
+      );
+      $args = array(
+        'data-row'         => $row,
+        'data-col'         => $col,
+        'data-orientation' => $this->orientation,
+        'data-src'         => $Tile->getImgUrl(),
+        'data-code'        => $Tile->getCode(),
+        self::ATTR_CLASS   => $this->orientation,
+        'src'              => $Tile->getImgUrl(),
+      );
       if ($isCompatible) {
-        $lstTiles .= '<div class="cell" style="display:inline-block;"><img data-row="'.$row.'" data-col="'.$col.'" data-orientation="'.$this->orientation.'" data-src="'.$Tile->getImgUrl().'" data-code="'.$Tile->getCode().'" class="'.$this->orientation.'" src="'.$Tile->getImgUrl().'"></div>  ';
+        $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
       }
       $this->getNextOrientation();
       $MapTile = new MapTile($Tile, $this->orientation);
       $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
       if ($isCompatible) {
-        $lstTiles .= '<div class="cell" style="display:inline-block;"><img data-row="'.$row.'" data-col="'.$col.'" data-orientation="'.$this->orientation.'" data-src="'.$Tile->getImgUrl().'" data-code="'.$Tile->getCode().'" class="'.$this->orientation.'" src="'.$Tile->getImgUrl().'"></div>  ';
+        $args['data-orientation'] = $this->orientation;
+        $args[self::ATTR_CLASS]   = $this->orientation;
+        $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
       }
       $this->getNextOrientation();
       $MapTile = new MapTile($Tile, $this->orientation);
       $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
       if ($isCompatible) {
-        $lstTiles .= '<div class="cell" style="display:inline-block;"><img data-row="'.$row.'" data-col="'.$col.'" data-orientation="'.$this->orientation.'" data-src="'.$Tile->getImgUrl().'" data-code="'.$Tile->getCode().'" class="'.$this->orientation.'" src="'.$Tile->getImgUrl().'"></div>  ';
+        $args['data-orientation'] = $this->orientation;
+        $args[self::ATTR_CLASS]   = $this->orientation;
+        $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
       }
       $this->getNextOrientation();
       $MapTile = new MapTile($Tile, $this->orientation);
       $isCompatible = $MapTile->isCompatibleV2($this->lockedMapTiles, $row, $col);
       if ($isCompatible) {
-        $lstTiles .= '<div class="cell" style="display:inline-block;"><img data-row="'.$row.'" data-col="'.$col.'" data-orientation="'.$this->orientation.'" data-src="'.$Tile->getImgUrl().'" data-code="'.$Tile->getCode().'" class="'.$this->orientation.'" src="'.$Tile->getImgUrl().'"></div>  ';
+        $args['data-orientation'] = $this->orientation;
+        $args[self::ATTR_CLASS]   = $this->orientation;
+        $lstTiles .= $Bean->getBalise(self::TAG_DIV, $Bean->getBalise(self::TAG_IMG, '', $args), $argsDiv);
       }
     }
     $result = '<section class="displayMap proposals" style="width:500px;">'.$lstTiles.'</section>';
