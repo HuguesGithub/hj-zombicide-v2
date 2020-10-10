@@ -14,6 +14,7 @@ class WpPageMissionOnlineBean extends WpPageBean
   protected $urlDirLiveMissions = '/web/rsc/missions/live/';
   protected $urlLoginTemplate   = 'web/pages/public/wppage-mission-online-login.php';
   protected $urlTemplate        = 'web/pages/public/wppage-mission-online.php';
+  protected $xmlSuffixe         = '.mission.xml';
   /**
    * Class Constructor
    * @param WpPage $WpPage
@@ -33,21 +34,21 @@ class WpPageMissionOnlineBean extends WpPageBean
       $Missions = $this->MissionServices->getMissionsWithFilters(array(self::FIELD_CODE=>$_POST['selectMission']));
       if (empty($Missions)) {
         $this->msgError = '<em>Attention</em>, le code sélectionné n\'existe pas.';
-      } elseif (is_file(PLUGIN_PATH.$this->urlDirMissions.$_POST['selectMission'].".mission.xml")) {
+      } elseif (is_file(PLUGIN_PATH.$this->urlDirMissions.$_POST['selectMission'].$this->xmlSuffixe)) {
         // ON doit générer une clef qui va bien et la stocker dans zombieKey.
         // Puis on génère un fichier live à partir du fichier référence de la Mission.
         //AnJwMKqNkXba2suQ
         $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $strCode = substr(str_shuffle($str), 0, 16);
         $Mission = array_shift($Missions);
-        copy(PLUGIN_PATH.$this->urlDirMissions.$Mission->getCode().".mission.xml", PLUGIN_PATH.$this->urlDirLiveMissions.$strCode.".mission.xml");
+        copy(PLUGIN_PATH.$this->urlDirMissions.$Mission->getCode().$this->xmlSuffixe, PLUGIN_PATH.$this->urlDirLiveMissions.$strCode.$this->xmlSuffixe);
         $_SESSION['zombieKey'] = $strCode;
         $this->msgError = '<em>Attention</em>, la Mission sélectionnée existe.';
       } else {
         $this->msgError = '<em>Attention</em>, la Mission sélectionnée n\'existe pas.';
       }
     } elseif ($_POST['radioChoice']=='old') {
-      if (is_file(PLUGIN_PATH.$this->urlDirLiveMissions.$_POST['saveCode'].".mission.xml")) {
+      if (is_file(PLUGIN_PATH.$this->urlDirLiveMissions.$_POST['saveCode'].$this->xmlSuffixe)) {
         // On récupère la clef fournie et on la stocke dans zombieKey
         $_SESSION['zombieKey'] = $_POST['saveCode'];
         $this->msgError = '<em>Attention</em>, le code saisi correspond à une partie sauvegardée.';
@@ -60,7 +61,7 @@ class WpPageMissionOnlineBean extends WpPageBean
     }
 
 
-    if (isset($_SESSION['zombieKey']) && is_file(PLUGIN_PATH.$this->urlDirLiveMissions.$_SESSION['zombieKey'].".mission.xml")) {
+    if (isset($_SESSION['zombieKey']) && is_file(PLUGIN_PATH.$this->urlDirLiveMissions.$_SESSION['zombieKey'].$this->xmlSuffixe)) {
       return $this->getBoard();
     } else {
       return $this->getLogin();
@@ -300,7 +301,6 @@ class WpPageMissionOnlineBean extends WpPageBean
       $status      = $chip[self::XML_ATTRIBUTES]['status'];
       $orientation = $chip[self::XML_ATTRIBUTES]['orientation'];
       $addClass    = ' token';
-      $display     = true;
 
       switch ($type) {
         case 'Door' :
@@ -310,13 +310,9 @@ class WpPageMissionOnlineBean extends WpPageBean
           $addClass .= ' '.$orientation;
         break;
         case 'Objective' :
-          if ($status=='Picked') {
-            $display = false;
-          } else {
-            $width     = 50;
-            $height    = 50;
-            $tokenName = 'objective_'.($status=='Unveiled' ? 'red' : strtolower($color));
-          }
+          $width     = 50;
+          $height    = 50;
+          $tokenName = 'objective_'.($status=='Unveiled' ? 'red' : strtolower($color));
         break;
         case 'Spawn' :
           $width     = 100;
@@ -334,7 +330,7 @@ class WpPageMissionOnlineBean extends WpPageBean
           $tokenName = '';
         break;
       }
-      if ($display) {
+      if ($status!='Picked') {
         $args = array(
           self::ATTR_CLASS   => 'chip'.$addClass,
           self::ATTR_ID      => $id,
