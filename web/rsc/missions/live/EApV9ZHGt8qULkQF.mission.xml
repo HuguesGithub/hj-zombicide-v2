@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mission code="AJ01">
+  <map width="3" height="2">
+    <tiles>
+      <tile code="AJ01" orientation="north" posX="0" posY="0"/>
+      <tile code="AJ04" orientation="north" posX="1" posY="0"/>
+      <tile code="5D" orientation="east" posX="2" posY="0"/>
+      <tile code="AJ02" orientation="north" posX="0" posY="1"/>
+      <tile code="AJ03" orientation="north" posX="1" posY="1"/>
+      <tile code="5B" orientation="west" posX="2" posY="1"/>
+    </tiles>
+    <zones>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords="" starting="true"/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+      <zone coords=""/>
+    </zones>
+    <chips>
+      <chip id="c01" type="Starting" coordX="975" coordY="475" orientation="north"/>
+      <chip id="c02" type="Door" coordX="483" coordY="210" orientation="east" color="red" status="Closed"/>
+      <chip id="c03" type="Door" coordX="483" coordY="385" orientation="east" color="red" status="Closed"/>
+      <chip id="c04" type="Door" coordX="483" coordY="555" orientation="east" color="red" status="Closed"/>
+      <chip id="c05" type="Door" coordX="483" coordY="735" orientation="east" color="red" status="Closed"/>
+      <chip id="c06" type="Door" coordX="100" coordY="485" orientation="south" color="red" status="Closed"/>
+      <chip id="c07" type="Door" coordX="355" coordY="485" orientation="south" color="red" status="Closed"/>
+      <chip id="c08" type="Door" coordX="560" coordY="460" orientation="north" color="red" status="Closed"/>
+      <chip id="c09" type="Door" coordX="735" coordY="460" orientation="north" color="red" status="Closed"/>
+      <chip id="c10" type="Door" coordX="1115" coordY="220" orientation="west" color="red" status="Closed"/>
+      <chip id="c11" type="Door" coordX="1115" coordY="720" orientation="west" color="red" status="Closed"/>
+      <chip id="c12" type="Door" coordX="330" coordY="240" orientation="east" color="green" status="Closed"/>
+      <chip id="c13" type="Door" coordX="830" coordY="400" orientation="east" color="blue" status="Opened"/>
+      <chip id="c14" type="Objective" coordX="35" coordY="265" color="red" status="Unveiled"/>
+      <chip id="c15" type="Objective" coordX="655" coordY="265" color="red" status="Unveiled"/>
+      <chip id="c16" type="Objective" coordX="1400" coordY="265" color="red" status="Unveiled"/>
+      <chip id="c17" type="Objective" coordX="35" coordY="735" color="red" status="Unveiled"/>
+      <chip id="c18" type="Objective" coordX="655" coordY="735" color="red" status="Unveiled"/>
+      <chip id="c19" type="Objective" coordX="1400" coordY="735" color="red" status="Unveiled"/>
+      <chip id="c20" type="Objective" coordX="210" coordY="265" color="blue" status="Unactive"/>
+      <chip id="c21" type="Spawn" coordX="890" coordY="10" orientation="north" color="red" status="Active"/>
+      <chip id="c22" type="Spawn" coordX="950" coordY="940" orientation="south" color="red" status="Active"/>
+      <chip id="c23" type="Spawn" coordX="1010" coordY="10" orientation="north" color="blue" status="Unactive"/>
+      <chip id="c24" type="Exit" coordX="1410" coordY="475" orientation="east" status="Unactive"/>
+    </chips>
+    <zombies/>
+    <survivors/>
+  </map>
+</mission>

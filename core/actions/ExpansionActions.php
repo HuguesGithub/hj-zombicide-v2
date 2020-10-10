@@ -195,13 +195,11 @@ class ExpansionActions extends LocalActions
     // Vérifions le nombre de Missions
     // TODO : Données à mettre à jour dans les articles. Les champs "Dalles" des WpPost de type Missions doivent être renseignés
     $Missions = $Expansion->getMissions();
-    if ($Expansion->getNbMissions()!=count($Missions)) {
+    if ($Expansion->getNbMissions()!=count($Missions) && $Expansion->getNbMissions()<count($Missions)) {
       //$this->strBilan .= "Le nombre de Missions pour l'Extension <em>".$name."</em> ne correspond pas. Nb dans le champ : ".$Expansion->getNbMissions().". Nb donnés par la requête : ".count($Missions).".<br>";
       // Note : On ne met à jour que si la requête renvoie plus que la donnée du champ.
-      if ($Expansion->getNbMissions()<count($Missions)) {
-        $Expansion->setNbMissions(count($Missions));
-        $doUpdate = true;
-      }
+      $Expansion->setNbMissions(count($Missions));
+      $doUpdate = true;
     }
     if ($doUpdate) {
       // Si nécessaire, on update en base.

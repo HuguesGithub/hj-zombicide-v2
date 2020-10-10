@@ -87,6 +87,22 @@
           </div>
           <input type="text" class="form-control" placeholder="0" value="%13$s" name="height">
         </div>
+        <div class="input-group mb-3">
+          <div class="input-group">
+            <span class="input-group-text">Objectifs</span>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          %14$s
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group">
+            <span class="input-group-text">Règles Spéciales</span>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          %15$s
+        </div>
       </div>
     </div>
     <div class="row">

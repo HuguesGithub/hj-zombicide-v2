@@ -55,6 +55,9 @@ class AjaxActions extends LocalActions
       case self::AJAX_GETTILES       :
         $returned = TileActions::dealWithStatic($_POST);
       break;
+      case 'updateLiveMission'       :
+        $returned = LiveMissionActions::dealWithStatic($_POST);
+      break;
       default :
         $returned  = 'Erreur dans le $_POST['.self::CST_AJAXACTION.'] : '.$_POST[self::CST_AJAXACTION].'<br>';
       break;

@@ -12,7 +12,7 @@ $pluginUrl = 'http://zombicide.jhugues.fr/wp-content/plugins/hj-zombicide/';
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/v4-shims.css">
     <link rel="stylesheet" href="<?php echo $commonUrl; ?>web/rsc/css/jquery-ui.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="<?php echo $commonUrl; ?>web/rsc/css/bootstrap-4.min.css" type="text/css" media="all" />
-<link rel="stylesheet" href="<?php echo $pluginUrl; ?>web/rsc/zombicide.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="<?php echo $pluginUrl; ?>web/rsc/zombicide.css" type="text/css" media="all" />
     <link rel="stylesheet" href="<?php echo $pluginUrl; ?>web/rsc/zombicide.min.css" type="text/css" media="all" />
   </head>
   <body>

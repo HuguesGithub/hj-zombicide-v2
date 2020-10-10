@@ -60,10 +60,10 @@ class MapTile extends LocalDomain
       //echo "[left : ".$this->Tile->getCode()."-$sideLeft;".$OtherMapTile->getTile()->getCode()."-$sideRight]\r\n";
       $isCompatible = $this->compSides($sideLeft, $sideRight);
     } elseif ($side=='right') {
-      $sideRight = $this->getRight();
-      $sideLeft  = $OtherMapTile->getLeft();
+      $thisSide  = $this->getRight();
+      $otherSide = $OtherMapTile->getLeft();
       //echo "[top : ".$this->Tile->getCode()."-$sideTop;".$OtherMapTile->getTile()->getCode()."-$sideBottom]\r\n";
-      $isCompatible = $this->compSides($sideRight, $sideLeft);
+      $isCompatible = $this->compSides($thisSide, $otherSide);
     } elseif ($side=='bottom') {
       $sideBottom = $this->getBottom();
       $sideTop    = $OtherMapTile->getTop();

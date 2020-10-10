@@ -223,7 +223,10 @@ interface ConstantsInterface
   // Tags
   const TAG_A                  = 'a';
   const TAG_BUTTON             = 'button';
+  const TAG_DD                 = 'dd';
   const TAG_DIV                = 'div';
+  const TAG_DL                 = 'dl';
+  const TAG_DT                 = 'dt';
   const TAG_I                  = 'i';
   const TAG_IMG                = 'img';
   const TAG_LI                 = 'li';

@@ -307,6 +307,8 @@ class Mission extends WpPostRelais
     }
     return $this->Player;
   }
+  public function getImgUrl()
+  { return '/wp-content/plugins/hj-zombicide/web/rsc/img/missions/'.$this->getCode().'-Mission.png'; }
   public function getThumbUrl()
   { return '/wp-content/plugins/hj-zombicide/web/rsc/img/missions/'.$this->getCode().'-Thumb.png'; }
   /**

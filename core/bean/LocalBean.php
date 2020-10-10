@@ -64,4 +64,7 @@ class LocalBean extends UtilitiesBean implements ConstantsInterface
     }
     return $default;
   }
+
+  public function getPublicBalise($balise, $label='', $attributes=array())
+  { return $this->getBalise($balise, $label, $attributes); }
 }

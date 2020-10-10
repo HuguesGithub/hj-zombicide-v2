@@ -125,12 +125,16 @@ class AdminPageMissionsBean extends AdminPageBean
     // La liste des dalles utilisées - 10
     $this->Mission->getWpPost()->getPostMeta('tileIds'),
     // Url de l'image de la map - 11
-    $this->Mission->getThumbUrl(),
+    $this->Mission->getImgUrl(),
     // Largeur de la Map - 12
     $this->Mission->getWidth(),
     // Hauteur de la Map - 13
     $this->Mission->getHeight(),
-      '', '', '', '', '', '', '', '', '', '', '', '', '',
+    // Liste des Objectifs - 14
+    '',
+    // Liste des Règles Spéciales - 15
+    '',
+    '', '', '', '', '', '', '', '', '', '', '',
     );
     // Puis on le restitue.
     return $this->getRender($this->urlAdminEdit, $args);

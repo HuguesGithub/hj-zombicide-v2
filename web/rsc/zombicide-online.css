@@ -1,5 +1,250 @@
+* {
+  box-sizing: border-box;
+}
+#shell {
+  padding-bottom: 0;
+}
+#shell > footer,
+#shell > header {
+  display: none;
+}
+
+i {
+  cursor: pointer;
+}
+a i {
+  color: #000000;
+}
+a:hover i {
+  color: #000000;
+}
+
+#page-mission-online {
+  position: relative;
+  width: 100%;
+}
+  #page-mission-online-login {
+    background: #ffffff;
+    border: 5px solid #ff9307;
+    border-radius: 10px;
+    left: 350px;
+    padding: 10px;
+    position: absolute;
+    text-align: center;
+    top: 250px;
+    width: 350px;
+  }
+
+  #page-mission-online-content {
+    position: relative;
+  }
+    #page-mission-online-map,
+    #page-mission-online-zones,
+    #page-mission-online-tokens {
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    #page-mission-online-zombie-reserve,
+    #page-mission-online-survivor-reserve {
+      background: #ffffff;
+      border: 5px solid #ff9307;
+      border-radius: 10px;
+      padding: 10px;
+      position: absolute;
+      text-align: center;
+      top: -250px;
+      width: 250px;
+    }
+    #page-mission-online-survivor-reserve {
+      width: 400px;
+    }
+    #page-mission-online-zombie-reserve button,
+    #page-mission-online-survivor-reserve button {
+      position: absolute;
+      background: #000000;
+      width: 25px;
+      height: 25px;
+      right: -10px;
+      top: -10px;
+      border: 2px solid #ff9307;
+      border-radius: 20px;
+      opacity: 1;
+      padding: 0;
+    }
+    #page-mission-online-zombie-reserve button.close span,
+    #page-mission-online-survivor-reserve button.close span {
+      color: #fff;
+      text-shadow: none;
+      font-size: 20px;
+      padding-top: -5px;
+      top: -5px;
+      position: relative;
+    }
+    #page-mission-online-zombie-reserve .chip.zombie {
+      display: inline-block;
+      position: initial;
+      width: 50px;
+    }
+    #page-mission-online-survivor-reserve .chip.survivor {
+      display: inline-block;
+      position: initial;
+      width: 50px;
+    }
+    #page-mission-online-map {
+      opacity:0.25;
+    }
+    .chip {
+      background-size: cover !important;
+      position: absolute;
+    }
+    .chip.token[data-type="Door"],
+    .chip.token[data-type="Exit"],
+    .chip.token[data-type="Objective"],
+    .chip.token[data-type="Spawn"],
+    #page-mission-online-zombie-reserve .chip.zombie,
+    #page-mission-online-survivor-reserve .chip.survivor {
+      cursor: pointer;
+    }
+    .chip.survivor,
+    .chip.zombie {
+      cursor: grab;
+    }
+    .chip.zombie,
+    .chip.survivor {
+      border-radius: 35px;
+      max-width: 50px;
+    }
+    .chip.zombie div {
+      background-color: white;
+      bottom: 10px;
+      margin-left: 25%;
+      min-width: 50%;
+      position: relative;
+    }
+    .chip.zombie.Standard {
+      border: 3px solid #868e96;
+    }
+    .chip.survivor.Blue {
+      border: 3px solid #007bff;
+    }
+    .chip.zombie img,
+    .chip.survivor img {
+      border-radius: 35px;
+      width: 100%;
+    }
+    .chip.unactive {
+      filter: grayscale(50%);
+    }
+    .map2x3 .mapTile {
+      background-size: cover !important;
+      height: 50%;
+      position: absolute;
+      width: 33.33333%;
+    }
+    .map2x3 .mapTile:nth-child(n+4) {
+      top: 50%;
+    }
+    .map2x3 .mapTile:nth-child(3n+2) {
+      left: 33.33333%;
+    }
+    .map2x3 .mapTile:nth-child(3n+3) {
+      left: 66.66666%;
+    }
+    .mapTile.east,
+    .chip.east {
+      transform: rotate(90deg);
+    }
+    .mapTile.south,
+    .chip.south {
+      transform: rotate(180deg);
+    }
+    .mapTile.west,
+    .chip.west {
+      transform: rotate(-90deg);
+    }
+  #page-mission-online-sidebar {
+    border-left: 5px solid #ff9307;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 300px;
+  }
+  #page-mission-online-sidebar h1 {
+    background-color: #ff9307;
+    border-bottom: 2px solid #ff9307;
+    font-size: 16px;
+    margin-bottom: 0;
+    padding: 5px;
+  }
+  #dataToPaste {
+    background: transparent;
+    border: 0;
+    font-weight: bold;
+  }
+  #dataToPaste {
+    outline: none;
+  }
+  #page-mission-online-sidebar h1 .fa-files-o {
+    margin-right: 5px;
+  }
+  #page-mission-online-sidebar-survivors {
+    border-bottom: 2px solid #ff9307;
+  }
+  #page-mission-online-sidebar-survivors img {
+    cursor: pointer;
+    width: 30%;
+  }
+  #page-mission-online-help {
+    bottom: 0;
+    position:absolute;
+    width: 100%;
+  }
+  #page-mission-online-sidebar-survivors-detail dl {
+    position: absolute;
+    right: -350px;
+    width: 300px;
+  }
+  #page-mission-online-sidebar-survivors-detail dt,
+  #page-mission-online-help dt {
+    background-color: #ff9307;
+    border-top: 1px solid #303030;
+    padding: 5px;
+    cursor: pointer;
+  }
+  #page-mission-online-sidebar-survivors-detail dl,
+  #page-mission-online-sidebar-survivors-detail dd,
+  #page-mission-online-help dl,
+  #page-mission-online-help dd {
+    margin-bottom: 0;
+  }
+  #page-mission-online-sidebar-survivors-detail dd,
+  #page-mission-online-help dd {
+    display: none;
+  }
+  #page-mission-online-sidebar-survivors-detail dd,
+  #page-mission-online-help dd dd {
+    background-color: #f2c489;
+    padding: 5px;
+  }
+  #page-mission-online-sidebar-survivors-detail dd,
+  #page-mission-online-help > dl > dd {
+    max-height: 200px;
+    overflow: auto;
+  }
+  #page-mission-online-help > dl > dd > h5 {
+    display: none;
+  }
+
+
+
+
+
+
+/*
 img { max-width: 100%; }
-#shell > footer, #shell > header { display: none; }
 #page-online { margin: 0; }
   #online-btn-actions { background: rgba(68,66,69,0.97); border-bottom: 3px solid rgb(250, 168, 0); border-top: 1px solid rgb(250, 168, 0); min-height: 40px; padding: 2px; width: 100%; }
   #online-btn-actions .btn { background: rgb(0, 0, 0); border: 2px solid rgb(250, 168, 0); color: rgb(250, 168, 0); font-size: 24px; line-height: 28px; padding: 2px; width: 36px; }
@@ -19,5 +264,4 @@ img { max-width: 100%; }
     input#keyAccess { border: 0 none; height: 42px; }
     button#startGame { height: 42px; }
   #online-canvas.game { margin: 0 0 0 250px; }
-
-
+*/

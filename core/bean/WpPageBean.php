@@ -49,8 +49,8 @@ class WpPageBean extends MainPageBean
         $strReturned = $Bean->getContentPage();
       break;
       case 'page-travaux'    :
-        $Bean = new WpPageToolsBean($this->WpPage);
-        $strReturned = $Bean->getTravaux();
+        $Bean = new WpPageMissionOnlineBean($this->WpPage);
+        $strReturned = $Bean->getContentPage();
       break;
       case self::PAGE_GENERATION_MAP    :
         $Bean = new WpPageToolsBean($this->WpPage);
