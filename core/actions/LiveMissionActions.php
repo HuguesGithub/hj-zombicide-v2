@@ -106,12 +106,10 @@ class LiveMissionActions extends LocalActions
   {
     $cpt = 0;
     foreach ($this->objXmlDocument->map->survivors->survivor as $survivor) {
-      if ($survivor['id'][0]==$this->id) {
-        if (isset($this->post['top'])) {
-          // Là, on vient de juste déplacer le Survivant.
-          $survivor->attributes()['coordX'] = $this->post['left'];
-          $survivor->attributes()['coordY'] = $this->post['top'];
-        }
+      if ($survivor['id'][0]==$this->id && isset($this->post['top'])) {
+        // Là, on vient de juste déplacer le Survivant.
+        $survivor->attributes()['coordX'] = $this->post['left'];
+        $survivor->attributes()['coordY'] = $this->post['top'];
       }
       $cpt++;
     }
@@ -141,6 +139,7 @@ class LiveMissionActions extends LocalActions
   }
   private function dealWithUpdateChip()
   {
+    $returned = '';
     switch (substr($this->id, 0, 1)) {
       case 'c' :
         $cpt = 0;
@@ -154,16 +153,16 @@ class LiveMissionActions extends LocalActions
             // On vient de trouver la chip concernée.
             switch($chip['type'][0]) {
               case 'Door' :
-                return $this->updateDoor($chip);
+                $returned = $this->updateDoor($chip);
               break;
               case 'Exit' :
-                return $this->updateExit($chip);
+                $returned = $this->updateExit($chip);
               break;
               case 'Objective' :
-                return $this->updateObjective($chip);
+                $returned = $this->updateObjective($chip);
               break;
               case 'Spawn' :
-                return $this->updateSpawn($chip);
+                $returned = $this->updateSpawn($chip);
               break;
               default :
               break;
@@ -183,6 +182,7 @@ class LiveMissionActions extends LocalActions
       default :
       break;
     }
+    return $returned;
   }
   private function insertZombie($matches)
   {

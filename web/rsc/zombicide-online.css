@@ -109,11 +109,8 @@ a:hover i {
     }
     .chip.survivor,
     .chip.zombie {
-      cursor: grab;
-    }
-    .chip.zombie,
-    .chip.survivor {
       border-radius: 35px;
+      cursor: grab;
       max-width: 50px;
     }
     .chip.zombie div {
@@ -183,8 +180,6 @@ a:hover i {
     background: transparent;
     border: 0;
     font-weight: bold;
-  }
-  #dataToPaste {
     outline: none;
   }
   #page-mission-online-sidebar h1 .fa-files-o {

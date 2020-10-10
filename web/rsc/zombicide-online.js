@@ -436,7 +436,7 @@ function setSectionSizes() {
   $hj('#page-mission-online-map').height(mapHeight*lowestRatio);
   $hj('#page-mission-online-tokens').height(mapHeight*lowestRatio);
 
-  var sidebarWidth = Math.max(300, shellWidth - $hj('#page-mission-online-content').width());
+  sidebarWidth = Math.max(300, shellWidth - $hj('#page-mission-online-content').width());
   $hj('#page-mission-online-sidebar').width(sidebarWidth);
 }
 function setChipSizes(obj) {

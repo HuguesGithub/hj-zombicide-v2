@@ -13,7 +13,7 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <nav>
+      <nav aria-label="Zombies disponibles">
         <div class="chip zombie Standard" data-type="zWalkerStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zWalkerStandard.png" alt="Walker Standard"></div>
         <div class="chip zombie Standard" data-type="zRunnerStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zRunnerStandard.png" alt="Runner Standard"></div>
         <div class="chip zombie Standard" data-type="zFattyStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zFattyStandard.png" alt="Fatty Standard"></div>
@@ -58,7 +58,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
-    <nav>
+    <nav aria-label="Survivants disponibles">
       <div class="chip survivor" data-survivorid="s1" data-src="pamy"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pamy.jpg" alt="Amy"></div>
       <div class="chip survivor" data-survivorid="s2" data-src="pdoug"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pdoug.jpg" alt="Doug"></div>
       <div class="chip survivor" data-survivorid="s3" data-src="pjosh"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/pjosh.jpg" alt="Josh"></div>
