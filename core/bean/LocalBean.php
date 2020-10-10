@@ -11,9 +11,6 @@ if (!defined('ABSPATH')) {
 class LocalBean extends UtilitiesBean implements ConstantsInterface
 {
 
-  public function __construct()
-  {}
-
   /**
    * @param array $addArg
    * @param array $remArg

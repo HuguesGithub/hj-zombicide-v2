@@ -103,10 +103,6 @@ class WpPageToolsBean extends WpPageBean
     return $this->getRender($this->urlTemplatePriorityOrder, $args);
   }
 
-  public function getTravaux()
-  {
-  }
-
   public function getRandomMapV2()
   {
     /////////////////////////////////////////////////////////////////////////////

@@ -11,6 +11,8 @@ if (!defined('ABSPATH')) {
 class LiveMissionActions extends LocalActions
 {
   protected $urlDirLiveMissions = 'web/rsc/missions/live/';
+  protected $strTokenStyle      = 'background:url("/wp-content/plugins/hj-zombicide/web/rsc/img/tokens/%1$s.png");';
+  protected $chipToken          = 'chip token';
   /**
    * Constructeur
    */
@@ -42,7 +44,7 @@ class LiveMissionActions extends LocalActions
     $chip->attributes()['status'] = $this->status;
     $tokenName = 'door_'.strtolower($chip['color'][0]).'_'.strtolower($this->status);
     $args = array(
-      self::ATTR_CLASS  => 'chip token '.$chip['orientation'][0],
+      self::ATTR_CLASS  => $this->chipToken.' '.$chip['orientation'][0],
       self::ATTR_ID     => $this->id,
       'data-type'       => $chip['type'][0],
       'data-coordx'     => $chip['coordX'][0],
@@ -52,7 +54,7 @@ class LiveMissionActions extends LocalActions
       'data-status'     => $chip['status'][0],
       'data-width'      => 56,
       'data-height'     => 56,
-      'style'           => "background:url('/wp-content/plugins/hj-zombicide/web/rsc/img/tokens/".$tokenName.".png');",
+      'style'           => sprintf($this->strTokenStyle, $tokenName),
     );
     $Bean = new LocalBean();
     $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
@@ -63,7 +65,7 @@ class LiveMissionActions extends LocalActions
     $chip->attributes()['status'] = $this->status;
     $tokenName = 'exit';
     $args = array(
-      self::ATTR_CLASS  => 'chip token '.$chip['orientation'][0].' '.strtolower($this->status),
+      self::ATTR_CLASS  => $this->chipToken.' '.$chip['orientation'][0].' '.strtolower($this->status),
       self::ATTR_ID     => $this->id,
       'data-type'       => $chip['type'][0],
       'data-coordx'     => $chip['coordX'][0],
@@ -72,7 +74,7 @@ class LiveMissionActions extends LocalActions
       'data-status'     => $chip['status'][0],
       'data-width'      => 100,
       'data-height'     => 50,
-      'style'           => "background:url('/wp-content/plugins/hj-zombicide/web/rsc/img/tokens/".$tokenName.".png');",
+      'style'           => sprintf($this->strTokenStyle, $tokenName),
     );
     $Bean = new LocalBean();
     $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
@@ -83,7 +85,7 @@ class LiveMissionActions extends LocalActions
     $chip->attributes()['status'] = $this->status;
     $tokenName = 'objective_'.strtolower($chip['color'][0]);
     $args = array(
-      self::ATTR_CLASS  => 'chip token',
+      self::ATTR_CLASS  => $this->chipToken,
       self::ATTR_ID     => $this->id,
       'data-type'       => $chip['type'][0],
       'data-coordx'     => $chip['coordX'][0],
@@ -92,7 +94,7 @@ class LiveMissionActions extends LocalActions
       'data-status'     => $this->status,
       'data-width'      => 50,
       'data-height'     => 50,
-      'style'           => "background:url('/wp-content/plugins/hj-zombicide/web/rsc/img/tokens/".$tokenName.".png');",
+      'style'           => sprintf($this->strTokenStyle, $tokenName),
     );
     $Bean = new LocalBean();
     $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
@@ -103,7 +105,7 @@ class LiveMissionActions extends LocalActions
     $chip->attributes()['status'] = $this->status;
     $tokenName = 'spawn_'.strtolower($chip['color'][0]);
     $args = array(
-      self::ATTR_CLASS  => 'chip token '.$chip['orientation'][0].' '.strtolower($this->status),
+      self::ATTR_CLASS  => $this->chipToken.' '.$chip['orientation'][0].' '.strtolower($this->status),
       self::ATTR_ID     => $this->id,
       'data-type'       => $chip['type'][0],
       'data-coordx'     => $chip['coordX'][0],
@@ -113,7 +115,7 @@ class LiveMissionActions extends LocalActions
       'data-status'     => $this->status,
       'data-width'      => 100,
       'data-height'     => 50,
-      'style'           => "background:url('/wp-content/plugins/hj-zombicide/web/rsc/img/tokens/".$tokenName.".png');",
+      'style'           => sprintf($this->strTokenStyle, $tokenName),
     );
     $Bean = new LocalBean();
     $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
@@ -182,6 +184,8 @@ class LiveMissionActions extends LocalActions
               case 'Spawn' :
                 return $this->updateSpawn($chip);
               break;
+              default :
+              break;
             }
           }
           $cpt++;
@@ -194,6 +198,8 @@ class LiveMissionActions extends LocalActions
       case 'z' :
         // On est dans le cas d'un zombie
         $this->updateZombie();
+      break;
+      default :
       break;
     }
   }
@@ -282,6 +288,7 @@ class LiveMissionActions extends LocalActions
     $returned = array('z'.$maxId, $Bean->getPublicBalise(self::TAG_DIV, $content, $args));
     return $this->jsonString($returned, 'lstElements', true);
     */
+    return $this->jsonString('', 'lstElements', true);
   }
   private function dealWithInsertChip()
   {

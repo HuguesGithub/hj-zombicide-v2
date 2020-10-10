@@ -236,6 +236,10 @@ interface ConstantsInterface
   const TAG_UL                 = 'ul';
 
   /////////////////////////////////////////////////
+  // Constantes XML
+  const XML_ATTRIBUTES         = '@attributes';
+
+  /////////////////////////////////////////////////
   // Wordpress
   const WP_CAT                 = 'cat';
   /*

@@ -30,14 +30,17 @@ class WpPageMissionOnlineBean extends WpPageBean
   {
     $this->msgError = '';
     if ($_POST['radioChoice']=='new') {
-      if (is_file(PLUGIN_PATH.$this->urlDirMissions.$_POST['selectMission'].".mission.xml")) {
+      $Missions = $this->MissionServices->getMissionsWithFilters(array(self::FIELD_CODE=>$_POST['selectMission']));
+      if (empty($Missions)) {
+        $this->msgError = '<em>Attention</em>, le code sélectionné n\'existe pas.';
+      } elseif (is_file(PLUGIN_PATH.$this->urlDirMissions.$_POST['selectMission'].".mission.xml")) {
         // ON doit générer une clef qui va bien et la stocker dans zombieKey.
         // Puis on génère un fichier live à partir du fichier référence de la Mission.
         //AnJwMKqNkXba2suQ
         $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $strCode = substr(str_shuffle($str), 0, 16);
-        // TODO : Vérifier l'intégrité de $_POST['selectMission'].
-        copy(PLUGIN_PATH.$this->urlDirMissions.$_POST['selectMission'].".mission.xml", PLUGIN_PATH.$this->urlDirLiveMissions.$strCode.".mission.xml");
+        $Mission = array_shift($Missions);
+        copy(PLUGIN_PATH.$this->urlDirMissions.$Mission->getCode().".mission.xml", PLUGIN_PATH.$this->urlDirLiveMissions.$strCode.".mission.xml");
         $_SESSION['zombieKey'] = $strCode;
         $this->msgError = '<em>Attention</em>, la Mission sélectionnée existe.';
       } else {
@@ -147,7 +150,7 @@ class WpPageMissionOnlineBean extends WpPageBean
       self::ATTR_ID    => 'portrait-'.$rank,
       self::ATTR_CLASS => 'known',
       'data-rank'      => $rank,
-      self::ATTR_SRC   => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p'.$survivor['@attributes']['src'].'.jpg',
+      self::ATTR_SRC   => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p'.$survivor[self::XML_ATTRIBUTES]['src'].'.jpg',
       self::ATTR_TITLE => '',
     );
     $this->arrLstPortraits[] = $this->getBalise(self::TAG_IMG, '', $args);
@@ -156,10 +159,10 @@ class WpPageMissionOnlineBean extends WpPageBean
   {
     $rank = count($this->arrLstSurvivorDetail)+1;
     // Le Contenu du premier DT
-    $contentDT  = $survivor['@attributes']['src'].' - <span>';
-    $contentDT .= $survivor['@attributes']['experiencePoints'].' <em>XP</em> - ';
-    $contentDT .= $survivor['@attributes']['actionPoints'].' <em>PA</em> - ';
-    $contentDT .= $survivor['@attributes']['hitPoints'].' <em>PV</em>';
+    $contentDT  = $survivor[self::XML_ATTRIBUTES]['src'].' - <span>';
+    $contentDT .= $survivor[self::XML_ATTRIBUTES]['experiencePoints'].' <em>XP</em> - ';
+    $contentDT .= $survivor[self::XML_ATTRIBUTES]['actionPoints'].' <em>PA</em> - ';
+    $contentDT .= $survivor[self::XML_ATTRIBUTES]['hitPoints'].' <em>PV</em>';
     $contentDT .= '</span><i class="fa fa-times-circle float-right"></i>';
     $contentDL  = $this->getBalise(self::TAG_DT, $contentDT);
 
@@ -198,9 +201,9 @@ class WpPageMissionOnlineBean extends WpPageBean
 
   private function displayZombie($zombie)
   {
-    $id          = $zombie['@attributes']['id'];
-    $quantite    = $zombie['@attributes']['quantite'];
-    $tokenName   = $zombie['@attributes']['src'];
+    $id          = $zombie[self::XML_ATTRIBUTES]['id'];
+    $quantite    = $zombie[self::XML_ATTRIBUTES]['quantite'];
+    $tokenName   = $zombie[self::XML_ATTRIBUTES]['src'];
     if (preg_match($this->patternZombie, $tokenName, $matches)) {
       $strName   = $matches[1].' '.$matches[2];
     } else {
@@ -219,8 +222,8 @@ class WpPageMissionOnlineBean extends WpPageBean
       self::ATTR_CLASS   => 'chip'.$addClass,
       self::ATTR_ID      => $id,
       'data-type'        => 'Zombie',
-      'data-coordX'      => $zombie['@attributes']['coordX'],
-      'data-coordY'      => $zombie['@attributes']['coordY'],
+      'data-coordX'      => $zombie[self::XML_ATTRIBUTES]['coordX'],
+      'data-coordY'      => $zombie[self::XML_ATTRIBUTES]['coordY'],
       'data-width'       => 50,
       'data-height'      => 50,
       'data-quantity'    => $quantite,
@@ -246,9 +249,9 @@ class WpPageMissionOnlineBean extends WpPageBean
   }
   private function displaySurvivor($survivor)
   {
-    $id          = $survivor['@attributes']['id'];
-    $level       = $survivor['@attributes']['level'];
-    $tokenName   = $survivor['@attributes']['src'];
+    $id          = $survivor[self::XML_ATTRIBUTES]['id'];
+    $level       = $survivor[self::XML_ATTRIBUTES]['level'];
+    $tokenName   = $survivor[self::XML_ATTRIBUTES]['src'];
 
     $addClass    = ' survivor '.$level;
 
@@ -260,8 +263,8 @@ class WpPageMissionOnlineBean extends WpPageBean
       self::ATTR_CLASS   => 'chip'.$addClass,
       self::ATTR_ID      => $id,
       'data-type'        => 'Survivor',
-      'data-coordX'      => $survivor['@attributes']['coordX'],
-      'data-coordY'      => $survivor['@attributes']['coordY'],
+      'data-coordX'      => $survivor[self::XML_ATTRIBUTES]['coordX'],
+      'data-coordY'      => $survivor[self::XML_ATTRIBUTES]['coordY'],
       'data-width'       => 50,
       'data-height'      => 50,
     );
@@ -291,11 +294,11 @@ class WpPageMissionOnlineBean extends WpPageBean
     $chips = $this->map['chips']['chip'];
     $lstChips = '';
     foreach ($chips as $chip) {
-      $id          = $chip['@attributes']['id'];
-      $type        = $chip['@attributes']['type'];
-      $color       = $chip['@attributes']['color'];
-      $status      = $chip['@attributes']['status'];
-      $orientation = $chip['@attributes']['orientation'];
+      $id          = $chip[self::XML_ATTRIBUTES]['id'];
+      $type        = $chip[self::XML_ATTRIBUTES]['type'];
+      $color       = $chip[self::XML_ATTRIBUTES]['color'];
+      $status      = $chip[self::XML_ATTRIBUTES]['status'];
+      $orientation = $chip[self::XML_ATTRIBUTES]['orientation'];
       $addClass    = ' token';
       $display     = true;
 
@@ -336,8 +339,8 @@ class WpPageMissionOnlineBean extends WpPageBean
           self::ATTR_CLASS   => 'chip'.$addClass,
           self::ATTR_ID      => $id,
           'data-type'        => $type,
-          'data-coordX'      => $chip['@attributes']['coordX'],
-          'data-coordY'      => $chip['@attributes']['coordY'],
+          'data-coordX'      => $chip[self::XML_ATTRIBUTES]['coordX'],
+          'data-coordY'      => $chip[self::XML_ATTRIBUTES]['coordY'],
           'data-orientation' => $orientation,
           'data-color'       => $color,
           'data-status'      => $status,
@@ -356,8 +359,8 @@ class WpPageMissionOnlineBean extends WpPageBean
     $tiles = $this->map['tiles']['tile'];
     $lstTiles = '';
     foreach ($tiles as $tile) {
-      $code        = $tile['@attributes']['code'];
-      $orientation = $tile['@attributes']['orientation'];
+      $code        = $tile[self::XML_ATTRIBUTES]['code'];
+      $orientation = $tile[self::XML_ATTRIBUTES]['orientation'];
       $args = array(
         self::ATTR_CLASS => 'mapTile '.$orientation,
         'style'          => "background:url('/wp-content/plugins/hj-zombicide/web/rsc/img/tiles/".$code."-500px.png');",
@@ -369,8 +372,8 @@ class WpPageMissionOnlineBean extends WpPageBean
   private function setDimensions()
   {
     // On détermine les dimensions de la map pour pouvoir appliquer les styles css
-    $this->width  = $this->map['@attributes']['width'];
-    $this->height = $this->map['@attributes']['height'];
+    $this->width  = $this->map[self::XML_ATTRIBUTES]['width'];
+    $this->height = $this->map[self::XML_ATTRIBUTES]['height'];
     return 'map'.$this->height.'x'.$this->width;
   }
   private function openFile()

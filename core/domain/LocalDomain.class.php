@@ -44,11 +44,11 @@ class LocalDomain extends GlobalDomain implements ConstantsInterface
   {
     global $globalExpansions;
     if ($this->Expansion==null) {
-      if (isset($globalExpansion[$this->expansionId])) {
-        $this->Expansion = $globalExpansion[$this->expansionId];
+      if (isset($globalExpansions[$this->expansionId])) {
+        $this->Expansion = $globalExpansions[$this->expansionId];
       } else {
         $this->Expansion = $this->ExpansionServices->selectExpansion($this->expansionId);
-        $globalExpansion[$this->expansionId] = $this->Expansion;
+        $globalExpansions[$this->expansionId] = $this->Expansion;
       }
     }
     return $this->Expansion;
