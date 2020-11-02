@@ -10,6 +10,7 @@ $hj(document).ready(function(){
   });
 
   setChipsAction();
+  setChipMenuActions();
 
   ////////////////////////////////////////////////////////////
   // Action sur l'accordéon d'aide de la sidebar
@@ -50,6 +51,12 @@ $hj(document).ready(function(){
       $hj(this).next('input').trigger('click');
     });
   }
+
+  menu = $hj('.menu');
+
+  $hj('#page-mission-online').on('click', function(){
+    $hj('.show-menu').removeClass('show-menu');
+  });
 });
 
   $hj(window).resize(function(){
@@ -66,33 +73,23 @@ function updateLiveMissionXml(data) {
         var obj = JSON.parse(response);
         if (obj['lstElements'] != '' ) {
           lstElements = obj['lstElements'];
-          var id = lstElements[0];
-          var element = lstElements[1];
-          if ($hj('#'+id).length==0) {
-            // Ajoute Nouveau.
-            $hj('#page-mission-online-tokens').prepend(element);
-            setChipSizes($hj('#'+id));
-            setZombieChipActions($hj('#'+id));
-          } else {
-            // Replace existant
-            $hj('#'+id).replaceWith(element);
-            setChipSizes($hj('#'+id));
-            switch ($hj('#'+id).data('type')) {
-              case 'Door' :
-                setDoorChipActions($hj('#'+id));
-              break;
-              case 'Exit' :
-                setExitChipActions($hj('#'+id));
-              break;
-              case 'Objective' :
-                setObjectiveChipActions($hj('#'+id));
-              break;
-              case 'Spawn' :
-                setSpawnChipActions($hj('#'+id));
-              break;
-
+          var nbElements = lstElements.length;
+          for (i=0; i<nbElements; i++) {
+            var oneElement = lstElements[i];
+            var id = oneElement[0];
+            var element = oneElement[1];
+            if ($hj('#'+id).length==0) {
+              // Ajoute Nouveau.
+              $hj('#page-mission-online-tokens').append(element);
+              setChipSizes($hj('#'+id));
+            } else {
+              // Replace existant
+              $hj('#'+id).replaceWith(element);
+              setChipSizes($hj('#'+id));
             }
           }
+          setChipsAction();
+          setChipMenuActions();
         }
 
       } catch (e) {
@@ -110,169 +107,74 @@ function updateLiveMissionXml(data) {
 }
 
 
-//////////////////////////////////////////////////
-// Gestion des clicks sur un Objectif  ///////////
-//////////////////////////////////////////////////
-function setObjectiveChipActions(obj) {
-  obj.unbind().click(function(){
-    var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    var newStatus = (dataStatus=='Unveiled' ? 'Unactive' : 'Picked');
-    var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': newStatus};
-    updateLiveMissionXml(data);
-    if (newStatus=='Picked') {
-      $hj(this).remove();
-    }
-  });
+function hideMenus() {
+  $hj('.show-menu').removeClass('show-menu');
 }
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
-
-///////////////////////////////////////
-// Gestion des clicks sur la Zone de Sortie
-///////////////////////////////////////
-function setExitChipActions(obj) {
-  obj.unbind().click(function(){
-    var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': (dataStatus=='Unactive' ? 'Active' : 'Unactive')};
-    updateLiveMissionXml(data);
-  });
-}
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
-
-//////////////////////////////////////////////////
-// Gestion des clicks sur une Porte    ///////////
-//////////////////////////////////////////////////
-function setDoorChipActions(obj) {
-  obj.unbind().click(function(){
-    var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': (dataStatus=='Closed' ? 'Opened' : 'Closed')};
-    updateLiveMissionXml(data);
-  });
-}
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
-
-//////////////////////////////////////////////////
-// Gestion des clicks sur une Porte    ///////////
-//////////////////////////////////////////////////
-function setSpawnChipActions(obj) {
-  obj.unbind().on('contextmenu', function(event){
-    var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    var newStatus = (dataStatus=='Unactive' ? 'Picked' : 'Unactive');
-    var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': newStatus};
-    updateLiveMissionXml(data);
-    if (newStatus=='Picked') {
-      $hj(this).remove();
-    }
-    event.preventDefault();
-    return false;
-  }).click(function(event){
-    var dataStatus = $hj(this).prop('data-status') || $hj(this).data('status');
-    // Le Left Click sur un Spawn permet de le rendre actif s'il est inactif. Ou d'ajouter des Zombies s'il est actif.
-    if (dataStatus=='Unactive') {
-      var data = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': $hj('#page-mission-online').data('uniqid'), 'id': $hj(this).attr('id'), 'status': 'Active'};
+var posX = 0;
+var posY = 0;
+function setChipMenuActions() {
+  $hj('menu .menu-item').unbind().on('click', function(){
+    if (!$hj(this).hasClass('disabled')) {
+      var uniqid = $hj('#page-mission-online').data('uniqid');
+      var id     = $hj(this).attr('id');
+      var act    = $hj(this).data('menu-action');
+      if (act=='' || act==undefined) {
+        return false;
+      }
+      var data   = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': uniqid, 'id': id, 'act': act, 'coordx': posX, 'coordy': posY};
       updateLiveMissionXml(data);
-    } else {
-      var posX = event.clientX;
-      var posY = event.clientY;
-      $hj('#page-mission-online-zombie-reserve').css('left', posX-125).css('top', posY);
+
+      hideMenus();
+      if (act=='pick') {
+        $hj('#'+id).remove();
+      }
     }
-    return false;
   });
 }
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
 
-
-
-
-
-
-function setZombieChipActions(obj) {
-  obj.on('mousedown', function(){
-    $hj(this).css('cursor', 'grabbing');
-  }).draggable({
-    containment: "#page-mission-online-tokens",
-    scroll: false,
-    stop: function(){
-      $hj(this).css('cursor', 'grab');
-      var top = $hj(this).position().top / lowestRatio;
-      var left = $hj(this).position().left / lowestRatio;
-      var data = {
-        'action': 'dealWithAjax',
-        'ajaxAction': 'updateLiveMission',
-        'uniqid': $hj('#page-mission-online').data('uniqid'),
-        'id': $hj(this).attr('id'),
-        'top': top,
-        'left': left
-      };
-      updateLiveMissionXml(data);
-    }
-  }).on('contextmenu', function(event){
-    console.log('Zombie Clicked, Remove one');
-    event.preventDefault();
-    var dataQty = $hj(this).prop('data-quantity') || $hj(this).data('quantity');
-    dataQty = dataQty*1-1;
-    if (dataQty==0) {
-      $hj(this).remove();
-    } else {
-      $hj(this).prop('data-quantity', dataQty);
-      $hj(this).find('div').html(dataQty);
-    }
-    var data = {
-      'action': 'dealWithAjax',
-      'ajaxAction': 'updateLiveMission',
-      'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'id': $hj(this).attr('id'),
-      'quantity': dataQty
-    };
-    updateLiveMissionXml(data);
-    $hj(this).css('cursor', 'grab');
-    return false;
-  }).click(function(){
-    console.log('Zombie Clicked, Add one');
-    var dataQty = $hj(this).prop('data-quantity') || $hj(this).data('quantity');
-    dataQty = dataQty*1+1;
-    $hj(this).prop('data-quantity', dataQty);
-    $hj(this).find('div').html(dataQty);
-    var data = {
-      'action': 'dealWithAjax',
-      'ajaxAction': 'updateLiveMission',
-      'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'id': $hj(this).attr('id'),
-      'quantity': dataQty
-    };
-    updateLiveMissionXml(data);
-    $hj(this).css('cursor', 'grab');
-  });
-}
 function setChipsAction() {
   ///////////////////////////////////////
   // Gestion des clicks sur une Porte
-  ///////////////////////////////////////
-  $hj('div.chip.token[data-type="Door"]').each(function(){
-    setDoorChipActions($hj(this));
-  })
-  ///////////////////////////////////////
   // Gestion des clicks sur la Zone de Sortie
-  ///////////////////////////////////////
-  $hj('div.chip.token[data-type="Exit"]').unbind().click(function(){
-    setExitChipActions($hj(this));
-  });
-  ///////////////////////////////////////
   // Gestion des clicks sur un Objectif
-  ///////////////////////////////////////
-  $hj('div.chip.token[data-type="Objective"]').each(function(){
-    setObjectiveChipActions($hj(this));
-  })
-  ///////////////////////////////////////
   // Gestion des clicks sur un Spawn
   ///////////////////////////////////////
-  $hj('div.chip.token[data-type="Spawn"]').each(function(){
-    setSpawnChipActions($hj(this));
-  })
+  $hj('div.chip.token').each(function(){
+    $hj(this).unbind().on('contextmenu', function(event){
+      event.preventDefault();
+      hideMenus();
+      posX = event.clientX;
+      posY = event.clientY;
+      $hj(this).next().addClass('show-menu').css('left', posX).css('top', posY);
+      posX = event.clientX / lowestRatio;
+      posY = event.clientY / lowestRatio;
+      return false;
+    });
 
+    if ($hj(this).hasClass('zombie')) {
+      $hj(this).on('mousedown', function(){
+        $hj(this).css('cursor', 'grabbing');
+      }).draggable({
+        containment: "#page-mission-online-tokens",
+        scroll: false,
+        stop: function(){
+          $hj(this).css('cursor', 'grab');
+          var top = $hj(this).position().top / lowestRatio;
+          var left = $hj(this).position().left / lowestRatio;
+          var data = {
+            'action': 'dealWithAjax',
+            'ajaxAction': 'updateLiveMission',
+            'uniqid': $hj('#page-mission-online').data('uniqid'),
+            'id': $hj(this).attr('id'),
+            'act': 'move',
+            'top': top,
+            'left': left
+          };
+          updateLiveMissionXml(data);
+        }
+      });
+    }
+  })
 
 
 
@@ -312,43 +214,6 @@ function setChipsAction() {
   });
 
 
-
-  ///////////////////////////////////////
-  // Gestion des clicks sur les Zombies
-  ///////////////////////////////////////
-  $hj('#page-mission-online-tokens div.chip.zombie').each(function(){
-    setZombieChipActions($hj(this));
-  });
-
-
-
-  ///////////////////////////////////////
-  // Gestion des clicks sur la Réserve de Zombies
-  ///////////////////////////////////////
-  $hj('#page-mission-online-zombie-reserve div').click(function(event){
-    console.log('Add Zombie Clicked');
-    var dataType = $hj(this).data('type');
-    var posX = event.clientX / lowestRatio;
-    var posY = event.clientY / lowestRatio;
-    // Ajout dans le fichier
-    var data = {
-      'action': 'dealWithAjax',
-      'ajaxAction': 'updateLiveMission',
-      'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'type': dataType,
-      'coordx': posX,
-      'coordy': posY
-    };
-    $hj('#page-mission-online-zombie-reserve .close span').trigger('click');
-    updateLiveMissionXml(data);
-  });
-
-  ///////////////////////////////////////
-  // Fermeture de la Réserve de Zombies
-  ///////////////////////////////////////
-  $hj('#page-mission-online-zombie-reserve .close span').click(function(){
-    $hj('#page-mission-online-zombie-reserve').css('top', -2500);
-  });
 
   ///////////////////////////////////////
   ///////////////////////////////////////
@@ -661,3 +526,4 @@ function addChatMsgActions() {
 }
 
 */
+

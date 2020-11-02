@@ -9,17 +9,6 @@
     <section id="page-mission-online-tokens" class="%1$s">
       %4$s
     </section>
-    <section id="page-mission-online-zombie-reserve">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <nav aria-label="Zombies disponibles">
-        <div class="chip zombie Standard" data-type="zWalkerStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zWalkerStandard.png" alt="Walker Standard"></div>
-        <div class="chip zombie Standard" data-type="zRunnerStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zRunnerStandard.png" alt="Runner Standard"></div>
-        <div class="chip zombie Standard" data-type="zFattyStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zFattyStandard.png" alt="Fatty Standard"></div>
-        <div class="chip zombie Standard" data-type="zAbominationStandard"><img src="/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/zAbominationStandard.png" alt="Abomination Standard"></div>
-      </nav>
-    </section>
   </section>
   <section id="page-mission-online-sidebar">
     <h1><input id="dataToPaste" type="text" value="%5$s"/><a href="?logout"><i class="fa fa-sign-out float-right"></i></a><i class="fa fa-files-o float-right" data-paste="%5$s"></i></h1>

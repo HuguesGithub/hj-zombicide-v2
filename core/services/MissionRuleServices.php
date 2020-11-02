@@ -40,7 +40,7 @@ class MissionRuleServices extends LocalServices
    * @param string $order
    * @return array
    */
-  public function getMissionRulesWithFilters($file, $line, $arrFilters=array(), $orderby=self::FIELD_ID, $order=self::ORDER_ASC )
+  public function getMissionRulesWithFilters($arrFilters=array(), $orderby=self::FIELD_ID, $order=self::ORDER_ASC )
   {
     $this->arrParams = $this->buildOrderAndLimit($orderby, $order);
     $this->buildFilters($arrFilters);

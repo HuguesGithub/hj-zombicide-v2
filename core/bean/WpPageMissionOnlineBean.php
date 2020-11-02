@@ -43,6 +43,8 @@ class WpPageMissionOnlineBean extends WpPageBean
         $Mission = array_shift($Missions);
         copy(PLUGIN_PATH.$this->urlDirMissions.$Mission->getCode().$this->xmlSuffixe, PLUGIN_PATH.$this->urlDirLiveMissions.$strCode.$this->xmlSuffixe);
         $_SESSION['zombieKey'] = $strCode;
+        $MissionOnline = new MissionOnline($Mission);
+        $MissionOnline->setUp();
         $this->msgError = '<em>Attention</em>, la Mission sélectionnée existe.';
       } else {
         $this->msgError = '<em>Attention</em>, la Mission sélectionnée n\'existe pas.';
@@ -200,49 +202,21 @@ class WpPageMissionOnlineBean extends WpPageBean
     $this->arrLstSurvivorDetail[] = $this->getBalise(self::TAG_DL, $contentDL, $args);
   }
 
-  private function displayZombie($zombie)
-  {
-    $id          = $zombie[self::XML_ATTRIBUTES]['id'];
-    $quantite    = $zombie[self::XML_ATTRIBUTES]['quantite'];
-    $tokenName   = $zombie[self::XML_ATTRIBUTES]['src'];
-    if (preg_match($this->patternZombie, $tokenName, $matches)) {
-      $strName   = $matches[1].' '.$matches[2];
-    } else {
-      $strName   = 'Pattern foireux ('.$tokenName.')';
-    }
-
-    $addClass    = ' zombie '.$matches[2];
-
-    $args = array(
-      self::ATTR_SRC   => '/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/'.$tokenName.'.png',
-      self::ATTR_TITLE => $strName.' x'.$quantite,
-    );
-    $content  = $this->getBalise(self::TAG_IMG, '', $args);
-    $content .= $this->getBalise(self::TAG_DIV, $quantite, array(self::ATTR_CLASS=>'badge'));
-    $args = array(
-      self::ATTR_CLASS   => 'chip'.$addClass,
-      self::ATTR_ID      => $id,
-      'data-type'        => 'Zombie',
-      'data-coordX'      => $zombie[self::XML_ATTRIBUTES]['coordX'],
-      'data-coordY'      => $zombie[self::XML_ATTRIBUTES]['coordY'],
-      'data-width'       => 50,
-      'data-height'      => 50,
-      'data-quantity'    => $quantite,
-    );
-    return $this->getBalise(self::TAG_DIV, $content, $args);
-  }
   private function displayZombies()
   {
     // On récupère les Zombies pour les afficher
     $zombies = $this->map['zombies']['zombie'];
     $lstZombies = '';
-    $this->patternZombie = '/z(Walker|Runner|Fatty|Abomination)(Standard)/';
     if (!empty($zombies)) {
       if (count($zombies)==1) {
-        $lstZombies .= $this->displayZombie($zombies);
+        $TokenBean = new TokenBean($zombies);
+        $lstZombies .= $TokenBean->getTokenBalise();
+        $lstZombies .= $TokenBean->getTokenMenu();
       } else {
         foreach ($zombies as $zombie) {
-          $lstZombies .= $this->displayZombie($zombie);
+          $TokenBean = new TokenBean($zombie);
+          $lstZombies .= $TokenBean->getTokenBalise();
+          $lstZombies .= $TokenBean->getTokenMenu();
         }
       }
     }
@@ -295,57 +269,9 @@ class WpPageMissionOnlineBean extends WpPageBean
     $chips = $this->map['chips']['chip'];
     $lstChips = '';
     foreach ($chips as $chip) {
-      $id          = $chip[self::XML_ATTRIBUTES]['id'];
-      $type        = $chip[self::XML_ATTRIBUTES]['type'];
-      $color       = $chip[self::XML_ATTRIBUTES]['color'];
-      $status      = $chip[self::XML_ATTRIBUTES]['status'];
-      $orientation = $chip[self::XML_ATTRIBUTES]['orientation'];
-      $addClass    = ' token';
-
-      switch ($type) {
-        case 'Door' :
-          $width     = 56;
-          $height    = 56;
-          $tokenName = 'door_'.strtolower($color).'_'.strtolower($status);
-          $addClass .= ' '.$orientation;
-        break;
-        case 'Objective' :
-          $width     = 50;
-          $height    = 50;
-          $tokenName = 'objective_'.($status=='Unveiled' ? 'red' : strtolower($color));
-        break;
-        case 'Spawn' :
-          $width     = 100;
-          $height    = 50;
-          $tokenName = 'spawn_'.strtolower($color);
-          $addClass .= ' '.$orientation.' '.strtolower($status);
-        break;
-        case 'Exit' :
-          $width     = 100;
-          $height    = 50;
-          $tokenName = 'exit';
-          $addClass .= ' '.$orientation.($status=='Unactive' ? ' unactive' : '');
-        break;
-        default :
-          $tokenName = '';
-        break;
-      }
-      if ($status!='Picked') {
-        $args = array(
-          self::ATTR_CLASS   => 'chip'.$addClass,
-          self::ATTR_ID      => $id,
-          'data-type'        => $type,
-          'data-coordX'      => $chip[self::XML_ATTRIBUTES]['coordX'],
-          'data-coordY'      => $chip[self::XML_ATTRIBUTES]['coordY'],
-          'data-orientation' => $orientation,
-          'data-color'       => $color,
-          'data-status'      => $status,
-          'data-width'       => $width,
-          'data-height'      => $height,
-          'style'            => "background:url('/wp-content/plugins/hj-zombicide/web/rsc/img/tokens/".$tokenName.".png');",
-        );
-        $lstChips .= $this->getBalise(self::TAG_DIV, '', $args);
-      }
+      $TokenBean = new TokenBean($chip);
+      $lstChips .= $TokenBean->getTokenBalise();
+      $lstChips .= $TokenBean->getTokenMenu();
     }
     return $lstChips;
   }

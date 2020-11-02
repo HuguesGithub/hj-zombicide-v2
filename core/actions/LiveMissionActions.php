@@ -39,6 +39,110 @@ class LiveMissionActions extends LocalActions
     return $returned;
   }
 
+  /**
+   * @return string
+   */
+  public function dealWithUpdateLiveMission()
+  {
+    $returned = '';
+    ////////////////////////////////////////////////////////////////////////
+    // On récupère et vérifie les données
+    if (!isset($this->post['uniqid'])) {
+      return $this->formatErrorMessage('Identifiant fichier non défini.');
+    }
+    $this->fileId = $this->post['uniqid'];
+    $fileName = PLUGIN_PATH.$this->urlDirLiveMissions.$this->fileId.".mission.xml";
+    if (!is_file($fileName)) {
+      return $this->formatErrorMessage('Le fichier de sauvegarde n\'existe pas.');
+    }
+    $this->objXmlDocument = simplexml_load_file($fileName);
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+    // On traite ensuite soit d'une insertion, soit d'une édition
+    if (!isset($this->post['id'])) {
+      // Ici, on gère un ajout
+      $returned = $this->dealWithInsertChip();
+    } elseif (!empty($this->post['id'])) {
+      // Ici, on gère un update
+      $this->id = $this->post['id'];
+      $returned = $this->dealWithUpdateChip();
+    }
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+    // On sauvegarde les modifications du fichier.
+    $this->objXmlDocument->asXML($fileName);
+    if (!empty($returned)) {
+      return $returned;
+    }
+  }
+
+  private function formatErrorMessage($msgError)
+  {
+    // TODO
+    return "[[$msgError]]";
+
+  }
+
+  private function dealWithInsertChip()
+  {
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+    $this->patternZombie = '/z(Walker|Runner|Fatty|Abomination)(Standard)/';
+    if (isset($this->post['act'])) {
+      if (preg_match($this->patternZombie, $this->post['act'], $matches)) {
+        // On va insérer un Zombie.
+        return $this->insertZombie($matches);
+      } elseif ($this->post['act']=='survivor') {
+        // On va insérer un Survivant.
+        return $this->insertSurvivor();
+      }
+    }
+  }
+
+  private function insertZombie($matches)
+  {
+    /////////////////////////////////////////////////////////
+    // On récupère l'id du prochain Zombie à insérer.
+    $zombies = $this->objXmlDocument->map->zombies->attributes()['maxid'];
+    $maxId = $zombies[0]+1;
+    // On met à jour l'id pour la prochaine insertion.
+    $this->objXmlDocument->map->zombies->attributes()['maxid'] = $maxId;
+    /////////////////////////////////////////////////////////
+    // On ajoute un nouveau Zombie au fichier XML
+    $zombie = $this->objXmlDocument->map->zombies->addChild('zombie');
+    $zombie->addAttribute('id', 'z'.$maxId);
+    $zombie->addAttribute('src', $this->post['act']);
+    $zombie->addAttribute('coordX', $this->post['coordx']);
+    $zombie->addAttribute('coordY', $this->post['coordy']);
+    $zombie->addAttribute('quantite', 1);
+    /////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////
+    // On restitue le visuel
+    $TokenBean = new TokenBean($zombie);
+    $returned = array(
+      array('z'.$maxId, $TokenBean->getTokenBalise()),
+      array('m'.'z'.$maxId, $TokenBean->getTokenMenu()),
+    );
+    return $this->jsonString($returned, 'lstElements', true);
+  }
+
+
+
+
+
+
+
+
+
+
+
   private function buildChipToken($classe, $chip, $width, $height, $style)
   {
     $args = array(
@@ -60,35 +164,39 @@ class LiveMissionActions extends LocalActions
   }
   private function updateDoor($chip)
   {
-    $chip->attributes()['status'] = $this->status;
-    $tokenName = 'door_'.strtolower($chip['color'][0]).'_'.strtolower($this->status);
-    $classe = $this->chipToken.' '.$chip['orientation'][0];
-    $style = sprintf($this->strTokenStyle, $tokenName);
-    return $this->buildChipToken($classe, $chip, 56, 56, $style);
+    $TokenBean = new TokenBean($chip);
+    $returned = array(
+      array($this->id, $TokenBean->getTokenBalise()),
+      array('m'.$this->id, $TokenBean->getTokenMenu())
+    );
+    return $this->jsonString($returned, 'lstElements', true);
   }
   private function updateExit($chip)
   {
-    $chip->attributes()['status'] = $this->status;
-    $tokenName = 'exit';
-    $classe = $this->chipToken.' '.$chip['orientation'][0].' '.strtolower($this->status);
-    $style = sprintf($this->strTokenStyle, $tokenName);
-    return $this->buildChipToken($classe, $chip, 100, 50, $style);
+    $TokenBean = new TokenBean($chip);
+    $returned = array(
+      array($this->id, $TokenBean->getTokenBalise()),
+      array('m'.$this->id, $TokenBean->getTokenMenu())
+    );
+    return $this->jsonString($returned, 'lstElements', true);
   }
   private function updateObjective($chip)
   {
-    $chip->attributes()['status'] = $this->status;
-    $tokenName = 'objective_'.strtolower($chip['color'][0]);
-    $classe = $this->chipToken;
-    $style = sprintf($this->strTokenStyle, $tokenName);
-    return $this->buildChipToken($classe, $chip, 50, 50, $style);
+    $TokenBean = new TokenBean($chip);
+    $returned = array(
+      array($this->id, $TokenBean->getTokenBalise()),
+      array('m'.$this->id, $TokenBean->getTokenMenu())
+    );
+    return $this->jsonString($returned, 'lstElements', true);
   }
   private function updateSpawn($chip)
   {
-    $chip->attributes()['status'] = $this->status;
-    $tokenName = 'spawn_'.strtolower($chip['color'][0]);
-    $classe = $this->chipToken.' '.$chip['orientation'][0].' '.strtolower($this->status);
-    $style = sprintf($this->strTokenStyle, $tokenName);
-    return $this->buildChipToken($classe, $chip, 100, 50, $style);
+    $TokenBean = new TokenBean($chip);
+    $returned = array(
+      array($this->id, $TokenBean->getTokenBalise()),
+      array('m'.$this->id, $TokenBean->getTokenMenu())
+    );
+    return $this->jsonString($returned, 'lstElements', true);
   }
   private function updateSurvivor()
   {
@@ -102,28 +210,14 @@ class LiveMissionActions extends LocalActions
       $cpt++;
     }
   }
-  private function updateZombie()
+  private function updateZombie($zombie)
   {
-    $cpt = 0;
-    foreach ($this->objXmlDocument->map->zombies->zombie as $zombie) {
-      if ($zombie['id'][0]==$this->id) {
-        if (isset($this->post['top'])) {
-          // Là, on vient de juste déplacer le Zombie.
-          $zombie->attributes()['coordX'] = $this->post['left'];
-          $zombie->attributes()['coordY'] = $this->post['top'];
-        } elseif (isset($this->post['quantity'])) {
-          $qty = $this->post['quantity'];
-          // Là, on vient de modifier le nombre de Zombies
-          if ($qty==0) {
-            // La pile est vide, on la supprime du fichier XML
-            unset($this->objXmlDocument->map->zombies->zombie[$cpt]);
-          } else {
-            $zombie->attributes()['quantite'] = $qty;
-          }
-        }
-      }
-      $cpt++;
-    }
+    $TokenBean = new TokenBean($zombie);
+    $returned = array(
+      array($this->id, $TokenBean->getTokenBalise()),
+      array('m'.$this->id, $TokenBean->getTokenMenu())
+    );
+    return $this->jsonString($returned, 'lstElements', true);
   }
   private function dealWithUpdateChip()
   {
@@ -133,23 +227,41 @@ class LiveMissionActions extends LocalActions
         $cpt = 0;
         foreach ($this->objXmlDocument->map->chips->chip as $chip) {
           if ($chip['id'][0]==$this->id) {
-            $this->status = $this->post['status'];
-            if ($this->status=='Picked') {
+            $this->act = $this->post['act'];
+            if ($this->act=='pick') {
               unset($this->objXmlDocument->map->chips->chip[$cpt]);
               continue;
             }
             // On vient de trouver la chip concernée.
             switch($chip['type'][0]) {
               case 'Door' :
+                if ($this->act=='open') {
+                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Opened';
+                } elseif ($this->act=='close') {
+                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Closed';
+                }
                 $returned = $this->updateDoor($chip);
               break;
               case 'Exit' :
+                if ($this->act=='activate') {
+                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Active';
+                } elseif ($this->act=='unactivate') {
+                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
+                }
                 $returned = $this->updateExit($chip);
               break;
               case 'Objective' :
+                if ($this->act=='reveal') {
+                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
+                }
                 $returned = $this->updateObjective($chip);
               break;
               case 'Spawn' :
+                if ($this->act=='activate') {
+                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Active';
+                } elseif ($this->act=='unactivate') {
+                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
+                }
                 $returned = $this->updateSpawn($chip);
               break;
               default :
@@ -165,54 +277,40 @@ class LiveMissionActions extends LocalActions
       break;
       case 'z' :
         // On est dans le cas d'un zombie
-        $this->updateZombie();
+        $cpt = 0;
+        foreach ($this->objXmlDocument->map->zombies->zombie as $zombie) {
+          if ($zombie['id'][0]==$this->id) {
+            $this->act = $this->post['act'];
+            list($act, $qte) = explode('-', $this->act);
+            if ($act=='pick') {
+              unset($this->objXmlDocument->map->zombies->zombie[$cpt]);
+              continue;
+            }
+            switch ($act) {
+              case 'add' :
+                $qte = $zombie->attributes()['quantite'] + $qte;
+                $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
+              break;
+              case 'del' :
+                $qte = $zombie->attributes()['quantite'] - $qte;
+                $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
+              break;
+              case 'move' :
+                $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['coordX'] = $this->post['left'];
+                $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['coordY'] = $this->post['top'];
+              break;
+              default :
+              break;
+            }
+            $returned = $this->updateZombie($zombie);
+          }
+          $cpt++;
+        }
       break;
       default :
       break;
     }
     return $returned;
-  }
-  private function insertZombie($matches)
-  {
-    /////////////////////////////////////////////////////////
-    // On récupère l'id du prochain Zombie à insérer.
-    $zombies = $this->objXmlDocument->map->zombies->attributes()['maxid'];
-    $maxId = $zombies[0]+1;
-    // On met à jour l'id pour la prochaine insertion.
-    $this->objXmlDocument->map->zombies->attributes()['maxid'] = $maxId;
-    // On ajoute un nouveau Zombie au fichier XML
-    $zombie = $this->objXmlDocument->map->zombies->addChild('zombie');
-    $zombie->addAttribute('id', 'z'.$maxId);
-    $zombie->addAttribute('src', $this->post['type']);
-    $zombie->addAttribute('coordX', $this->post['coordx']);
-    $zombie->addAttribute('coordY', $this->post['coordy']);
-    $zombie->addAttribute('quantite', 1);
-    /////////////////////////////////////////////////////////
-
-    $Bean = new LocalBean();
-    /////////////////////////////////////////////////////////
-    // On prépare le Template pour retourner le visuel à afficher.
-    $args = array(
-      self::ATTR_SRC    => '/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/'.$this->post['type'].'.png',
-      // TODO : Construction du Title à améliorer plus tard quand on aura des trucs un peu plus spécifique.
-      // Notamment pour les Crawlers, Skinners... Dont les noms ne sont pas composés.
-      // Faudra aussi reprendre le pattern.
-      self::ATTR_TITLE  => $matches[1].' '.$matches[2].' x1',
-    );
-    $content  = $Bean->getPublicBalise(self::TAG_IMG, '', $args);
-    $content .= $Bean->getPublicBalise(self::TAG_DIV, 1, array(self::ATTR_CLASS=>'badge'));
-    $args = array(
-      self::ATTR_CLASS  => 'chip zombie '.$matches[2],
-      self::ATTR_ID     => 'z'.$maxId,
-      'data-type'       => 'Zombie',
-      'data-coordx'     => $this->post['coordx'],
-      'data-coordy'     => $this->post['coordy'],
-      'data-width'      => 50,
-      'data-height'     => 50,
-      'data-quantity'   => 1,
-    );
-    $returned = array('z'.$maxId, $Bean->getPublicBalise(self::TAG_DIV, $content, $args));
-    return $this->jsonString($returned, 'lstElements', true);
   }
   private function insertSurvivor()
   {
@@ -252,58 +350,6 @@ class LiveMissionActions extends LocalActions
     );
     $returned = array($this->post['survivorId'], $Bean->getPublicBalise(self::TAG_DIV, $content, $args));
     return $this->jsonString($returned, 'lstElements', true);
-  }
-  private function dealWithInsertChip()
-  {
-    $this->patternZombie = '/z(Walker|Runner|Fatty|Abomination)(Standard)/';
-    if (isset($this->post['type'])) {
-      if (preg_match($this->patternZombie, $this->post['type'], $matches)) {
-        // On va insérer un Zombie.
-        return $this->insertZombie($matches);
-      } elseif ($this->post['type']=='survivor') {
-        // On va insérer un Survivant.
-        return $this->insertSurvivor();
-      }
-    }
-  }
-  private function formatErrorMessage($msgError)
-  {
-    // TODO
-    return "[[$msgError]]";
-
-  }
-  /**
-   * @return string
-   */
-  public function dealWithUpdateLiveMission()
-  {
-    $returned = '';
-    ////////////////////////////////////////////////////////////////////////
-    // On récupère et vérifie les données
-    if (!isset($this->post['uniqid'])) {
-      return $this->formatErrorMessage('Identifiant fichier non défini.');
-    }
-    $this->fileId = $this->post['uniqid'];
-    $fileName = PLUGIN_PATH.$this->urlDirLiveMissions.$this->fileId.".mission.xml";
-    if (!is_file($fileName)) {
-      return $this->formatErrorMessage('Le fichier de sauvegarde n\'existe pas.');
-    }
-    $this->objXmlDocument = simplexml_load_file($fileName);
-    if (!isset($this->post['id'])) {
-      // Ici, on gère un ajout
-      $returned = $this->dealWithInsertChip();
-    } elseif (!empty($this->post['id'])) {
-      // Ici, on gère un update
-      $this->id = $this->post['id'];
-      $returned = $this->dealWithUpdateChip();
-    }
-    ////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////
-
-    $this->objXmlDocument->asXML($fileName);
-    if (!empty($returned)) {
-      return $returned;
-    }
   }
 
 }
