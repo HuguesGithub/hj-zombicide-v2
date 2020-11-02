@@ -179,18 +179,26 @@ class TokenBean extends LocalBean
   }
   private function getZombieMenu()
   {
+    $strButton = '<button type="button" class="menu-btn"> <span class="menu-text">%1$s</span> </button>';
+    $argsLi = array(
+      self::ATTR_CLASS   => 'menu-item',
+      self::ATTR_ID      => $this-id,
+    );
     // On peut ajouter des Zombies
     $subMenu  = '';
     for ($i=1; $i<=5; $i++) {
-      $subMenu .= '<li class="menu-item" id="'.$this->id.'" data-menu-action="add-'.$i.'"><button type="button" class="menu-btn"> <span class="menu-text">'.$i.'</span> </button></li>';
+      $argsLi['data-menu-action'] = 'add-'.$i;
+      $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
     }
     $strMenu  ='<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-plus-circle"></i> <span class="menu-text">Ajouter</span> </button><menu class="menu">'.$subMenu.'</menu></li>';
     // On peut enlever des Zombies
-    $subMenu  = '<li class="menu-item" id="'.$this->id.'" data-menu-action="pick"><button type="button" class="menu-btn"> <span class="menu-text">Tous</span> </button></li>';
+    $argsLi['data-menu-action'] = 'pick';
+    $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
     if ($this->quantite>1) {
       $subMenu .= $this->getLiMenuSeparator();
       for ($i=1; $i<min(6, $this->quantite); $i++) {
-        $subMenu .= '<li class="menu-item" id="'.$this->id.'" data-menu-action="del-'.$i.'"><button type="button" class="menu-btn"> <span class="menu-text">'.$i.'</span> </button></li>';
+        $argsLi['data-menu-action'] = 'del-'.$i;
+        $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
       }
     }
     $strMenu .='<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-minus-circle"></i> <span class="menu-text">Retirer</span> </button><menu class="menu">'.$subMenu.'</menu></li>';

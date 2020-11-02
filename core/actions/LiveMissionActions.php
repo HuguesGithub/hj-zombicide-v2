@@ -97,7 +97,7 @@ class LiveMissionActions extends LocalActions
     if (isset($this->post['act'])) {
       if (preg_match($this->patternZombie, $this->post['act'], $matches)) {
         // On va insérer un Zombie.
-        return $this->insertZombie($matches);
+        return $this->insertZombie();
       } elseif ($this->post['act']=='survivor') {
         // On va insérer un Survivant.
         return $this->insertSurvivor();
@@ -105,7 +105,7 @@ class LiveMissionActions extends LocalActions
     }
   }
 
-  private function insertZombie($matches)
+  private function insertZombie()
   {
     /////////////////////////////////////////////////////////
     // On récupère l'id du prochain Zombie à insérer.
@@ -143,61 +143,6 @@ class LiveMissionActions extends LocalActions
 
 
 
-  private function buildChipToken($classe, $chip, $width, $height, $style)
-  {
-    $args = array(
-      self::ATTR_CLASS  => $classe,
-      self::ATTR_ID     => $this->id,
-      'data-width'      => $width,
-      'data-height'     => $height,
-      'style'           => $style,
-    );
-    $arrAttributes = array('type', 'coordX', 'coordY', 'orientation', 'color', 'status');
-    foreach ($arrAttributes as $attribute) {
-      if (isset($chip[$attribute][0])) {
-        $args['data-'.strtolower($attribute)] = $chip[$attribute][0];
-      }
-    }
-    $Bean = new LocalBean();
-    $returned = array($this->id, $Bean->getPublicBalise(self::TAG_DIV, '', $args));
-    return $this->jsonString($returned, 'lstElements', true);
-  }
-  private function updateDoor($chip)
-  {
-    $TokenBean = new TokenBean($chip);
-    $returned = array(
-      array($this->id, $TokenBean->getTokenBalise()),
-      array('m'.$this->id, $TokenBean->getTokenMenu())
-    );
-    return $this->jsonString($returned, 'lstElements', true);
-  }
-  private function updateExit($chip)
-  {
-    $TokenBean = new TokenBean($chip);
-    $returned = array(
-      array($this->id, $TokenBean->getTokenBalise()),
-      array('m'.$this->id, $TokenBean->getTokenMenu())
-    );
-    return $this->jsonString($returned, 'lstElements', true);
-  }
-  private function updateObjective($chip)
-  {
-    $TokenBean = new TokenBean($chip);
-    $returned = array(
-      array($this->id, $TokenBean->getTokenBalise()),
-      array('m'.$this->id, $TokenBean->getTokenMenu())
-    );
-    return $this->jsonString($returned, 'lstElements', true);
-  }
-  private function updateSpawn($chip)
-  {
-    $TokenBean = new TokenBean($chip);
-    $returned = array(
-      array($this->id, $TokenBean->getTokenBalise()),
-      array('m'.$this->id, $TokenBean->getTokenMenu())
-    );
-    return $this->jsonString($returned, 'lstElements', true);
-  }
   private function updateSurvivor()
   {
     $cpt = 0;
@@ -210,9 +155,9 @@ class LiveMissionActions extends LocalActions
       $cpt++;
     }
   }
-  private function updateZombie($zombie)
+  private function getChipReturnedJSon($chip)
   {
-    $TokenBean = new TokenBean($zombie);
+    $TokenBean = new TokenBean($chip);
     $returned = array(
       array($this->id, $TokenBean->getTokenBalise()),
       array('m'.$this->id, $TokenBean->getTokenMenu())
@@ -240,7 +185,7 @@ class LiveMissionActions extends LocalActions
                 } elseif ($this->act=='close') {
                   $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Closed';
                 }
-                $returned = $this->updateDoor($chip);
+                $returned = $this->getChipReturnedJSon($chip);
               break;
               case 'Exit' :
                 if ($this->act=='activate') {
@@ -248,13 +193,13 @@ class LiveMissionActions extends LocalActions
                 } elseif ($this->act=='unactivate') {
                   $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
                 }
-                $returned = $this->updateExit($chip);
+                $returned = $this->getChipReturnedJSon($chip);
               break;
               case 'Objective' :
                 if ($this->act=='reveal') {
                   $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
                 }
-                $returned = $this->updateObjective($chip);
+                $returned = $this->getChipReturnedJSon($chip);
               break;
               case 'Spawn' :
                 if ($this->act=='activate') {
@@ -262,7 +207,7 @@ class LiveMissionActions extends LocalActions
                 } elseif ($this->act=='unactivate') {
                   $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
                 }
-                $returned = $this->updateSpawn($chip);
+                $returned = $this->getChipReturnedJSon($chip);
               break;
               default :
               break;
@@ -302,7 +247,7 @@ class LiveMissionActions extends LocalActions
               default :
               break;
             }
-            $returned = $this->updateZombie($zombie);
+            $returned = $this->getChipReturnedJSon($zombie);
           }
           $cpt++;
         }

@@ -269,8 +269,8 @@ function addSidebarSurvivorKnownActions() {
 }
 function addSidebarSurvivorUnknownActions() {
   $hj('#page-mission-online-sidebar-survivors img.unknown').click(function(event){
-    var posX = event.clientX;
-    var posY = event.clientY;
+    posX = event.clientX;
+    posY = event.clientY;
     $hj('#page-mission-online-survivor-reserve').css('left', posX-400).css('top', posY);
     survivorRankClicked = $hj(this).data('rank');
     console.log(survivorRankClicked);
@@ -305,8 +305,8 @@ function setSectionSizes() {
 function setChipSizes(obj) {
   var type = obj.data('type');
   if (type=='Objective' || type=='Spawn' || type=='Exit' || type=='Door' || type=='Survivor' || type=='Zombie') {
-    var posX   = lowestRatio * obj.data('coordx');
-    var posY   = lowestRatio * obj.data('coordy');
+    posX   = lowestRatio * obj.data('coordx');
+    posY   = lowestRatio * obj.data('coordy');
     var width  = lowestRatio * obj.data('width');
     var height = lowestRatio * obj.data('height');
   }

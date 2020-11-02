@@ -302,7 +302,7 @@ img { max-width: 100%; }
   padding: 6px 8px;
   border-radius: 3px;
 }
- .menu-btn::-moz-focus-inner, .menu-btn::-moz-focus-inner {
+ .menu-btn::-moz-focus-inner {
  border: 0;
  padding: 0;
 }
@@ -320,8 +320,8 @@ img { max-width: 100%; }
 .menu-item:hover > .menu-btn {
   color: #fff;
   outline: none;
-  background: -webkit-linear-gradient(to top, #2E3940, #5D6D79);
-  background: linear-gradient(to top, #2E3940, #5D6D79);
+  background: -webkit-linear-gradient(top, #2E3940, #5D6D79);
+  background: linear-gradient(top, #2E3940, #5D6D79);
   background-color: #2E3940;
   border: 1px solid #2E3940;
 }
