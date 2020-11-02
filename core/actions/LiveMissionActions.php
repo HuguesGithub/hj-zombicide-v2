@@ -117,6 +117,7 @@ class LiveMissionActions extends LocalActions
     // On ajoute un nouveau Zombie au fichier XML
     $zombie = $this->objXmlDocument->map->zombies->addChild('zombie');
     $zombie->addAttribute('id', 'z'.$maxId);
+    $zombie->addAttribute('type', 'Zombie');
     $zombie->addAttribute('src', $this->post['act']);
     $zombie->addAttribute('coordX', $this->post['coordx']);
     $zombie->addAttribute('coordY', $this->post['coordy']);
@@ -143,16 +144,46 @@ class LiveMissionActions extends LocalActions
 
 
 
-  private function updateSurvivor()
+  private function updateSurvivor($cpt)
   {
-    $cpt = 0;
-    foreach ($this->objXmlDocument->map->survivors->survivor as $survivor) {
-      if ($survivor['id'][0]==$this->id && isset($this->post['top'])) {
-        // Là, on vient de juste déplacer le Survivant.
-        $survivor->attributes()['coordX'] = $this->post['left'];
-        $survivor->attributes()['coordY'] = $this->post['top'];
-      }
-      $cpt++;
+    list($act, $type, $qte) = explode('-', $this->act);
+    switch ($act) {
+      case 'add' :
+        if ($type=='xp') {
+          $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] + $qte;
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
+        } elseif ($type=='pv') {
+          /*
+          $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] + 1;
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] = $qte;
+          */
+        }
+      break;
+      /*
+      case 'del' :
+        if ($type=='xp') {
+          $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] - 1;
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
+        } elseif ($type=='pa') {
+          $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] - 1;
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] = $qte;
+        } elseif ($type=='pv') {
+          $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] - 1;
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] = $qte;
+        }
+      break;
+      case 'init' :
+        if ($type=='pa') {
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] = 3;
+        }
+      break;
+      case 'move' :
+        $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['coordX'] = $this->post['left'];
+        $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['coordY'] = $this->post['top'];
+      break;
+      default :
+      break;
+      */
     }
   }
   private function getChipReturnedJSon($chip)
@@ -194,14 +225,15 @@ class LiveMissionActions extends LocalActions
     }
     return $newStatus;
   }
-  private function updateZombie($cpt, $act, $qte) {
+  private function updateZombie($cpt) {
+    list($act, $qte) = explode('-', $this->act);
     switch ($act) {
       case 'add' :
-        $qte = $zombie->attributes()['quantite'] + $qte;
+        $qte = $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] + $qte;
         $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
       break;
       case 'del' :
-        $qte = $zombie->attributes()['quantite'] - $qte;
+        $qte = $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] - $qte;
         $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
       break;
       case 'move' :
@@ -224,18 +256,28 @@ class LiveMissionActions extends LocalActions
             $this->act = $this->post['act'];
             if ($this->act=='pick') {
               unset($this->objXmlDocument->map->chips->chip[$cpt]);
-            } else {
-              $newStatus = $this->getNewStatus($cpt);
-              $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = $newStatus;
-              $returned = $this->getChipReturnedJSon($chip);
+              continue;
             }
+            $newStatus = $this->getNewStatus($cpt);
+            $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = $newStatus;
+            $returned = $this->getChipReturnedJSon($chip);
           }
           $cpt++;
         }
       break;
       case 's' :
-        // On est dans le cas d'un Survivant
-        $this->updateSurvivor();
+        $cpt = 0;
+        foreach ($this->objXmlDocument->map->survivors->survivor as $survivor) {
+          if ($survivor['id'][0]==$this->id) {
+            $this->act = $this->post['act'];
+            if ($this->act=='pick') {
+              unset($this->objXmlDocument->map->survivors->survivor[$cpt]);
+              continue;
+            }
+            $this->updateSurvivor($cpt);
+          }
+          $cpt++;
+        }
       break;
       case 'z' :
         // On est dans le cas d'un zombie
@@ -243,13 +285,12 @@ class LiveMissionActions extends LocalActions
         foreach ($this->objXmlDocument->map->zombies->zombie as $zombie) {
           if ($zombie['id'][0]==$this->id) {
             $this->act = $this->post['act'];
-            list($act, $qte) = explode('-', $this->act);
-            if ($act=='pick') {
+            if ($this->act=='pick') {
               unset($this->objXmlDocument->map->zombies->zombie[$cpt]);
-            } else {
-              $this->updateZombie($cpt, $act, $qte);
-              $returned = $this->getChipReturnedJSon($zombie);
+              continue;
             }
+            $this->updateZombie($cpt);
+            $returned = $this->getChipReturnedJSon($zombie);
           }
           $cpt++;
         }
@@ -273,6 +314,7 @@ class LiveMissionActions extends LocalActions
     $survivor->addAttribute('coordX', 975);
     $survivor->addAttribute('coordY', 475);
     $survivor->addAttribute('hitPoints', 2);
+    $survivor->addAttribute('type', 'Survivor');
     $survivor->addAttribute('status', 'Survivor');
     $survivor->addAttribute('actionPoints', 3);
     $survivor->addAttribute('experiencePoints', 0);

@@ -16,6 +16,7 @@ class TokenBean extends LocalBean
   private $coordY;
   private $height;
   private $id;
+  private $level;
   private $name;
   private $orientation;
   private $quantite;
@@ -37,6 +38,7 @@ class TokenBean extends LocalBean
       $this->coordX      = $chip->attributes()['coordX'];
       $this->coordY      = $chip->attributes()['coordY'];
       $this->id          = $chip->attributes()['id'];
+      $this->level       = $chip->attributes()['level'];
       $this->orientation = $chip->attributes()['orientation'];
       $this->quantite    = $chip->attributes()['quantite'];
       $this->src         = $chip->attributes()['src'];
@@ -47,6 +49,7 @@ class TokenBean extends LocalBean
       $this->coordX      = $chip[self::XML_ATTRIBUTES]['coordX'];
       $this->coordY      = $chip[self::XML_ATTRIBUTES]['coordY'];
       $this->id          = $chip[self::XML_ATTRIBUTES]['id'];
+      $this->level       = $chip[self::XML_ATTRIBUTES]['level'];
       $this->orientation = $chip[self::XML_ATTRIBUTES]['orientation'];
       $this->quantite    = $chip[self::XML_ATTRIBUTES]['quantite'];
       $this->src         = $chip[self::XML_ATTRIBUTES]['src'];
@@ -84,7 +87,16 @@ class TokenBean extends LocalBean
         $this->name      = 'exit';
         $this->addClass .= ' '.$this->orientation.($this->status=='Unactive' ? ' unactive' : '');
       break;
-      case '' :
+      case 'Survivor' :
+        $this->width     = 50;
+        $this->height    = 50;
+        $this->addClass .= ' survivor '.$this->level;
+        $args = array(
+          self::ATTR_SRC=>'/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/'.$this->src.'.jpg'
+        );
+        $this->baliseContent  = $this->getBalise(self::TAG_IMG, '', $args);
+      break;
+      case 'Zombie' :
         if (preg_match($this->patternZombie, $this->src, $matches)) {
           $strName       = $matches[1].' '.$matches[2];
         } else {
@@ -176,6 +188,32 @@ class TokenBean extends LocalBean
     $args = array(($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
     return $strMenu . $this->getRender($this->urlMenuZombiesTemplate, $args);
   }
+  private function getSurvivorMenu()
+  {
+    $strButton = '<button type="button" class="menu-btn"> <span class="menu-text">%1$s</span> </button>';
+    $argsLi = array(
+      self::ATTR_CLASS   => 'menu-item',
+      self::ATTR_ID      => $this->id,
+    );
+    // On peut ajouter des Zombies
+    $subMenu  = '';
+    for ($i=1; $i<=5; $i++) {
+      $argsLi['data-menu-action'] = 'add-xp-'.$i;
+      $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
+    }
+    $strMenu  ='<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-plus-circle"></i> <span class="menu-text">Ajouter XP</span> </button><menu class="menu">'.$subMenu.'</menu></li>';
+    $strMenu .= $this->getLiMenuItem('Retirer 1 XP', 'del-xp', 'minus-circle');
+    $strMenu .= $this->getLiMenuSeparator();
+    $strMenu .= $this->getLiMenuItem('Reinitialiser PA', 'init-pa', 'undo');
+    $strMenu .= $this->getLiMenuItem('Retirer 1 PA', 'del-pa', 'minus-circle');
+    $strMenu .= $this->getLiMenuSeparator();
+    $strMenu .= $this->getLiMenuItem('Ajouter 1 PV', 'add-pv', 'plus-circle');
+    $strMenu .= $this->getLiMenuItem('Retirer 1 PV', 'del-pv', 'minus-circle');
+    $strMenu .= $this->getLiMenuSeparator();
+    $strMenu .= $this->getLiMenuItem('Supprimer', 'pick', 'trash');
+
+    return $strMenu;
+  }
   private function getZombieMenu()
   {
     $strButton = '<button type="button" class="menu-btn"> <span class="menu-text">%1$s</span> </button>';
@@ -222,6 +260,9 @@ class TokenBean extends LocalBean
       break;
       case 'Zombie' :
         $returned = $this->getZombieMenu();
+      break;
+      case 'Survivor' :
+        $returned = $this->getSurvivorMenu();
       break;
       default :
       break;

@@ -190,6 +190,7 @@ function setChipsAction() {
   ///////////////////////////////////////
   // Gestion des clicks sur un Survivant
   ///////////////////////////////////////
+  /*
   $hj('div.chip.survivor').on('mousedown', function(){
     $hj(this).css('cursor', 'grabbing');
   }).draggable({
@@ -210,6 +211,7 @@ function setChipsAction() {
       updateLiveMissionXml(data);
     }
   });
+  */
 
 
 
@@ -226,13 +228,13 @@ function setChipsAction() {
   ///////////////////////////////////////
   // Gestion des clicks sur la Réserve de Survivants
   ///////////////////////////////////////
-  $hj('#page-mission-online-survivor-reserve div').click(function(event){
+  $hj('#page-mission-online-survivor-reserve div').unbind().click(function(event){
     console.log('Add Survivor Clicked');
     var data = {
       'action': 'dealWithAjax',
       'ajaxAction': 'updateLiveMission',
       'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'type' : 'survivor',
+      'act' : 'survivor',
       'rank': survivorRankClicked,
       'survivorId' : $hj(this).data('survivorid')
     };
@@ -260,15 +262,26 @@ function addSidebarSurvivorKnownActions() {
   $hj('#page-mission-online-sidebar-survivors img.known').unbind().click(function(event){
     survivorRankClicked = $hj(this).data('rank');
     console.log('Affichage Detail Survivant '+survivorRankClicked);
-    $hj('#page-mission-online-sidebar-survivors-detail dl').css('right', '-350px');
-    $hj('#detail-survivor-'+survivorRankClicked).css('right', '0');
+    $hj('#page-mission-online-sidebar-survivors-detail').css('top', '0');
+    $hj('#page-mission-online-help a').removeClass('active');
   });
   $hj('#page-mission-online-sidebar-survivors-detail .fa-times-circle').click(function(){
     $hj('#page-mission-online-sidebar-survivors-detail dl').css('right', '-350px');
   });
+  $hj('#page-mission-online-help a').unbind().click(function(){
+    $hj('#page-mission-online-obj-rules').css('top', '-105%');
+    $hj('#page-mission-online-help-website').css('top', '-105%');
+    $hj('#page-mission-online-sidebar-survivors-detail').css('top', '-105%');
+
+    $hj(this).siblings().removeClass('active');
+    $hj(this).addClass('active');
+    if ($hj(this).data('target')!=undefined) {
+      $hj($hj(this).data('target')).css('top', '0');
+    }
+  });
 }
 function addSidebarSurvivorUnknownActions() {
-  $hj('#page-mission-online-sidebar-survivors img.unknown').click(function(event){
+  $hj('#page-mission-online-sidebar-survivors img.unknown').unbind().click(function(event){
     posX = event.clientX;
     posY = event.clientY;
     $hj('#page-mission-online-survivor-reserve').css('left', posX-400).css('top', posY);

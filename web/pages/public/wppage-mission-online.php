@@ -9,38 +9,39 @@
     <section id="page-mission-online-tokens" class="%1$s">
       %4$s
     </section>
+    <section id="page-mission-online-obj-rules">
+      <div>%6$s</div>
+      <div>%7$s</div>
+    </section>
+    <section id="page-mission-online-help-website">
+      <dl>
+        <dt><i class="fa fa-caret-right"></i> Mécanique</dt>
+        <dd>Aucun contrôle de cohérence n'est effectué dans vos Actions. Aussi vous pouvez déplacer un Survivant derrière une porte fermée par exemple. Vous êtes le garant de l'application des règles.</dd>
+        <dt><i class="fa fa-caret-right"></i> Objectifs</dt>
+        <dd>Cliquez avec le bouton gauche de la souris sur un Objectif non Rouge pour le prendre. Il est retiré du plateau. Quand vous cliquez sur un Objectif Rouge, soit il change de couleur, soit il ne se passe rien. Si vous cliquez une deuxième fois sur un Objectif Rouge, il est retiré du plateau.</dd>
+        <dt><i class="fa fa-caret-right"></i> Portes</dt>
+        <dd>Les interactions avec les Portes se limitent à l'ouverture et la fermeture de celles-ci. Cliquez avec le bouton gauche de la souris sur une Porte. Elle se ferme si elle était ouverte, elle s'ouvre sinon.</dd>
+        <dt><i class="fa fa-caret-right"></i> Réserve de Zombies</dt>
+        <dd>Vous pouvez cliquer sur un Zombie pour en ajouter un sur le plateau.</dd>
+        <dt><i class="fa fa-caret-right"></i> Survivants</dt>
+        <dd>Les interactions avec les Survivants se limitent au déplacement. Vous pouvez "drag and dropper" un Survivant. Cliquez avec le bouton gauche de la souris sur un Survivant, maintenez enfoncé, déplacez le Survivant, relâchez le bouton.</dd>
+        <dt><i class="fa fa-caret-right"></i> Zombies</dt>
+        <dd>Les interactions avec les Zombies sont multiples. Vous pouvez "drag and dropper" un Zombie. Cliquez avec le bouton gauche de la souris sur un Zombie, maintenez enfoncé, déplacez le Zombie, relâchez le bouton. Vous pouvez cliquer simplement avec le bouton de gauche de la souris pour augmenter le nombre de Zombies de ce type. Cliquez droit pour le diminuer.</dd>
+        <dt><i class="fa fa-caret-right"></i> Zone d'invasion</dt>
+        <dd>Les interactions avec les Zones d'invasion sont multiples. Cliquez avec le bouton droit de la souris pour rendre une Zone d'invasion inactive. Si elle est déjà inactive, elle est retirée du plateau. Cliquez avec le bouton gauche de la souris pour rendre une Zone d'invasion active. Si elle est déjà active, ouvrez la fenêtre de réserve des Zombies.</dd>
+      </dl>
+    </section>
+    <section id="page-mission-online-sidebar-survivors-detail">%9$s</section>
   </section>
   <section id="page-mission-online-sidebar">
-    <h1><input id="dataToPaste" type="text" value="%5$s"/><a href="?logout"><i class="fa fa-sign-out float-right"></i></a><i class="fa fa-files-o float-right" data-paste="%5$s"></i></h1>
+    <h1><input id="dataToPaste" type="text" value="%5$s"/><a href="?logout"><i class="fa fa-sign-out float-right"></i></a><i class="fa fa-clipboard float-right" data-paste="%5$s"></i></h1>
     <section id="page-mission-online-sidebar-survivors">%8$s</section>
-    <section id="page-mission-online-sidebar-survivors-detail">%9$s</section>
     <section id="page-mission-online-help">
-      <dl>
-        <dt><i class="fa fa-question-circle"></i></dt>
-        <dt>Objectifs <i class="fa fa-window-minimize float-right"></i></dt>
-        <dd>%6$s</dd>
-        <dt>Règles Spéciales <i class="fa fa-window-minimize float-right"></i></dt>
-        <dd>%7$s</dd>
-        <dt>Plateau de jeu <i class="fa fa-window-minimize float-right"></i></dt>
-        <dd>
-          <dl>
-            <dt><i class="fa fa-caret-right"></i> Mécanique<i class="fa fa-window-minimize float-right"></i></dt>
-            <dd>Aucun contrôle de cohérence n'est effectué dans vos Actions. Aussi vous pouvez déplacer un Survivant derrière une porte fermée par exemple. Vous êtes le garant de l'application des règles.</dd>
-            <dt><i class="fa fa-caret-right"></i> Objectifs<i class="fa fa-window-minimize float-right"></i></dt>
-            <dd>Cliquez avec le bouton gauche de la souris sur un Objectif non Rouge pour le prendre. Il est retiré du plateau. Quand vous cliquez sur un Objectif Rouge, soit il change de couleur, soit il ne se passe rien. Si vous cliquez une deuxième fois sur un Objectif Rouge, il est retiré du plateau.</dd>
-            <dt><i class="fa fa-caret-right"></i> Portes<i class="fa fa-window-minimize float-right"></i></dt>
-            <dd>Les interactions avec les Portes se limitent à l'ouverture et la fermeture de celles-ci. Cliquez avec le bouton gauche de la souris sur une Porte. Elle se ferme si elle était ouverte, elle s'ouvre sinon.</dd>
-            <dt><i class="fa fa-caret-right"></i> Réserve de Zombies<i class="fa fa-window-minimize float-right"></i></dt>
-            <dd>Vous pouvez cliquer sur un Zombie pour en ajouter un sur le plateau.</dd>
-            <dt><i class="fa fa-caret-right"></i> Survivants<i class="fa fa-window-minimize float-right"></i></dt>
-            <dd>Les interactions avec les Survivants se limitent au déplacement. Vous pouvez "drag and dropper" un Survivant. Cliquez avec le bouton gauche de la souris sur un Survivant, maintenez enfoncé, déplacez le Survivant, relâchez le bouton.</dd>
-            <dt><i class="fa fa-caret-right"></i> Zombies<i class="fa fa-window-minimize float-right"></i></dt>
-            <dd>Les interactions avec les Zombies sont multiples. Vous pouvez "drag and dropper" un Zombie. Cliquez avec le bouton gauche de la souris sur un Zombie, maintenez enfoncé, déplacez le Zombie, relâchez le bouton. Vous pouvez cliquer simplement avec le bouton de gauche de la souris pour augmenter le nombre de Zombies de ce type. Cliquez droit pour le diminuer.</dd>
-            <dt><i class="fa fa-caret-right"></i> Zone d'invasion<i class="fa fa-window-minimize float-right"></i></dt>
-            <dd>Les interactions avec les Zones d'invasion sont multiples. Cliquez avec le bouton droit de la souris pour rendre une Zone d'invasion inactive. Si elle est déjà inactive, elle est retirée du plateau. Cliquez avec le bouton gauche de la souris pour rendre une Zone d'invasion active. Si elle est déjà active, ouvrez la fenêtre de réserve des Zombies.</dd>
-          </dl>
-        </dd>
-      </dl>
+      <nav class="nav nav-pills nav-fill">
+        <a class="nav-item nav-link active" href="#"><i class="fa fa-map-o"></i></a>
+        <a class="nav-item nav-link" href="#" data-target="#page-mission-online-obj-rules"><i class="fa fa-book"></i></a>
+        <a class="nav-item nav-link" href="#" data-target="#page-mission-online-help-website"><i class="fa fa-question-circle"></i></a>
+      </nav>
     </section>
   </section>
   <section id="page-mission-online-survivor-reserve">

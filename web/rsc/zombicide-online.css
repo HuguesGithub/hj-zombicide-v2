@@ -46,7 +46,6 @@ a:hover i {
       top: 0;
       width: 100%;
     }
-    #page-mission-online-zombie-reserve,
     #page-mission-online-survivor-reserve {
       background: #ffffff;
       border: 5px solid #ff9307;
@@ -60,7 +59,6 @@ a:hover i {
     #page-mission-online-survivor-reserve {
       width: 400px;
     }
-    #page-mission-online-zombie-reserve button,
     #page-mission-online-survivor-reserve button {
       position: absolute;
       background: #000000;
@@ -73,7 +71,6 @@ a:hover i {
       opacity: 1;
       padding: 0;
     }
-    #page-mission-online-zombie-reserve button.close span,
     #page-mission-online-survivor-reserve button.close span {
       color: #fff;
       text-shadow: none;
@@ -81,11 +78,6 @@ a:hover i {
       padding-top: -5px;
       top: -5px;
       position: relative;
-    }
-    #page-mission-online-zombie-reserve .chip.zombie {
-      display: inline-block;
-      position: initial;
-      width: 50px;
     }
     #page-mission-online-survivor-reserve .chip.survivor {
       display: inline-block;
@@ -103,7 +95,6 @@ a:hover i {
     .chip.token[data-type="Exit"],
     .chip.token[data-type="Objective"],
     .chip.token[data-type="Spawn"],
-    #page-mission-online-zombie-reserve .chip.zombie,
     #page-mission-online-survivor-reserve .chip.survivor {
       cursor: pointer;
     }
@@ -182,7 +173,7 @@ a:hover i {
     font-weight: bold;
     outline: none;
   }
-  #page-mission-online-sidebar h1 .fa-files-o {
+  #page-mission-online-sidebar h1 .fa-clipboard {
     margin-right: 5px;
   }
   #page-mission-online-sidebar-survivors {
@@ -197,41 +188,81 @@ a:hover i {
     position:absolute;
     width: 100%;
   }
-  #page-mission-online-sidebar-survivors-detail dl {
+  #page-mission-online-sidebar-survivors-detail {
+    background: #ff9307;
+    height: 100%;
     position: absolute;
-    right: -350px;
-    width: 300px;
+    top: -105%;
+    width: 100%;
   }
-  #page-mission-online-sidebar-survivors-detail dt,
-  #page-mission-online-help dt {
+  #page-mission-online-help nav {
+  }
+  #page-mission-online-help a {
     background-color: #ff9307;
+    border-radius: 0;
+    border-right: 1px solid #303030;
     border-top: 1px solid #303030;
     padding: 5px;
     cursor: pointer;
   }
+  #page-mission-online-help a.active {
+    background-color: #303030;
+    cursor: default;
+  }
+  #page-mission-online-help a.active i {
+    color: #ff9307;
+    cursor: default;
+  }
   #page-mission-online-sidebar-survivors-detail dl,
-  #page-mission-online-sidebar-survivors-detail dd,
-  #page-mission-online-help dl,
-  #page-mission-online-help dd {
+  #page-mission-online-sidebar-survivors-detail dd {
     margin-bottom: 0;
   }
-  #page-mission-online-sidebar-survivors-detail dd,
-  #page-mission-online-help dd {
+  #page-mission-online-sidebar-survivors-detail dd {
     display: none;
   }
-  #page-mission-online-sidebar-survivors-detail dd,
-  #page-mission-online-help dd dd {
+  #page-mission-online-sidebar-survivors-detail dd {
     background-color: #f2c489;
     padding: 5px;
   }
-  #page-mission-online-sidebar-survivors-detail dd,
-  #page-mission-online-help > dl > dd {
+  #page-mission-online-sidebar-survivors-detail dd {
     max-height: 200px;
     overflow: auto;
   }
-  #page-mission-online-help > dl > dd > h5 {
-    display: none;
-  }
+
+#page-mission-online-obj-rules,
+#page-mission-online-help-website {
+  background: #ff9307;
+  height: 100%;
+  overflow: auto;
+  padding: 10px;
+  position: absolute;
+  top: -105%;
+  width: 100%;
+}
+
+#page-mission-online-sidebar-survivors-detail .panel-body {
+  padding: 10px;
+}
+
+#page-mission-online-sidebar-survivors-detail .panel-body > div {
+  display: inline-block;
+  vertical-align: top;
+  background: #303030;
+  border-radius: 10px;
+  padding: 10px
+}
+
+#page-mission-online-sidebar-survivors-detail .portrait {
+  text-align:center;
+}
+
+#page-mission-online-sidebar-survivors-detail .points ul {
+  color: #ff9307;
+}
+
+
+
+
 
 
 /*

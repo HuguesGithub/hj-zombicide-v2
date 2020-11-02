@@ -15,6 +15,7 @@ class WpPageMissionOnlineBean extends WpPageBean
   protected $urlLoginTemplate   = 'web/pages/public/wppage-mission-online-login.php';
   protected $urlTemplate        = 'web/pages/public/wppage-mission-online.php';
   protected $xmlSuffixe         = '.mission.xml';
+  protected $urlOnlineDetailSurvivor = 'web/pages/public/fragments/online-detail-survivor.php';
   /**
    * Class Constructor
    * @param WpPage $WpPage
@@ -23,6 +24,7 @@ class WpPageMissionOnlineBean extends WpPageBean
   {
     parent::__construct($WpPage);
     $this->MissionServices = new MissionServices();
+    $this->SurvivorServices = new SurvivorServices();
   }
   /**
    * @return string
@@ -160,6 +162,31 @@ class WpPageMissionOnlineBean extends WpPageBean
   }
   private function buildLstSurvivorDetail($survivor)
   {
+    $rank = count($this->arrLstPortraits)+1;
+    $id = substr($survivor[self::XML_ATTRIBUTES]['id'], 1);
+    $Survivor = $this->SurvivorServices->selectSurvivor($id);
+
+    $args = array(
+      // Le rang du Survivant dans la partie
+      $rank,
+      // L'url du portrait
+      $Survivor->getPortraitUrl(),
+      // Le nom du Survivant
+      $Survivor->getName(),
+      // Niveau du Survivant
+      strtolower($survivor[self::XML_ATTRIBUTES]['level']),
+      // Nombre d'XP - 5
+      strtolower($survivor[self::XML_ATTRIBUTES]['experiencePoints']),
+      // Nombre de PA - 6
+      strtolower($survivor[self::XML_ATTRIBUTES]['actionPoints']),
+      // Nombre de PV - 7
+      strtolower($survivor[self::XML_ATTRIBUTES]['hitPoints']),
+
+    );
+
+    $this->arrLstSurvivorDetail[] = $this->getRender($this->urlOnlineDetailSurvivor, $args);
+
+    /*
     $rank = count($this->arrLstSurvivorDetail)+1;
     // Le Contenu du premier DT
     $contentDT  = $survivor[self::XML_ATTRIBUTES]['src'].' - <span>';
@@ -200,6 +227,7 @@ class WpPageMissionOnlineBean extends WpPageBean
       self::ATTR_ID   => 'detail-survivor-'.$rank,
     );
     $this->arrLstSurvivorDetail[] = $this->getBalise(self::TAG_DL, $contentDL, $args);
+    */
   }
 
   private function displayZombies()
@@ -222,31 +250,6 @@ class WpPageMissionOnlineBean extends WpPageBean
     }
     return $lstZombies;
   }
-  private function displaySurvivor($survivor)
-  {
-    $id          = $survivor[self::XML_ATTRIBUTES]['id'];
-    $level       = $survivor[self::XML_ATTRIBUTES]['level'];
-    $tokenName   = $survivor[self::XML_ATTRIBUTES]['src'];
-
-    $addClass    = ' survivor '.$level;
-
-    $args = array(
-      self::ATTR_SRC=>'/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/'.$tokenName.'.jpg'
-    );
-    $content = $this->getBalise(self::TAG_IMG, '', $args);
-    $args = array(
-      self::ATTR_CLASS   => 'chip'.$addClass,
-      self::ATTR_ID      => $id,
-      'data-type'        => 'Survivor',
-      'data-coordX'      => $survivor[self::XML_ATTRIBUTES]['coordX'],
-      'data-coordY'      => $survivor[self::XML_ATTRIBUTES]['coordY'],
-      'data-width'       => 50,
-      'data-height'      => 50,
-    );
-    $this->buildLstPortraits($survivor);
-    $this->buildLstSurvivorDetail($survivor);
-    return $this->getBalise(self::TAG_DIV, $content, $args);
-  }
   private function displaySurvivors()
   {
     // On récupère les Survivants pour les afficher
@@ -254,10 +257,18 @@ class WpPageMissionOnlineBean extends WpPageBean
     $lstSurvivors = '';
     if (!empty($survivors)) {
       if (count($survivors)==1) {
-        $lstSurvivors .= $this->displaySurvivor($survivors);
+        $TokenBean = new TokenBean($survivors);
+        $lstSurvivors .= $TokenBean->getTokenBalise();
+        $lstSurvivors .= $TokenBean->getTokenMenu();
+        $this->buildLstPortraits($survivors);
+        $this->buildLstSurvivorDetail($survivors);
       } else {
         foreach ($survivors as $survivor) {
-          $lstSurvivors .= $this->displaySurvivor($survivor);
+          $TokenBean = new TokenBean($survivor);
+          $lstSurvivors .= $TokenBean->getTokenBalise();
+          $lstSurvivors .= $TokenBean->getTokenMenu();
+          $this->buildLstPortraits($survivor);
+          $this->buildLstSurvivorDetail($survivor);
         }
       }
     }
