@@ -133,6 +133,49 @@ class LiveMissionActions extends LocalActions
     );
     return $this->jsonString($returned, 'lstElements', true);
   }
+  private function insertSurvivor()
+  {
+    ///////////////////////////////////////////////////////
+    // On ajoute un nouveau Survivant au fichier XML
+    $survivor = $this->objXmlDocument->map->survivors->addChild('survivor');
+    $survivor->addAttribute('id', $this->post['survivorId']);
+    $survivorId = substr($this->post['survivorId'], 1);
+    $Survivor = $this->SurvivorServices->selectSurvivor($survivorId);
+    $usedName = ($Survivor->getAltImgName()!='' ? $Survivor->getAltImgName() : $Survivor->getName());
+    $src = 'p'.$Survivor->getNiceName($usedName);
+    $survivor->addAttribute('src', $src);
+    $survivor->addAttribute('coordX', 975);
+    $survivor->addAttribute('coordY', 475);
+    $survivor->addAttribute('hitPoints', 2);
+    $survivor->addAttribute('type', 'Survivor');
+    $survivor->addAttribute('status', 'Survivor');
+    $survivor->addAttribute('actionPoints', 3);
+    $survivor->addAttribute('experiencePoints', 0);
+    $survivor->addAttribute('level', 'Blue');
+    // On va ajouter à survivor des skills.
+    $skills = $survivor->addChild('skills');
+    $SurvivorSkills = $Survivor->getSurvivorSkills(self::CST_SURVIVORTYPEID_S);
+    while (!empty($SurvivorSkills)) {
+      $SurvivorSkill = array_shift($SurvivorSkills);
+      $skill = $skills->addChild('skill');
+      $skill->addAttribute('id', $this->post['survivorId'].'-sk'.$SurvivorSkill->getSkillId());
+      $skill->addAttribute('level', $SurvivorSkill->getBean()->getColor());
+      $skill->addAttribute('unlocked', ($SurvivorSkill->getTagLevelId()<20));
+    }
+    $items = $survivor->addChild('items');
+    ///////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////
+    // On restitue le visuel
+    $TokenBean = new TokenBean($survivor);
+    $returned = array(
+      array($this->post['survivorId'], $TokenBean->getTokenBalise()),
+      array('m'.$this->post['survivorId'], $TokenBean->getTokenMenu()),
+      array('portrait-new', $TokenBean->getTokenPortrait()),
+      array('detail-new', $TokenBean->getTokenDetail()),
+    );
+    return $this->jsonString($returned, 'lstElements', true);
+  }
 
 
 
@@ -151,7 +194,17 @@ class LiveMissionActions extends LocalActions
       case 'add' :
         if ($type=='xp') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] + $qte;
+          if ($qte>=43) {
+            $level = 'Red';
+          } elseif ($qte>=19) {
+            $level = 'Orange';
+          } elseif ($qte>=7) {
+            $level = 'Yellow';
+          } else {
+            $level = 'Blue';
+          }
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['level'] = $level;
         } elseif ($type=='pv') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] + 1;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] = $qte;
@@ -160,7 +213,17 @@ class LiveMissionActions extends LocalActions
       case 'del' :
         if ($type=='xp') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] - 1;
+          if ($qte>=43) {
+            $level = 'Red';
+          } elseif ($qte>=19) {
+            $level = 'Orange';
+          } elseif ($qte>=7) {
+            $level = 'Yellow';
+          } else {
+            $level = 'Blue';
+          }
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['level'] = $level;
         } elseif ($type=='pa') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] - 1;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] = $qte;
@@ -171,7 +234,8 @@ class LiveMissionActions extends LocalActions
       break;
       case 'init' :
         if ($type=='pa') {
-          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] = 3;
+          $base = ($this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints']>=7 ? 4 : 3);
+          $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] = $base;
         }
       break;
       case 'move' :
@@ -189,6 +253,10 @@ class LiveMissionActions extends LocalActions
       array($this->id, $TokenBean->getTokenBalise()),
       array('m'.$this->id, $TokenBean->getTokenMenu())
     );
+    if ($chip->attributes()['type']=='Survivor') {
+      $returned[] = array('portrait-'.$this->id, $TokenBean->getTokenPortrait());
+      $returned[] = array('detail-survivor-'.$this->id, $TokenBean->getTokenDetail());
+    }
     return $this->jsonString($returned, 'lstElements', true);
   }
   private function getNewStatus($cpt)
@@ -262,17 +330,23 @@ class LiveMissionActions extends LocalActions
         }
       break;
       case 's' :
-        $cpt = 0;
-        foreach ($this->objXmlDocument->map->survivors->survivor as $survivor) {
-          if ($survivor['id'][0]==$this->id) {
-            $this->act = $this->post['act'];
-            if ($this->act=='pick') {
-              unset($this->objXmlDocument->map->survivors->survivor[$cpt]);
-              continue;
+        if (strpos($this->id, 'sk')!==false) {
+          $obj = $this->objXmlDocument->xpath('//skill[@id="'.$this->id.'"]')[0];
+          $obj->attributes()['unlocked'] = $this->post['unlocked'];
+        } else {
+          $cpt = 0;
+          foreach ($this->objXmlDocument->map->survivors->survivor as $survivor) {
+            if ($survivor['id'][0]==$this->id) {
+              $this->act = $this->post['act'];
+              if ($this->act=='pick') {
+                unset($this->objXmlDocument->map->survivors->survivor[$cpt]);
+                continue;
+              }
+              $this->updateSurvivor($cpt);
+              $returned = $this->getChipReturnedJSon($survivor);
             }
-            $this->updateSurvivor($cpt);
+            $cpt++;
           }
-          $cpt++;
         }
       break;
       case 'z' :
@@ -296,45 +370,6 @@ class LiveMissionActions extends LocalActions
     }
     return $returned;
   }
-  private function insertSurvivor()
-  {
-    ///////////////////////////////////////////////////////
-    // On ajoute un nouveau Survivant au fichier XML
-    $survivor = $this->objXmlDocument->map->survivors->addChild('survivor');
-    $survivor->addAttribute('id', $this->post['survivorId']);
-    $survivorId = substr($this->post['survivorId'], 1);
-    $Survivor = $this->SurvivorServices->selectSurvivor($survivorId);
-    $usedName = ($Survivor->getAltImgName()!='' ? $Survivor->getAltImgName() : $Survivor->getName());
-    $src = 'p'.$Survivor->getNiceName($usedName);
-    $survivor->addAttribute('src', $src);
-    $survivor->addAttribute('coordX', 975);
-    $survivor->addAttribute('coordY', 475);
-    $survivor->addAttribute('hitPoints', 2);
-    $survivor->addAttribute('type', 'Survivor');
-    $survivor->addAttribute('status', 'Survivor');
-    $survivor->addAttribute('actionPoints', 3);
-    $survivor->addAttribute('experiencePoints', 0);
-    $survivor->addAttribute('level', 'Blue');
-    ///////////////////////////////////////////////////////
 
-    $Bean = new LocalBean();
-    /////////////////////////////////////////////////////////
-    // On prépare le Template pour retourner le visuel à afficher.
-    $args = array(
-      self::ATTR_SRC    => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/'.$src.'.jpg',
-    );
-    $content  = $Bean->getPublicBalise(self::TAG_IMG, '', $args);
-    $args = array(
-      self::ATTR_CLASS  => 'chip survivor Blue',
-      self::ATTR_ID     => $this->post['survivorId'],
-      'data-type'       => 'Survivor',
-      'data-coordx'     => 975,
-      'data-coordy'     => 475,
-      'data-width'      => 50,
-      'data-height'     => 50
-    );
-    $returned = array($this->post['survivorId'], $Bean->getPublicBalise(self::TAG_DIV, $content, $args));
-    return $this->jsonString($returned, 'lstElements', true);
-  }
 
 }

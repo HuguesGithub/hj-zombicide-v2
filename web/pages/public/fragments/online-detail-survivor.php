@@ -11,11 +11,9 @@
     </ul>
   </div>
   <div class="skills col-4">
-    <ul class="colSkills skills-survivant">
-      <ul class="col-12"><li><span class="badge badge-blue-skill">Frimeur [A distance]</span></li></ul>
-      <ul class="col-12"><li><span class="badge badge-yellow-skill">+1 Action</span></li></ul>
-      <ul class="col-12"><li><span class="badge badge-orange-skill">+1 au résultat du dé [À distance]</span></li><li><span class="badge badge-orange-skill">Frénésie [Combat]</span></li></ul>
-      <ul class="col-12"><li><span class="badge badge-red-skill">Charognard</span></li><li><span class="badge badge-red-skill">Mode automatique</span></li><li><span class="badge badge-red-skill">Sur un 6 : +1 dé [Combat]</span></li></ul>
-    </ul>
+    <ul class="colSkills skills-survivant">%8$s</ul>
+  </div>
+  <div class="inventaire col-12 row">
+    <div class="card-slot col-2"><i class="fa fa-hand-paper-o"></i></div><div class="card-slot col-2"><i class="fa fa-hand-paper-o"></i></div><div class="card-slot col-2"><i class="fa fa-dropbox"></i></div><div class="card-slot col-2"><i class="fa fa-dropbox"></i></div><div class="card-slot col-2"><i class="fa fa-dropbox"></i></div><div class="card-slot col-2 trade"><i class="fa fa-dropbox"></i></div>
   </div>
 </div>

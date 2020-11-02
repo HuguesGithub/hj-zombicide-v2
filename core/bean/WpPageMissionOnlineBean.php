@@ -15,7 +15,6 @@ class WpPageMissionOnlineBean extends WpPageBean
   protected $urlLoginTemplate   = 'web/pages/public/wppage-mission-online-login.php';
   protected $urlTemplate        = 'web/pages/public/wppage-mission-online.php';
   protected $xmlSuffixe         = '.mission.xml';
-  protected $urlOnlineDetailSurvivor = 'web/pages/public/fragments/online-detail-survivor.php';
   /**
    * Class Constructor
    * @param WpPage $WpPage
@@ -136,55 +135,15 @@ class WpPageMissionOnlineBean extends WpPageBean
 
   private function getLstPortraits()
   {
-    for ($rank=count($this->arrLstPortraits); $rank<6; $rank++) {
-      $args = array(
-        self::ATTR_ID    => 'portrait-'.$rank,
-        self::ATTR_CLASS => 'unknown',
-        'data-rank'      => $rank,
-        self::ATTR_SRC   => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p.jpg',
-        self::ATTR_TITLE => 'Add a Survivor',
-      );
-      $this->arrLstPortraits[] = $this->getBalise(self::TAG_IMG, '', $args);
-    }
-    return implode('', $this->arrLstPortraits);
-  }
-  private function buildLstPortraits($survivor)
-  {
-    $rank = count($this->arrLstPortraits)+1;
+    // On rajoute un Unkonwn, pour pouvoir ajouter un Survivant.
     $args = array(
-      self::ATTR_ID    => 'portrait-'.$rank,
-      self::ATTR_CLASS => 'known',
-      'data-rank'      => $rank,
-      self::ATTR_SRC   => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p'.$survivor[self::XML_ATTRIBUTES]['src'].'.jpg',
-      self::ATTR_TITLE => '',
+      self::ATTR_ID    => 'portrait-new',
+      self::ATTR_CLASS => 'unknown',
+      self::ATTR_SRC   => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p.jpg',
+      self::ATTR_TITLE => 'Add a Survivor',
     );
     $this->arrLstPortraits[] = $this->getBalise(self::TAG_IMG, '', $args);
-  }
-  private function buildLstSurvivorDetail($survivor)
-  {
-    $rank = count($this->arrLstPortraits)+1;
-    $id = substr($survivor[self::XML_ATTRIBUTES]['id'], 1);
-    $Survivor = $this->SurvivorServices->selectSurvivor($id);
-
-    $args = array(
-      // Le rang du Survivant dans la partie
-      $rank,
-      // L'url du portrait
-      $Survivor->getPortraitUrl(),
-      // Le nom du Survivant
-      $Survivor->getName(),
-      // Niveau du Survivant
-      strtolower($survivor[self::XML_ATTRIBUTES]['level']),
-      // Nombre d'XP - 5
-      strtolower($survivor[self::XML_ATTRIBUTES]['experiencePoints']),
-      // Nombre de PA - 6
-      strtolower($survivor[self::XML_ATTRIBUTES]['actionPoints']),
-      // Nombre de PV - 7
-      strtolower($survivor[self::XML_ATTRIBUTES]['hitPoints']),
-
-    );
-
-    $this->arrLstSurvivorDetail[] = $this->getRender($this->urlOnlineDetailSurvivor, $args);
+    return implode('', $this->arrLstPortraits);
   }
 
   private function displayZombies()
@@ -217,15 +176,15 @@ class WpPageMissionOnlineBean extends WpPageBean
         $TokenBean = new TokenBean($survivors);
         $lstSurvivors .= $TokenBean->getTokenBalise();
         $lstSurvivors .= $TokenBean->getTokenMenu();
-        $this->buildLstPortraits($survivors);
-        $this->buildLstSurvivorDetail($survivors);
+        $this->arrLstPortraits[] = $TokenBean->getTokenPortrait();
+        $this->arrLstSurvivorDetail[] = $TokenBean->getTokenDetail();
       } else {
         foreach ($survivors as $survivor) {
           $TokenBean = new TokenBean($survivor);
           $lstSurvivors .= $TokenBean->getTokenBalise();
           $lstSurvivors .= $TokenBean->getTokenMenu();
-          $this->buildLstPortraits($survivor);
-          $this->buildLstSurvivorDetail($survivor);
+          $this->arrLstPortraits[] = $TokenBean->getTokenPortrait();
+          $this->arrLstSurvivorDetail[] = $TokenBean->getTokenDetail();
         }
       }
     }

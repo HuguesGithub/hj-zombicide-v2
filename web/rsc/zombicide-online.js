@@ -77,17 +77,35 @@ function updateLiveMissionXml(data) {
             var id = oneElement[0];
             var element = oneElement[1];
             if ($hj('#'+id).length==0) {
-              // Ajoute Nouveau.
-              $hj('#page-mission-online-tokens').append(element);
+              // On a des exception
+              switch (id) {
+                case 'detail-new' :
+                  $hj('#page-mission-online-sidebar-survivors-detail').append(element);
+                break;
+                default :
+                // Ajoute Nouveau.
+                  $hj('#page-mission-online-tokens').append(element);
+                break;
+              }
               setChipSizes($hj('#'+id));
             } else {
-              // Replace existant
-              $hj('#'+id).replaceWith(element);
+              // On a des exception
+              switch (id) {
+                case 'portrait-new' :
+                  $hj(element).insertBefore('#portrait-new');
+                  addSidebarSurvivorKnownActions();
+                break;
+                default :
+                // Mais sinon, on replace existant
+                  $hj('#'+id).replaceWith(element);
+                break;
+              }
               setChipSizes($hj('#'+id));
             }
+            setChipAction($hj('#'+id));
           }
-          setChipsAction();
           setChipMenuActions();
+          addSidebarSurvivorKnownActions();
         }
 
       } catch (e) {
@@ -98,8 +116,6 @@ function updateLiveMissionXml(data) {
   ).done(
     function() {
       console.log('updateLiveMissionXml Done');
-      //setChipsAction();
-      //setChipSizes();
     }
   );
 }
@@ -125,11 +141,54 @@ function setChipMenuActions() {
       hideMenus();
       if (act=='pick') {
         $hj('#'+id).remove();
+        $hj('#portrait-'+id).remove();
+        $hj('#detail-survivor-'+id).remove();
       }
     }
   });
 }
 
+
+function setChipAction(obj) {
+  obj.unbind().on('contextmenu', function(event){
+    event.preventDefault();
+    hideMenus();
+    posX = event.clientX;
+    posY = event.clientY;
+    $hj(this).next().addClass('show-menu').css('left', posX).css('top', posY);
+    posX = event.clientX / lowestRatio;
+    posY = event.clientY / lowestRatio;
+    return false;
+  });
+
+  if (obj.hasClass('zombie') || obj.hasClass('survivor')) {
+    obj.on('mousedown', function(){
+      $hj(this).css('cursor', 'grabbing');
+    }).draggable({
+      containment: "#page-mission-online-tokens",
+      scroll: false,
+      start: function(){
+        $hj(this).css('cursor', 'grabbing');
+      },
+      stop: function(){
+        $hj(this).css('cursor', 'grab');
+        var top = $hj(this).position().top / lowestRatio;
+        var left = $hj(this).position().left / lowestRatio;
+        var data = {
+          'action': 'dealWithAjax',
+          'ajaxAction': 'updateLiveMission',
+          'uniqid': $hj('#page-mission-online').data('uniqid'),
+          'id': $hj(this).attr('id'),
+          'act': 'move',
+          'top': top,
+          'left': left
+        };
+        updateLiveMissionXml(data);
+      }
+    });
+  }
+
+}
 function setChipsAction() {
   ///////////////////////////////////////
   // Gestion des clicks sur une Porte
@@ -138,87 +197,12 @@ function setChipsAction() {
   // Gestion des clicks sur un Spawn
   ///////////////////////////////////////
   $hj('div.chip.token').each(function(){
-    $hj(this).unbind().on('contextmenu', function(event){
-      event.preventDefault();
-      hideMenus();
-      posX = event.clientX;
-      posY = event.clientY;
-      $hj(this).next().addClass('show-menu').css('left', posX).css('top', posY);
-      posX = event.clientX / lowestRatio;
-      posY = event.clientY / lowestRatio;
-      return false;
-    });
-
-    if ($hj(this).hasClass('zombie')) {
-      $hj(this).on('mousedown', function(){
-        $hj(this).css('cursor', 'grabbing');
-      }).draggable({
-        containment: "#page-mission-online-tokens",
-        scroll: false,
-        stop: function(){
-          $hj(this).css('cursor', 'grab');
-          var top = $hj(this).position().top / lowestRatio;
-          var left = $hj(this).position().left / lowestRatio;
-          var data = {
-            'action': 'dealWithAjax',
-            'ajaxAction': 'updateLiveMission',
-            'uniqid': $hj('#page-mission-online').data('uniqid'),
-            'id': $hj(this).attr('id'),
-            'act': 'move',
-            'top': top,
-            'left': left
-          };
-          updateLiveMissionXml(data);
-        }
-      });
-    }
-  })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ///////////////////////////////////////
-  // Gestion des clicks sur un Survivant
-  ///////////////////////////////////////
-  /*
-  $hj('div.chip.survivor').on('mousedown', function(){
-    $hj(this).css('cursor', 'grabbing');
-  }).draggable({
-    containment: "#page-mission-online-tokens",
-    scroll: false,
-    stop: function(){
-      $hj(this).css('cursor', 'grab');
-      var top = $hj(this).position().top / lowestRatio;
-      var left = $hj(this).position().left / lowestRatio;
-      var data = {
-        'action': 'dealWithAjax',
-        'ajaxAction': 'updateLiveMission',
-        'uniqid': $hj('#page-mission-online').data('uniqid'),
-        'id': $hj(this).attr('id'),
-        'top': top,
-        'left': left
-      };
-      updateLiveMissionXml(data);
-    }
+    setChipAction($hj(this));
   });
-  */
 
 
 
-  ///////////////////////////////////////
-  ///////////////////////////////////////
-  ///////////////////////////////////////
-  ///////////////////////////////////////
+
 
   ///////////////////////////////////////
   // Gestion des clicks sur les Survivants inconnus
@@ -239,12 +223,7 @@ function setChipsAction() {
       'survivorId' : $hj(this).data('survivorid')
     };
     updateLiveMissionXml(data);
-
-    var src = $hj(this).data('src');
-    var srcImg = $hj('#page-mission-online-sidebar-survivors img[data-rank="'+survivorRankClicked+'"]').attr('src').replace('p.jpg', src+'.jpg');
-    $hj('#page-mission-online-sidebar-survivors img[data-rank="'+survivorRankClicked+'"]').removeClass('unknown').addClass('known').attr('src', srcImg);
     $hj('#page-mission-online-survivor-reserve .close span').trigger('click');
-    addSidebarSurvivorKnownActions();
   });
 
   ///////////////////////////////////////
@@ -265,9 +244,6 @@ function addSidebarSurvivorKnownActions() {
     $hj('#page-mission-online-sidebar-survivors-detail').css('top', '0');
     $hj('#page-mission-online-help a').removeClass('active');
   });
-  $hj('#page-mission-online-sidebar-survivors-detail .fa-times-circle').click(function(){
-    $hj('#page-mission-online-sidebar-survivors-detail dl').css('right', '-350px');
-  });
   $hj('#page-mission-online-help a').unbind().click(function(){
     $hj('#page-mission-online-obj-rules').css('top', '-105%');
     $hj('#page-mission-online-help-website').css('top', '-105%');
@@ -278,6 +254,18 @@ function addSidebarSurvivorKnownActions() {
     if ($hj(this).data('target')!=undefined) {
       $hj($hj(this).data('target')).css('top', '0');
     }
+  });
+  $hj('#page-mission-online-sidebar-survivors-detail li').unbind().click(function(){
+    var data = {
+      'action': 'dealWithAjax',
+      'ajaxAction': 'updateLiveMission',
+      'uniqid': $hj('#page-mission-online').data('uniqid'),
+      'act' : 'skill',
+      'id' : $hj(this).attr('id'),
+      'unlocked' : ($hj(this).hasClass('disabled') ? 1 : 0),
+    };
+    updateLiveMissionXml(data);
+    $hj(this).toggleClass('disabled');
   });
 }
 function addSidebarSurvivorUnknownActions() {

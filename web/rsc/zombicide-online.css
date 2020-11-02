@@ -114,6 +114,15 @@ a:hover i {
     .chip.survivor.Blue {
       border: 3px solid #007bff;
     }
+    .chip.survivor.Yellow {
+      border: 3px solid #ffe207;
+    }
+    .chip.survivor.Orange {
+      border: 3px solid #ff9307;
+    }
+    .chip.survivor.Red {
+      border: 3px solid #dc3545;
+    }
     .chip.zombie img,
     .chip.survivor img {
       border-radius: 35px;
@@ -210,7 +219,8 @@ a:hover i {
   }
 
 #page-mission-online-obj-rules,
-#page-mission-online-help-website {
+#page-mission-online-help-website,
+#page-mission-online-sidebar-survivors-detail {
   background: #ff9307;
   height: 100%;
   overflow: auto;
@@ -225,11 +235,11 @@ a:hover i {
 }
 
 #page-mission-online-sidebar-survivors-detail .panel-body > div {
-  display: inline-block;
-  vertical-align: top;
   background: #303030;
   border-radius: 10px;
-  padding: 10px
+  display: inline-block;
+  padding: 10px;
+  vertical-align: top;
 }
 
 #page-mission-online-sidebar-survivors-detail .portrait {
@@ -240,10 +250,33 @@ a:hover i {
   color: #ff9307;
 }
 
+#page-mission-online-sidebar-survivors-detail li {
+  cursor: pointer;
+}
+#page-mission-online-sidebar-survivors-detail li.disabled {
+  filter: grayscale(1);
+}
 
+#page-mission-online-sidebar-survivors-detail .inventaire  {
+  margin-top: 5px;
+}
 
-
-
+#page-mission-online-sidebar-survivors-detail .card-slot {
+  display: inline-block;
+  border: 2px solid #eeeeee;
+  border-radius: 10px;
+  color: #eeeeee;
+  height: 100%;
+  margin: 0 5px;
+  text-align: center;
+  width: 15%;
+}
+#page-mission-online-sidebar-survivors-detail .card-slot.trade {
+  border: 2px dashed #eeeeee;
+}
+#page-mission-online-sidebar-survivors-detail .card-slot i {
+  margin-top: 50%;
+}
 
 /*
 img { max-width: 100%; }

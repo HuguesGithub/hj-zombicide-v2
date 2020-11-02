@@ -16,19 +16,25 @@
     <section id="page-mission-online-help-website">
       <dl>
         <dt><i class="fa fa-caret-right"></i> Mécanique</dt>
-        <dd>Aucun contrôle de cohérence n'est effectué dans vos Actions. Aussi vous pouvez déplacer un Survivant derrière une porte fermée par exemple. Vous êtes le garant de l'application des règles.</dd>
+        <dd>Aucun contrôle de cohérence n'est effectué dans vos Actions. Aussi vous pouvez déplacer un Survivant derrière une porte fermée par exemple. Vous êtes le garant de l'application des règles.<br>Il y a cependant quelques petits contrôles ergonomiques bénins. Par exemple, l'action pour ouvrir une porte n'est pas disponible sur une porte ouverte.</dd>
         <dt><i class="fa fa-caret-right"></i> Objectifs</dt>
-        <dd>Cliquez avec le bouton gauche de la souris sur un Objectif non Rouge pour le prendre. Il est retiré du plateau. Quand vous cliquez sur un Objectif Rouge, soit il change de couleur, soit il ne se passe rien. Si vous cliquez une deuxième fois sur un Objectif Rouge, il est retiré du plateau.</dd>
+        <dd>Cliquez avec le bouton droit sur un Objectif pour afficher le menu contextuel. Vous pouvez révéler un Objectif (pour les Objectifs rouges parmi lesquels un Objectif de couleur peut se cacher) non révélé ou prendre un Objectif révélé.</dd>
         <dt><i class="fa fa-caret-right"></i> Portes</dt>
-        <dd>Les interactions avec les Portes se limitent à l'ouverture et la fermeture de celles-ci. Cliquez avec le bouton gauche de la souris sur une Porte. Elle se ferme si elle était ouverte, elle s'ouvre sinon.</dd>
-        <dt><i class="fa fa-caret-right"></i> Réserve de Zombies</dt>
-        <dd>Vous pouvez cliquer sur un Zombie pour en ajouter un sur le plateau.</dd>
-        <dt><i class="fa fa-caret-right"></i> Survivants</dt>
-        <dd>Les interactions avec les Survivants se limitent au déplacement. Vous pouvez "drag and dropper" un Survivant. Cliquez avec le bouton gauche de la souris sur un Survivant, maintenez enfoncé, déplacez le Survivant, relâchez le bouton.</dd>
-        <dt><i class="fa fa-caret-right"></i> Zombies</dt>
-        <dd>Les interactions avec les Zombies sont multiples. Vous pouvez "drag and dropper" un Zombie. Cliquez avec le bouton gauche de la souris sur un Zombie, maintenez enfoncé, déplacez le Zombie, relâchez le bouton. Vous pouvez cliquer simplement avec le bouton de gauche de la souris pour augmenter le nombre de Zombies de ce type. Cliquez droit pour le diminuer.</dd>
+        <dd>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ouvrir ou fermer une porte.</dd>
         <dt><i class="fa fa-caret-right"></i> Zone d'invasion</dt>
-        <dd>Les interactions avec les Zones d'invasion sont multiples. Cliquez avec le bouton droit de la souris pour rendre une Zone d'invasion inactive. Si elle est déjà inactive, elle est retirée du plateau. Cliquez avec le bouton gauche de la souris pour rendre une Zone d'invasion active. Si elle est déjà active, ouvrez la fenêtre de réserve des Zombies.</dd>
+        <dd>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez activer ou désactiver une Zone d'invasion. Vous pouvez même la supprimer. De plus, sur une Zone d'invasion activ, vous pouvez placer des Zombies Standards.</dd>
+        <dt><i class="fa fa-caret-right"></i> Zombies</dt>
+        <dd>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ajouter ou supprimer des Zombies. En maintenant le clic gauche, vous pouvez déplacer un Zombie.</dd>
+        <dt><i class="fa fa-caret-right"></i> Survivants</dt>
+        <dd>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ajouter ou retirer des points d'expérience, d'action ou de vie. Vous pouvez même supprimer un Survivant. En maintenant le clic gauche, vous pouvez déplacer un Survivant.</dd>
+
+        <dt><i class="fa fa-caret-right"></i> Barre Latérale - Portraits</dt>
+        <dd>Cliquer sur le Portrait inconnu permet d'ajouter un nouveau Survivant. Cliquer sur un Portrait de Survivant permet d'afficher l'écran d'informations des Survivants. On y retrouve pour chaque Survivant, son portrait, son nom, ses points d'expérience, d'action et de vie. On y retrouve aussi ses Compétences débloquées, ou non.<br>Cliquer sur une Compétence permet d'en changer le statut.</dd>
+        <dt><i class="fa fa-caret-right"></i> Barre Latérale - Icones en bas à droite</dt>
+        <dd>Les 3 icones permettent d'afficher respectivement, de gauche à droite, la Map, les Objectifs et Règles Spéciales de la Mission, cette aide de jeu.</dd>
+        <dt><i class="fa fa-caret-right"></i> Barre Latérale - en haut à dtoire</dt>
+        <dd>La chaîne de caractère (ici <strong>%5$s</strong>) est celle à conserver pour reprendre la même partie, ou inviter des personnes à rejoindre cette partie (attention, pour le moment aucun droit ni aucune synchronisation automatique). Le premier icone permet de copier ce code, le deuxième de quitter la partie.</dd>
+
       </dl>
     </section>
     <section id="page-mission-online-sidebar-survivors-detail">%9$s</section>

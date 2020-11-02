@@ -26,6 +26,7 @@ class TokenBean extends LocalBean
   private $width;
 
   private $urlMenuZombiesTemplate = 'web/pages/public/fragments/menu-zombies-creation.php';
+  private $urlOnlineDetailSurvivor = 'web/pages/public/fragments/online-detail-survivor.php';
 
   /**
    * @param Expansion $Expansion
@@ -33,6 +34,9 @@ class TokenBean extends LocalBean
   public function __construct($chip=null)
   {
     parent::__construct();
+    $this->SurvivorServices = new SurvivorServices();
+    $this->SkillServices = new SkillServices();
+
     if (!is_array($chip)) {
       $this->color       = $chip->attributes()['color'];
       $this->coordX      = $chip->attributes()['coordX'];
@@ -44,6 +48,9 @@ class TokenBean extends LocalBean
       $this->src         = $chip->attributes()['src'];
       $this->status      = $chip->attributes()['status'];
       $this->type        = $chip->attributes()['type'];
+      $this->experiencePoints = $chip->attributes()['experiencePoints'];
+      $this->actionPoints = $chip->attributes()['actionPoints'];
+      $this->hitPoints   = $chip->attributes()['hitPoints'];
     } else {
       $this->color       = $chip[self::XML_ATTRIBUTES]['color'];
       $this->coordX      = $chip[self::XML_ATTRIBUTES]['coordX'];
@@ -55,7 +62,11 @@ class TokenBean extends LocalBean
       $this->src         = $chip[self::XML_ATTRIBUTES]['src'];
       $this->status      = $chip[self::XML_ATTRIBUTES]['status'];
       $this->type        = $chip[self::XML_ATTRIBUTES]['type'];
+      $this->experiencePoints = $chip[self::XML_ATTRIBUTES]['experiencePoints'];
+      $this->actionPoints = $chip[self::XML_ATTRIBUTES]['actionPoints'];
+      $this->hitPoints   = $chip[self::XML_ATTRIBUTES]['hitPoints'];
     }
+    $this->chip = $chip;
     $this->patternZombie = '/z(Walker|Runner|Fatty|Abomination)(Standard)/';
     $this->init();
   }
@@ -210,9 +221,7 @@ class TokenBean extends LocalBean
     $strMenu .= $this->getLiMenuItem('Ajouter 1 PV', 'add-pv', 'plus-circle');
     $strMenu .= $this->getLiMenuItem('Retirer 1 PV', 'del-pv', 'minus-circle');
     $strMenu .= $this->getLiMenuSeparator();
-    $strMenu .= $this->getLiMenuItem('Supprimer', 'pick', 'trash');
-
-    return $strMenu;
+    return $strMenu . $this->getLiMenuItem('Supprimer', 'pick', 'trash');
   }
   private function getZombieMenu()
   {
@@ -271,4 +280,52 @@ class TokenBean extends LocalBean
     return $this->getBalise('menu', $returned, array(self::ATTR_CLASS=>'menu', self::ATTR_ID=>'m'.$this->id));
   }
 
+  public function getTokenPortrait()
+  {
+    // Retourne le portrait que l'on veut afficher en haut à droite de la sidebar.
+    $args = array(
+      self::ATTR_ID    => 'portrait-'.$this->id,
+      self::ATTR_CLASS => 'known',
+      self::ATTR_SRC   => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p'.$this->src.'.jpg',
+      self::ATTR_TITLE => '',
+    );
+    return $this->getBalise(self::TAG_IMG, '', $args);
+  }
+  public function getTokenDetail()
+  {
+    $id = substr($this->id, 1);
+    $Survivor = $this->SurvivorServices->selectSurvivor($id);
+    $skills = $this->chip['skills']['skill'];
+    $strSkills = '';
+    while (!empty($skills)) {
+      $skill = array_shift($skills);
+      $id = $skill['@attributes']['id'];
+      list($sId, $skId) = explode('-', $id);
+      $skillId = substr($skId, 2);
+      $Skill = $this->SkillServices->selectSkill($skillId);
+      $level = strtolower($skill['@attributes']['level']);
+      $unlocked = ($skill['@attributes']['unlocked']==1);
+      $strSkills .= '<li id="'.$id.'" class="'.(!$unlocked ? 'disabled' : '').'"><span class="badge badge-'.$level.'-skill">'.$Skill->getName().'</span></li>';
+
+    }
+    $args = array(
+      // Le rang du Survivant dans la partie
+      $this->id,
+      // L'url du portrait
+      $Survivor->getPortraitUrl(),
+      // Le nom du Survivant
+      $Survivor->getName(),
+      // Niveau du Survivant
+      strtolower($this->level),
+      // Nombre d'XP - 5
+      strtolower($this->experiencePoints),
+      // Nombre de PA - 6
+      strtolower($this->actionPoints),
+      // Nombre de PV - 7
+      strtolower($this->hitPoints),
+      // Les Compétences du Survivant - 8
+      $strSkills
+    );
+    return $this->getRender($this->urlOnlineDetailSurvivor, $args);
+  }
 }
