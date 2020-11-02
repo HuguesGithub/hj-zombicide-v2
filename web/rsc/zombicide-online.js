@@ -52,8 +52,6 @@ $hj(document).ready(function(){
     });
   }
 
-  menu = $hj('.menu');
-
   $hj('#page-mission-online').on('click', function(){
     $hj('.show-menu').removeClass('show-menu');
   });
@@ -74,7 +72,7 @@ function updateLiveMissionXml(data) {
         if (obj['lstElements'] != '' ) {
           lstElements = obj['lstElements'];
           var nbElements = lstElements.length;
-          for (i=0; i<nbElements; i++) {
+          for (var i=0; i<nbElements; i++) {
             var oneElement = lstElements[i];
             var id = oneElement[0];
             var element = oneElement[1];

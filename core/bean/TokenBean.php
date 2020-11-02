@@ -24,6 +24,8 @@ class TokenBean extends LocalBean
   private $type;
   private $width;
 
+  private $urlMenuZombiesTemplate = 'web/pages/public/fragments/menu-zombies-creation.php';
+
   /**
    * @param Expansion $Expansion
    */
@@ -147,38 +149,33 @@ class TokenBean extends LocalBean
   private function getDoorMenu()
   {
     // On peut vouloir ouvrir ou fermer une porte.
-    $strMenu = $this->getLiMenuItem('Ouvrir', 'open', 'folder-open-o', ($this->status=='Closed' ? '' : ' disabled'));
-    return $strMenu . $this->getLiMenuItem('Fermer', 'close', 'folder-o', ($this->status=='Opened' ? '' : ' disabled'));
+    $strMenu = $this->getLiMenuItem('Ouvrir', 'open', 'folder-open-o', ($this->status=='Closed' ? '' : ' '.self::CST_DISABLED));
+    return $strMenu . $this->getLiMenuItem('Fermer', 'close', 'folder-o', ($this->status=='Opened' ? '' : ' '.self::CST_DISABLED));
   }
   private function getObjectiveMenu()
   {
     // On peut vouloir révéler ou prendre un Objectif
-    $strMenu = $this->getLiMenuItem('Révéler', 'reveal', 'share-square-o', ($this->status=='Unveiled' ? '' : ' disabled'));
-    return $strMenu . $this->getLiMenuItem('Prendre', 'pick', 'check-square-o', ($this->status=='Unactive' ? '' : ' disabled'));
+    $strMenu = $this->getLiMenuItem('Révéler', 'reveal', 'share-square-o', ($this->status=='Unveiled' ? '' : ' '.self::CST_DISABLED));
+    return $strMenu . $this->getLiMenuItem('Prendre', 'pick', 'check-square-o', ($this->status=='Unactive' ? '' : ' '.self::CST_DISABLED));
   }
   private function getExitMenu()
   {
-    $strMenu  = $this->getLiMenuItem('Activer', 'activate', 'thumbs-o-up', ($this->status=='Unactive' ? '' : ' disabled'));
-    return $strMenu . $this->getLiMenuItem('Désactiver', 'unactivate', 'thumbs-o-down', ($this->status=='Active' ? '' : ' disabled'));
+    $strMenu  = $this->getLiMenuItem('Activer', 'activate', 'thumbs-o-up', ($this->status=='Unactive' ? '' : ' '.self::CST_DISABLED));
+    return $strMenu . $this->getLiMenuItem('Désactiver', 'unactivate', 'thumbs-o-down', ($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
   }
   private function getSpawnMenu()
   {
     // On peut vouloir activer ou désactiver un Spawn.
-    $strMenu  = $this->getLiMenuItem('Activer', 'activate', 'thumbs-o-up', ($this->status=='Unactive' ? '' : ' disabled'));
-    $strMenu .= $this->getLiMenuItem('Désactiver', 'unactivate', 'thumbs-o-down', ($this->status=='Active' ? '' : ' disabled'));
+    $strMenu  = $this->getLiMenuItem('Activer', 'activate', 'thumbs-o-up', ($this->status=='Unactive' ? '' : ' '.self::CST_DISABLED));
+    $strMenu .= $this->getLiMenuItem('Désactiver', 'unactivate', 'thumbs-o-down', ($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
     $strMenu .= $this->getLiMenuSeparator();
     // On peut vouloir le retirer du plateau. On peut vouloir le déplacer.
-    $strMenu .= $this->getLiMenuItem('Déplacer', 'move', 'arrows-alt', ' disabled');
+    $strMenu .= $this->getLiMenuItem('Déplacer', 'move', 'arrows-alt', ' '.self::CST_DISABLED);
     $strMenu .= $this->getLiMenuItem('Supprimer', 'pick', 'trash');
     $strMenu .= $this->getLiMenuSeparator();
-    // On peut v ouloir ajouter des Zombies.
-    $subsubMenu  = '<li class="menu-item" data-menu-action="zWalkerStandard"><button type="button" class="menu-btn"> <span class="menu-text">Walker</span> </button></li>';
-    $subsubMenu .= '<li class="menu-item" data-menu-action="zFattyStandard"><button type="button" class="menu-btn"> <span class="menu-text">Fatty</span> </button></li>';
-    $subsubMenu .= '<li class="menu-item" data-menu-action="zRunnerStandard"><button type="button" class="menu-btn"> <span class="menu-text">Runner</span> </button></li>';
-    $subsubMenu .= '<li class="menu-item" data-menu-action="zAbominationStandard"><button type="button" class="menu-btn"> <span class="menu-text">Abomination</span> </button></li>';
-    $subMenu = '<li class="menu-item submenu"><button type="button" class="menu-btn"> <span class="menu-text">Standard</span> </button><menu class="menu">'.$subsubMenu.'</menu></li>';
-    $strMenu .='<li class="menu-item submenu'.($this->status=='Active' ? '' : ' disabled').'"><button type="button" class="menu-btn"> <i class="fa fa-user-plus"></i> <span class="menu-text">Spawner</span> </button><menu class="menu">'.$subMenu.'</menu></li>';
-    return $strMenu;
+    // On peut vouloir ajouter des Zombies.
+    $args = array(($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
+    return $strMenu . $this->getRender($this->urlMenuZombiesTemplate, $args);
   }
   private function getZombieMenu()
   {
@@ -199,7 +196,7 @@ class TokenBean extends LocalBean
     $strMenu .='<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-minus-circle"></i> <span class="menu-text">Retirer</span> </button><menu class="menu">'.$subMenu.'</menu></li>';
     // On peut déplacer des Zombies
     $strMenu .= $this->getLiMenuSeparator();
-    return $strMenu . $this->getLiMenuItem('Déplacer', 'move', 'arrows-alt', ' disabled');
+    return $strMenu . $this->getLiMenuItem('Déplacer', 'move', 'arrows-alt', ' '.self::CST_DISABLED);
   }
   public function getTokenMenu()
   {
