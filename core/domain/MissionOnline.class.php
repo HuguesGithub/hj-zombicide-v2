@@ -82,7 +82,7 @@ class MissionOnline extends WpPostRelais
       for ($i=2; $i<count($arrColors); $i++) {
         $lstElements = $this->objXmlDocument->xpath('//map/chips/chip[@type="Objective"][@color="red"]');
         $nbElements = count($lstElements);
-        $rnd = rand(0, $nbElements-1);
+        $rnd = random_int(0, $nbElements-1);
         $this->objXmlDocument->xpath('//map/chips/chip[@type="Objective"][@color="red"]')[$rnd]->attributes()['color'] = strtolower($arrColors[$i]);
       }
     }

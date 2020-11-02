@@ -614,7 +614,7 @@ function addSelectionSurvivantActions() {
     var nbSurvSel = $hj('#nbSurvSel button.active').data('nb');
     // Si le nombre sélectionné est inférieur à celui souhaité, même pas la peine de chercher...
     if (nbSurv<nbSurvSel) {
-      alert('Impossible');
+      console.log('Impossible');
     } else {
       var data = {'action': 'dealWithAjax', 'ajaxAction': 'getRandomTeam', 'nbSurvSel': nbSurvSel, 'value': selection};
       resolveCallAjax(data, 'page-selection-survivants');
