@@ -153,13 +153,10 @@ class LiveMissionActions extends LocalActions
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] + $qte;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
         } elseif ($type=='pv') {
-          /*
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] + 1;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] = $qte;
-          */
         }
       break;
-      /*
       case 'del' :
         if ($type=='xp') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] - 1;
@@ -183,7 +180,6 @@ class LiveMissionActions extends LocalActions
       break;
       default :
       break;
-      */
     }
   }
   private function getChipReturnedJSon($chip)

@@ -54,9 +54,6 @@ a:hover i {
       position: absolute;
       text-align: center;
       top: -250px;
-      width: 250px;
-    }
-    #page-mission-online-survivor-reserve {
       width: 400px;
     }
     #page-mission-online-survivor-reserve button {
@@ -195,8 +192,6 @@ a:hover i {
     top: -105%;
     width: 100%;
   }
-  #page-mission-online-help nav {
-  }
   #page-mission-online-help a {
     background-color: #ff9307;
     border-radius: 0;
@@ -212,21 +207,6 @@ a:hover i {
   #page-mission-online-help a.active i {
     color: #ff9307;
     cursor: default;
-  }
-  #page-mission-online-sidebar-survivors-detail dl,
-  #page-mission-online-sidebar-survivors-detail dd {
-    margin-bottom: 0;
-  }
-  #page-mission-online-sidebar-survivors-detail dd {
-    display: none;
-  }
-  #page-mission-online-sidebar-survivors-detail dd {
-    background-color: #f2c489;
-    padding: 5px;
-  }
-  #page-mission-online-sidebar-survivors-detail dd {
-    max-height: 200px;
-    overflow: auto;
   }
 
 #page-mission-online-obj-rules,

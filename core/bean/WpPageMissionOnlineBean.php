@@ -185,49 +185,6 @@ class WpPageMissionOnlineBean extends WpPageBean
     );
 
     $this->arrLstSurvivorDetail[] = $this->getRender($this->urlOnlineDetailSurvivor, $args);
-
-    /*
-    $rank = count($this->arrLstSurvivorDetail)+1;
-    // Le Contenu du premier DT
-    $contentDT  = $survivor[self::XML_ATTRIBUTES]['src'].' - <span>';
-    $contentDT .= $survivor[self::XML_ATTRIBUTES]['experiencePoints'].' <em>XP</em> - ';
-    $contentDT .= $survivor[self::XML_ATTRIBUTES]['actionPoints'].' <em>PA</em> - ';
-    $contentDT .= $survivor[self::XML_ATTRIBUTES]['hitPoints'].' <em>PV</em>';
-    $contentDT .= '</span><i class="fa fa-times-circle float-right"></i>';
-    $contentDL  = $this->getBalise(self::TAG_DT, $contentDT);
-
-// Le contenu du deuxième DT
-    $contentDT  = 'Compétences<i class="fa fa-window-minimize float-right"></i>';
-    $args = array(
-      'data-nav' => 'survivor-skill-'.$rank,
-    );
-    $contentDL .= $this->getBalise(self::TAG_DT, $contentDT, $args);
-// Et du DD associé
-    $contentDD  = 'Ici, l\'affichage des compétences du Survivant. On verra plus tard pour ce qui est des compétences acquises et celles en devenir de l\'être.';
-    $args = array(
-      self::ATTR_ID => 'survivor-skill-'.$rank,
-    );
-    $contentDL .= $this->getBalise(self::TAG_DD, $contentDD, $args);
-
-// Le contenu du troisième DT
-    $contentDT  = 'Équipement<i class="fa fa-window-minimize float-right"></i>';
-    $args = array(
-      'data-nav' => 'survivor-inventory-'.$rank,
-    );
-    $contentDL .= $this->getBalise(self::TAG_DT, $contentDT, $args);
-// Et du DD associé
-    $contentDD  = 'Ici, les 5 (voire plus si on veut en ajouter) emplacement d\'équipements.';
-    $args = array(
-      self::ATTR_ID => 'survivor-inventory-'.$rank,
-    );
-    $contentDL .= $this->getBalise(self::TAG_DD, $contentDD, $args);
-
-    // Le rendu final.
-    $args = array(
-      self::ATTR_ID   => 'detail-survivor-'.$rank,
-    );
-    $this->arrLstSurvivorDetail[] = $this->getBalise(self::TAG_DL, $contentDL, $args);
-    */
   }
 
   private function displayZombies()

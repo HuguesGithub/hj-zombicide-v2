@@ -37,7 +37,7 @@
     <h1><input id="dataToPaste" type="text" value="%5$s"/><a href="?logout"><i class="fa fa-sign-out float-right"></i></a><i class="fa fa-clipboard float-right" data-paste="%5$s"></i></h1>
     <section id="page-mission-online-sidebar-survivors">%8$s</section>
     <section id="page-mission-online-help">
-      <nav class="nav nav-pills nav-fill">
+      <nav class="nav nav-pills nav-fill" aria-label="Raccourcis">
         <a class="nav-item nav-link active" href="#"><i class="fa fa-map-o"></i></a>
         <a class="nav-item nav-link" href="#" data-target="#page-mission-online-obj-rules"><i class="fa fa-book"></i></a>
         <a class="nav-item nav-link" href="#" data-target="#page-mission-online-help-website"><i class="fa fa-question-circle"></i></a>
