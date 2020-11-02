@@ -54,10 +54,10 @@ class TokenBean extends LocalBean
       $this->type        = $chip[self::XML_ATTRIBUTES]['type'];
     }
     $this->patternZombie = '/z(Walker|Runner|Fatty|Abomination)(Standard)/';
-    $this->init($chip);
+    $this->init();
   }
 
-  private function init($chip)
+  private function init()
   {
     $this->baliseContent = '';
     switch ($this->type) {

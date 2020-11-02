@@ -188,6 +188,7 @@ class LiveMissionActions extends LocalActions
                 $returned = $this->getChipReturnedJSon($chip);
               break;
               case 'Exit' :
+              case 'Spawn' :
                 if ($this->act=='activate') {
                   $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Active';
                 } elseif ($this->act=='unactivate') {
@@ -197,14 +198,6 @@ class LiveMissionActions extends LocalActions
               break;
               case 'Objective' :
                 if ($this->act=='reveal') {
-                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
-                }
-                $returned = $this->getChipReturnedJSon($chip);
-              break;
-              case 'Spawn' :
-                if ($this->act=='activate') {
-                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Active';
-                } elseif ($this->act=='unactivate') {
                   $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
                 }
                 $returned = $this->getChipReturnedJSon($chip);

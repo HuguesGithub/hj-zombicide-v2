@@ -321,7 +321,7 @@ img { max-width: 100%; }
   color: #fff;
   outline: none;
   background: -webkit-linear-gradient(top, #2E3940, #5D6D79);
-  background: linear-gradient(top, #2E3940, #5D6D79);
+  background: linear-gradient(to top, #2E3940, #5D6D79);
   background-color: #2E3940;
   border: 1px solid #2E3940;
 }
