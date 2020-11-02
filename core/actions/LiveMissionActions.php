@@ -164,6 +164,36 @@ class LiveMissionActions extends LocalActions
     );
     return $this->jsonString($returned, 'lstElements', true);
   }
+  private function getNewStatus($cpt)
+  {
+    $newStatus = $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'][0];
+    $type = $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['type'][0];
+    switch($type) {
+      case 'Door' :
+        if ($this->act=='open') {
+          $newStatus = 'Opened';
+        } elseif ($this->act=='close') {
+          $newStatus = 'Closed';
+        }
+      break;
+      case 'Exit' :
+      case 'Spawn' :
+        if ($this->act=='activate') {
+          $newStatus = 'Active';
+        } elseif ($this->act=='unactivate') {
+          $newStatus = 'Unactive';
+        }
+      break;
+      case 'Objective' :
+        if ($this->act=='reveal') {
+          $newStatus = 'Unactive';
+        }
+      break;
+      default :
+      break;
+    }
+    return $newStatus;
+  }
   private function dealWithUpdateChip()
   {
     $returned = '';
@@ -175,35 +205,10 @@ class LiveMissionActions extends LocalActions
             $this->act = $this->post['act'];
             if ($this->act=='pick') {
               unset($this->objXmlDocument->map->chips->chip[$cpt]);
-              continue;
-            }
-            // On vient de trouver la chip concernée.
-            switch($chip['type'][0]) {
-              case 'Door' :
-                if ($this->act=='open') {
-                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Opened';
-                } elseif ($this->act=='close') {
-                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Closed';
-                }
-                $returned = $this->getChipReturnedJSon($chip);
-              break;
-              case 'Exit' :
-              case 'Spawn' :
-                if ($this->act=='activate') {
-                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Active';
-                } elseif ($this->act=='unactivate') {
-                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
-                }
-                $returned = $this->getChipReturnedJSon($chip);
-              break;
-              case 'Objective' :
-                if ($this->act=='reveal') {
-                  $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = 'Unactive';
-                }
-                $returned = $this->getChipReturnedJSon($chip);
-              break;
-              default :
-              break;
+            } else {
+              $newStatus = $this->getNewStatus($cpt);
+              $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = $newStatus;
+              $returned = $this->getChipReturnedJSon($chip);
             }
           }
           $cpt++;
