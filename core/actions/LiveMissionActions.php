@@ -194,6 +194,25 @@ class LiveMissionActions extends LocalActions
     }
     return $newStatus;
   }
+  private function updateZombie($cpt, $act, $qte) {
+    switch ($act) {
+      case 'add' :
+        $qte = $zombie->attributes()['quantite'] + $qte;
+        $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
+      break;
+      case 'del' :
+        $qte = $zombie->attributes()['quantite'] - $qte;
+        $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
+      break;
+      case 'move' :
+        $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['coordX'] = $this->post['left'];
+        $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['coordY'] = $this->post['top'];
+      break;
+      default :
+      break;
+    }
+  }
+
   private function dealWithUpdateChip()
   {
     $returned = '';
@@ -227,25 +246,10 @@ class LiveMissionActions extends LocalActions
             list($act, $qte) = explode('-', $this->act);
             if ($act=='pick') {
               unset($this->objXmlDocument->map->zombies->zombie[$cpt]);
-              continue;
+            } else {
+              $this->updateZombie($cpt, $act, $qte);
+              $returned = $this->getChipReturnedJSon($zombie);
             }
-            switch ($act) {
-              case 'add' :
-                $qte = $zombie->attributes()['quantite'] + $qte;
-                $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
-              break;
-              case 'del' :
-                $qte = $zombie->attributes()['quantite'] - $qte;
-                $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
-              break;
-              case 'move' :
-                $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['coordX'] = $this->post['left'];
-                $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['coordY'] = $this->post['top'];
-              break;
-              default :
-              break;
-            }
-            $returned = $this->getChipReturnedJSon($zombie);
           }
           $cpt++;
         }

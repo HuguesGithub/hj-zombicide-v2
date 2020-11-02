@@ -102,7 +102,6 @@ class TokenBean extends LocalBean
         $this->baliseContent .= $this->getBalise(self::TAG_DIV, $this->quantite, array(self::ATTR_CLASS=>'badge'));
       break;
       default :
-//        echo "[[".$this->type."]]";
         $this->name      = '';
       break;
     }
@@ -182,7 +181,7 @@ class TokenBean extends LocalBean
     $strButton = '<button type="button" class="menu-btn"> <span class="menu-text">%1$s</span> </button>';
     $argsLi = array(
       self::ATTR_CLASS   => 'menu-item',
-      self::ATTR_ID      => $this-id,
+      self::ATTR_ID      => $this->id,
     );
     // On peut ajouter des Zombies
     $subMenu  = '';
