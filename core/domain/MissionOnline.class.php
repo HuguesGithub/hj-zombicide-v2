@@ -70,6 +70,21 @@ class MissionOnline extends WpPostRelais
         }
       }
     }
+    $this->setUpSpawns();
+    // On sauvegarde les éventuels changements.
+    $this->saveMissionFile();
+    // Et on mélange.
+    // Besoin de sauvegarder avant car l'action de remélange réouvre le fichier...
+    $args = array(
+      self::CST_AJAXACTION => 'updateLiveMission',
+      'uniqid'             => $_SESSION['zombieKey'],
+      'act'                => 'shuffleSpawn',
+    );
+    LiveMissionActions::dealWithStatic($args);
+  }
+
+  private function setUpSpawns()
+  {
     // On doit aussi gérer la création de cartes Invasion.
     // Pour ça, on doit récupérer la valeur du champ interval.
     $interval = $this->objXmlDocument->xpath('//spawns')[0]->attributes()['interval'];
@@ -95,16 +110,6 @@ class MissionOnline extends WpPostRelais
         }
       }
     }
-    // On sauvegarde les éventuels changements.
-    $this->saveMissionFile();
-    // Et on mélange.
-    // Besoin de sauvegarder avant car l'action de remélange réouvre le fichier...
-    $args = array(
-      self::CST_AJAXACTION => 'updateLiveMission',
-      'uniqid'             => $_SESSION['zombieKey'],
-      'act'                => 'shuffleSpawn',
-    );
-    LiveMissionActions::dealWithStatic($args);
   }
 
   private function dealWithSetUpRule($metaValue)

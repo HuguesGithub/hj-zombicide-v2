@@ -169,7 +169,7 @@ class LiveMissionActions extends LocalActions
       $skill->addAttribute('level', $SurvivorSkill->getBean()->getColor());
       $skill->addAttribute('unlocked', ($SurvivorSkill->getTagLevelId()<20 ? 1 : 0));
     }
-    $items = $survivor->addChild('items');
+    $survivor->addChild('items');
     ///////////////////////////////////////////////////////
     $this->insertTchatMessage('Survivant créé');
 

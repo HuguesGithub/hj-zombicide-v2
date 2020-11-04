@@ -203,6 +203,10 @@ class TokenBean extends LocalBean
     $args = array(($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
     return $strMenu . $this->getRender($this->urlMenuZombiesTemplate, $args);
   }
+  private function getLiSubMenu($faClass, $label, $content)
+  {
+    '<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-'.$faClass.'"></i> <span class="menu-text">'.$label.'</span> </button><menu class="menu">'.$content.'</menu></li>';
+  }
   private function getSurvivorMenu()
   {
     $strButton = '<button type="button" class="menu-btn"> <span class="menu-text">%1$s</span> </button>';
@@ -216,7 +220,7 @@ class TokenBean extends LocalBean
       $argsLi['data-menu-action'] = 'add-xp-'.$i;
       $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
     }
-    $strMenu  ='<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-plus-circle"></i> <span class="menu-text">Ajouter XP</span> </button><menu class="menu">'.$subMenu.'</menu></li>';
+    $strMenu  = $this->getLiSubMenu('plus-circle', 'Ajouter XP', $subMenu);
     $strMenu .= $this->getLiMenuItem('Retirer 1 XP', 'del-xp', 'minus-circle');
     $strMenu .= $this->getLiMenuSeparator();
     $strMenu .= $this->getLiMenuItem('Reinitialiser PA', 'init-pa', 'undo');
@@ -240,7 +244,7 @@ class TokenBean extends LocalBean
       $argsLi['data-menu-action'] = 'add-'.$i;
       $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
     }
-    $strMenu  ='<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-plus-circle"></i> <span class="menu-text">Ajouter</span> </button><menu class="menu">'.$subMenu.'</menu></li>';
+    $strMenu  = $this->getLiSubMenu('plus-circle', 'Ajouter', $subMenu);
     // On peut enlever des Zombies
     $argsLi['data-menu-action'] = 'pick';
     $subMenu  = $this->getBalise(self::TAG_LI, sprintf($strButton, 'Tous'), $argsLi);
@@ -251,7 +255,7 @@ class TokenBean extends LocalBean
         $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
       }
     }
-    $strMenu .='<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-minus-circle"></i> <span class="menu-text">Retirer</span> </button><menu class="menu">'.$subMenu.'</menu></li>';
+    $strMenu .= $this->getLiSubMenu('minus-circle', 'Retirer', $subMenu);
     // On peut déplacer des Zombies
     $strMenu .= $this->getLiMenuSeparator();
     return $strMenu . $this->getLiMenuItem('Déplacer', 'move', 'arrows-alt', ' '.self::CST_DISABLED);
