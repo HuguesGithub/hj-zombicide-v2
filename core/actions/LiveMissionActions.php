@@ -10,6 +10,7 @@ if (!defined('ABSPATH')) {
  */
 class LiveMissionActions extends LocalActions
 {
+  protected $urlDirSpawns       = '/wp-content/plugins/hj-zombicide/web/rsc/img/spawns/';
   protected $urlDirLiveMissions = 'web/rsc/missions/live/';
   protected $strTokenStyle      = 'background:url("/wp-content/plugins/hj-zombicide/web/rsc/img/tokens/%1$s.png");';
   protected $chipToken          = 'chip token';
@@ -62,7 +63,12 @@ class LiveMissionActions extends LocalActions
     ////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////
     // On traite ensuite soit d'une insertion, soit d'une édition
-    if (!isset($this->post['id'])) {
+    // On a potentiellement d'autres actions disponibles...
+    if (isset($this->post['act']) && $this->post['act']=='shuffleSpawn') {
+      $this->dealWithSpawnShuffle();
+    } elseif (isset($this->post['act']) && $this->post['act']=='drawSpawn') {
+      $returned = $this->dealWithSpawnDraw();
+    } elseif (!isset($this->post['id'])) {
       // Ici, on gère un ajout
       $returned = $this->dealWithInsertChip();
     } elseif (!empty($this->post['id'])) {
@@ -123,6 +129,7 @@ class LiveMissionActions extends LocalActions
     $zombie->addAttribute('coordY', $this->post['coordy']);
     $zombie->addAttribute('quantite', 1);
     /////////////////////////////////////////////////////////
+    $this->insertTchatMessage('Zombie créé');
 
     /////////////////////////////////////////////////////////
     // On restitue le visuel
@@ -160,10 +167,11 @@ class LiveMissionActions extends LocalActions
       $skill = $skills->addChild('skill');
       $skill->addAttribute('id', $this->post['survivorId'].'-sk'.$SurvivorSkill->getSkillId());
       $skill->addAttribute('level', $SurvivorSkill->getBean()->getColor());
-      $skill->addAttribute('unlocked', ($SurvivorSkill->getTagLevelId()<20));
+      $skill->addAttribute('unlocked', ($SurvivorSkill->getTagLevelId()<20 ? 1 : 0));
     }
     $items = $survivor->addChild('items');
     ///////////////////////////////////////////////////////
+    $this->insertTchatMessage('Survivant créé');
 
     /////////////////////////////////////////////////////////
     // On restitue le visuel
@@ -205,9 +213,11 @@ class LiveMissionActions extends LocalActions
           }
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['level'] = $level;
+          $this->insertTchatMessage('XP modifiés');
         } elseif ($type=='pv') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] + 1;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] = $qte;
+          $this->insertTchatMessage('PV modifiés');
         }
       break;
       case 'del' :
@@ -224,23 +234,28 @@ class LiveMissionActions extends LocalActions
           }
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['level'] = $level;
+          $this->insertTchatMessage('XP modifiés');
         } elseif ($type=='pa') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] - 1;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] = $qte;
+          $this->insertTchatMessage('PA modifiés');
         } elseif ($type=='pv') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] - 1;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['hitPoints'] = $qte;
+          $this->insertTchatMessage('PV modifiés');
         }
       break;
       case 'init' :
         if ($type=='pa') {
           $base = ($this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints']>=7 ? 4 : 3);
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['actionPoints'] = $base;
+          $this->insertTchatMessage('PA modifiés');
         }
       break;
       case 'move' :
         $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['coordX'] = $this->post['left'];
         $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['coordY'] = $this->post['top'];
+        $this->insertTchatMessage('Survivant déplacé');
       break;
       default :
       break;
@@ -295,14 +310,17 @@ class LiveMissionActions extends LocalActions
       case 'add' :
         $qte = $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] + $qte;
         $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
+        $this->insertTchatMessage('Zombie ajouté');
       break;
       case 'del' :
         $qte = $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] - $qte;
         $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['quantite'] = $qte;
+        $this->insertTchatMessage('Zombie retiré');
       break;
       case 'move' :
         $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['coordX'] = $this->post['left'];
         $this->objXmlDocument->map->zombies->zombie[$cpt]->attributes()['coordY'] = $this->post['top'];
+        $this->insertTchatMessage('Zombie déplacé');
       break;
       default :
       break;
@@ -320,10 +338,12 @@ class LiveMissionActions extends LocalActions
             $this->act = $this->post['act'];
             if ($this->act=='pick') {
               unset($this->objXmlDocument->map->chips->chip[$cpt]);
+              $this->insertTchatMessage('Jeton supprimé');
               continue;
             }
             $newStatus = $this->getNewStatus($cpt);
             $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = $newStatus;
+            $this->insertTchatMessage('Jeton changement de statut');
             $returned = $this->getChipReturnedJSon($chip);
           }
           $cpt++;
@@ -340,6 +360,7 @@ class LiveMissionActions extends LocalActions
               $this->act = $this->post['act'];
               if ($this->act=='pick') {
                 unset($this->objXmlDocument->map->survivors->survivor[$cpt]);
+                $this->insertTchatMessage('Survivant supprimé');
                 continue;
               }
               $this->updateSurvivor($cpt);
@@ -357,6 +378,7 @@ class LiveMissionActions extends LocalActions
             $this->act = $this->post['act'];
             if ($this->act=='pick') {
               unset($this->objXmlDocument->map->zombies->zombie[$cpt]);
+              $this->insertTchatMessage('Zombie supprimé');
               continue;
             }
             $this->updateZombie($cpt);
@@ -372,4 +394,51 @@ class LiveMissionActions extends LocalActions
   }
 
 
+  private function dealWithSpawnShuffle()
+  {
+    $Spawns = $this->objXmlDocument->xpath('//spawns/spawn');
+    shuffle($Spawns);
+    $rank = 1;
+    foreach ($Spawns as $Spawn) {
+      $Spawn->attributes()['rank'] = $rank;
+      $Spawn->attributes()['status'] = 'deck';
+      $rank++;
+    }
+    $this->insertTchatMessage('Pioche Invasion mélangée');
+  }
+
+  private function dealWithSpawnDraw()
+  {
+    $Spawns = $this->objXmlDocument->xPath('//spawns/spawn[@status="deck"]');
+    if (empty($Spawns)) {
+      $this->dealWithSpawnShuffle();
+      $Spawns = $this->objXmlDocument->xPath('//spawns/spawn[@status="deck"]');
+    }
+    usort($Spawns, 'sort_trees');
+    $Spawn = $Spawns[0];
+    $Spawn->attributes()['status'] = 'discard';
+    $this->insertTchatMessage('1 Carte Invasion piochée');
+
+    $Bean = new LocalBean();
+    $returned = array(
+      array("modalBody", $Bean->getBalise(self::TAG_IMG, '', array(self::ATTR_SRC=>$this->urlDirSpawns.$Spawn->attributes()['src'].'-thumb.jpg'))),
+    );
+    return $this->jsonString($returned, 'lstElements', true);
+  }
+
+  private function insertTchatMessage($msg='', $author='Automat')
+  {
+    //$Tchats = $this->objXmlDocument->xPath('//tchats');
+    $Tchat = $this->objXmlDocument->tchats->addChild('tchat', $msg);
+    $Tchat->addAttribute('timestamp', time());
+    $Tchat->addAttribute('author', $author);
+  }
+
+
+
+}
+
+function sort_trees($t1, $t2) {
+  //return strcmp($t1['rank']*1, $t2['rank']*1);
+  return ($t1['rank']*1 > $t2['rank']*1);
 }

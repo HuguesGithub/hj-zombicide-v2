@@ -4,9 +4,6 @@ body { height: 100%; margin: 0; min-height: 100%; overflow-x: hidden; }
 a:hover { text-decoration: none; }
 a img { border: 0 none; display: inline-block; height: auto; image-rendering: optimizequality; margin: 0; max-width: 100%; padding: 0; }
 
-.clearfix::before, .clearfix::after { content: " "; display: block; height: 0; overflow: hidden; visibility: hidden; width: 0; }
-.clearfix::after { clear: both; }
-
 .shell.shellpage { background-position: center -250px; }
 .shell.shellonline { background: none #000000; }
 .shell.shellpage > header { height: 105px; margin: 0 0 35px; }
@@ -858,11 +855,8 @@ button#genKey i { color: #f6a800; padding-top: 4px; padding-right: 0px; }
 #online-board { height: calc(100% - 165px); position: relative; }
 #online-sidebar-options { border-right: 3px solid rgb(250, 168, 0); height: 100%; left: 0; position: absolute; top: 0; width:250px; }
 
-#online-sidebar-chat { border-left: 3px solid rgb(250, 168, 0); height: 100%; position: absolute; right: 0; top: 0; transition: width 300ms linear 0s; width:250px;  z-index: 1002;}
 .closed-chat #online-sidebar-chat { width: 0; }
 
-#online-chat-content { overflow-y: auto; }
-#online-chat-content li { display: inline-block; font-size: 12px; line-height: 15px; min-width: 40%; max-width: 75%; opacity: 1; padding: 5px; transition: opacity 300ms linear 0s; }
 .closed-chat #online-chat-content li { opacity: 0; }
 .msg-technique { background: rgb(246, 158, 117); border-radius: 10px; color: rgb(37, 36, 36); margin: 2px 5%; width: 90%; max-width: 90% !important;}
 .msg-technique > div { display: none; }
@@ -871,14 +865,11 @@ button#genKey i { color: #f6a800; padding-top: 4px; padding-right: 0px; }
 .msg-right { background: rgb(224, 224, 237); border-radius: 10px 0 0 10px; color: rgb(37, 36, 36); float: right; margin: 2px 0 2px 25%; }
 .msg-left .timestamp, .msg-right .timestamp { color: rgba(37, 36, 36, 0.5); }
 
-.online-chat-saisie { bottom: 0; position: absolute; width: 100%; }
 .online-chat-saisie > header { background: rgb(250, 168, 0); border-top: 1px solid rgb(250, 168, 0); height: 35px; }
 .online-chat-saisie .nav { margin-top: 2px; }
 .online-chat-saisie .nav-link { border-radius: 5px 5px 0 0; padding: 4px 8px; }
 .online-chat-saisie .nav-link.active { background-color: #343a40; }
 .online-chat-saisie a { color:#343a40; }
-.online-chat-saisie > content { display: block; height: 79px; }
-.online-chat-saisie textarea { border-radius: 0; font-size: 14px; height: 100%; padding: 4px 8px; }
 .online-chat-saisie > footer { background: rgb(250, 168, 0); border-top: 1px solid rgb(250, 168, 0); padding: 0; margin: 0; height: 35px; }
 
 .online-chat-fold, .online-chat-unfold { border: 3px solid rgb(250, 168, 0); border-right: 0; border-radius: 10px 0 0 10px; color: rgb(250, 168, 0); cursor: pointer; font-size: 35px; height: 44px; left: -44px; margin-top: -22px; position: absolute; text-align: center; top: 50%; width: 44px; z-index: 1003; }

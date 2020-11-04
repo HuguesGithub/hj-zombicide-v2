@@ -14,6 +14,7 @@ class WpPageMissionOnlineBean extends WpPageBean
   protected $urlDirLiveMissions = '/web/rsc/missions/live/';
   protected $urlLoginTemplate   = 'web/pages/public/wppage-mission-online-login.php';
   protected $urlTemplate        = 'web/pages/public/wppage-mission-online.php';
+  protected $urlTchatMsgTpl     = 'web/pages/public/fragments/tchat-message.php';
   protected $xmlSuffixe         = '.mission.xml';
   /**
    * Class Constructor
@@ -111,7 +112,7 @@ class WpPageMissionOnlineBean extends WpPageBean
     // On enrichi le template puis on le restitue.
     $args = array(
       // class pour afficher correctement la Map - 1
-      $this->setDimensions(),
+      $this->getDimensions(),
       // La liste des Dalles - 2
       $this->displayTiles(),
       // La liste des Zones - 3
@@ -128,13 +129,89 @@ class WpPageMissionOnlineBean extends WpPageBean
       // Portraits des Survivants dans la Sidebar - 8
       $this->getLstPortraits(),
       // Fiche d'identité des Survivants dans la Sidebar - 9
-      implode('', $this->arrLstSurvivorDetail),
+      $this->getLstDetails(),
+      // Le Tchat - 10
+      $this->getLstTchats(),
     );
     return $this->getRender($this->urlTemplate, $args);
   }
 
+  private function getLstTchats()
+  {
+    $Tchats = $this->objXmlDocument->xPath('//tchat');
+    usort($Tchats, 'sort_trees');
+    $lstMsgs = '';
+    $prevTs = '';
+    while (!empty($Tchats)) {
+      $Tchat = array_shift($Tchats);
+      $author = $Tchat->attributes()['author'];
+      $ts = $Tchat->attributes()['timestamp']*1;
+      if ($prevTs=='' || date('d', $ts)!=date('d', $prevTs)) {
+        $liClass = 'clearfix';
+        $msgDataClass = ' message changeDate';
+        $msgDataContent  = date('d m Y', $ts);
+        $msgClass = ' hidden';
+        $args = array(
+          $liClass,
+          $msgDataClass,
+          $msgDataContent,
+          $msgClass,
+          '',
+        );
+        $lstMsgs .= $this->getRender($this->urlTchatMsgTpl, $args);
+      }
+
+      if ($author=='Automat') {
+        $liClass = 'clearfix';
+        $msgDataClass = '';
+        $msgDataContent  = date('H:i', $ts);
+        $msgClass = ' tech-message';
+      } elseif ($author=='me') {
+        $liClass = 'clearfix';
+        $msgDataClass = ' align-right';
+        $msgDataContent  = $this->getBalise(self::TAG_SPAN, date('H:i', $ts), array(self::ATTR_CLASS=>'message-data-time')).'&nbsp;&nbsp;';
+        $msgDataContent .= $this->getBalise(self::TAG_SPAN, $author, array(self::ATTR_CLASS=>'message-data-name'));
+        $msgClass = ' other-message float-right';
+      } else {
+        $liClass = '';
+        $msgDataClass = '';
+        $msgDataContent  = $this->getBalise(self::TAG_SPAN, $author, array(self::ATTR_CLASS=>'message-data-name')).'&nbsp;&nbsp;';
+        $msgDataContent .= $this->getBalise(self::TAG_SPAN, date('H:i', $ts), array(self::ATTR_CLASS=>'message-data-time'));
+        $msgClass = ' my-message';
+      }
+      $args = array(
+        $liClass,
+        $msgDataClass,
+        $msgDataContent,
+        $msgClass,
+        $Tchat[0],
+      );
+      $lstMsgs .= $this->getRender($this->urlTchatMsgTpl, $args);
+      $prevTs = $ts;
+    }
+    return $lstMsgs;
+  }
+
+  private function getLstDetails()
+  {
+    $lstDetails       = array();
+    $survivors        = $this->objXmlDocument->xPath('//survivor');
+    while (!empty($survivors)) {
+      $survivor       = array_shift($survivors);
+      $TokenBean      = new TokenBean($survivor);
+      $lstDetails[]   = $TokenBean->getTokenDetail();
+    }
+    return implode('', $lstDetails);
+  }
   private function getLstPortraits()
   {
+    $lstPortraits     = array();
+    $survivors        = $this->objXmlDocument->xPath('//survivor');
+    while (!empty($survivors)) {
+      $survivor       = array_shift($survivors);
+      $TokenBean      = new TokenBean($survivor);
+      $lstPortraits[] = $TokenBean->getTokenPortrait();
+    }
     // On rajoute un Unkonwn, pour pouvoir ajouter un Survivant.
     $args = array(
       self::ATTR_ID    => 'portrait-new',
@@ -142,60 +219,43 @@ class WpPageMissionOnlineBean extends WpPageBean
       self::ATTR_SRC   => '/wp-content/plugins/hj-zombicide/web/rsc/img/portraits/p.jpg',
       self::ATTR_TITLE => 'Add a Survivor',
     );
-    $this->arrLstPortraits[] = $this->getBalise(self::TAG_IMG, '', $args);
-    return implode('', $this->arrLstPortraits);
+    $lstPortraits[] = $this->getBalise(self::TAG_IMG, '', $args);
+    return implode('', $lstPortraits);
   }
 
   private function displayZombies()
   {
+    $lstZombies    = '';
     // On récupère les Zombies pour les afficher
-    $zombies = $this->map['zombies']['zombie'];
-    $lstZombies = '';
-    if (!empty($zombies)) {
-      if (count($zombies)==1) {
-        $TokenBean = new TokenBean($zombies);
-        $lstZombies .= $TokenBean->getTokenBalise();
-        $lstZombies .= $TokenBean->getTokenMenu();
-      } else {
-        foreach ($zombies as $zombie) {
-          $TokenBean = new TokenBean($zombie);
-          $lstZombies .= $TokenBean->getTokenBalise();
-          $lstZombies .= $TokenBean->getTokenMenu();
-        }
-      }
+    $zombies       = $this->objXmlDocument->xPath('//zombie');
+    while (!empty($zombies)) {
+      $zombie      = array_shift($zombies);
+      $TokenBean   = new TokenBean($zombie);
+      $lstZombies .= $TokenBean->getTokenBalise();
+      $lstZombies .= $TokenBean->getTokenMenu();
     }
     return $lstZombies;
   }
   private function displaySurvivors()
   {
+    $lstSurvivors    = '';
     // On récupère les Survivants pour les afficher
-    $survivors = $this->map['survivors']['survivor'];
-    $lstSurvivors = '';
-    if (!empty($survivors)) {
-      if (count($survivors)==1) {
-        $TokenBean = new TokenBean($survivors);
-        $lstSurvivors .= $TokenBean->getTokenBalise();
-        $lstSurvivors .= $TokenBean->getTokenMenu();
-        $this->arrLstPortraits[] = $TokenBean->getTokenPortrait();
-        $this->arrLstSurvivorDetail[] = $TokenBean->getTokenDetail();
-      } else {
-        foreach ($survivors as $survivor) {
-          $TokenBean = new TokenBean($survivor);
-          $lstSurvivors .= $TokenBean->getTokenBalise();
-          $lstSurvivors .= $TokenBean->getTokenMenu();
-          $this->arrLstPortraits[] = $TokenBean->getTokenPortrait();
-          $this->arrLstSurvivorDetail[] = $TokenBean->getTokenDetail();
-        }
-      }
+    $survivors       = $this->objXmlDocument->xPath('//survivor');
+    while (!empty($survivors)) {
+      $survivor      = array_shift($survivors);
+      $TokenBean     = new TokenBean($survivor);
+      $lstSurvivors .= $TokenBean->getTokenBalise();
+      $lstSurvivors .= $TokenBean->getTokenMenu();
     }
     return $lstSurvivors;
   }
   private function displayTokens()
   {
+    $lstChips    = '';
     // On récupère les Tokens pour les afficher
-    $chips = $this->map['chips']['chip'];
-    $lstChips = '';
-    foreach ($chips as $chip) {
+    $chips       = $this->objXmlDocument->xPath('//chip');
+    while (!empty($chips)) {
+      $chip      = array_shift($chips);
       $TokenBean = new TokenBean($chip);
       $lstChips .= $TokenBean->getTokenBalise();
       $lstChips .= $TokenBean->getTokenMenu();
@@ -204,12 +264,13 @@ class WpPageMissionOnlineBean extends WpPageBean
   }
   private function displayTiles()
   {
+    $lstTiles      = '';
     // On récupère les Dalles pour les afficher
-    $tiles = $this->map['tiles']['tile'];
-    $lstTiles = '';
-    foreach ($tiles as $tile) {
-      $code        = $tile[self::XML_ATTRIBUTES]['code'];
-      $orientation = $tile[self::XML_ATTRIBUTES]['orientation'];
+    $tiles         = $this->objXmlDocument->xPath('//tile');
+    while (!empty($tiles)) {
+      $tile        = array_shift($tiles);
+      $code        = $tile->attributes()[self::FIELD_CODE];
+      $orientation = $tile->attributes()['orientation'];
       $args = array(
         self::ATTR_CLASS => 'mapTile '.$orientation,
         'style'          => "background:url('/wp-content/plugins/hj-zombicide/web/rsc/img/tiles/".$code."-500px.png');",
@@ -218,18 +279,26 @@ class WpPageMissionOnlineBean extends WpPageBean
     }
     return $lstTiles;
   }
-  private function setDimensions()
+  private function getDimensions()
   {
+    $maps = $this->objXmlDocument->xPath('//map');
+    $map  = array_shift($maps);
     // On détermine les dimensions de la map pour pouvoir appliquer les styles css
-    $this->width  = $this->map[self::XML_ATTRIBUTES]['width'];
-    $this->height = $this->map[self::XML_ATTRIBUTES]['height'];
+    $this->width  = $map->attributes()['width'];
+    $this->height = $map->attributes()['height'];
     return 'map'.$this->height.'x'.$this->width;
   }
   private function openFile()
   {
-    $objXmlDocument = simplexml_load_file(PLUGIN_PATH.$this->urlDirLiveMissions.$_SESSION['zombieKey'].".mission.xml");
+    $fileName = PLUGIN_PATH.$this->urlDirLiveMissions.$_SESSION['zombieKey'].".mission.xml";
+    $this->objXmlDocument = simplexml_load_file($fileName);
+    $objXmlDocument = simplexml_load_file($fileName);
     $objJsonDocument = json_encode($objXmlDocument);
     $arrOutput = json_decode($objJsonDocument, TRUE);
     $this->map = $arrOutput['map'];
   }
+}
+
+function sort_trees($t1, $t2) {
+  return ($t1['timestamp']*1 > $t2['timestamp']*1);
 }

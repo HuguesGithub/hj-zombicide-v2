@@ -1,5 +1,5 @@
 <li class="menu-item submenu%1$s">
-  <button type="button" class="menu-btn"> <i class="fa fa-user-plus"></i> <span class="menu-text">Spawner</span> </button>
+  <button type="button" class="menu-btn"> <i class="fa fa-user-plus"></i> <span class="menu-text">Ajouter Zombies</span> </button>
   <menu class="menu">
     <li class="menu-item submenu">
       <button type="button" class="menu-btn"> <span class="menu-text">Standard</span> </button>

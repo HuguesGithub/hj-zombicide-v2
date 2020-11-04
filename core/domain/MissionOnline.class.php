@@ -70,8 +70,41 @@ class MissionOnline extends WpPostRelais
         }
       }
     }
+    // On doit aussi gérer la création de cartes Invasion.
+    // Pour ça, on doit récupérer la valeur du champ interval.
+    $interval = $this->objXmlDocument->xpath('//spawns')[0]->attributes()['interval'];
+    $intervals = explode(',', $interval);
+    $rank = 1;
+    foreach ($intervals as $interval) {
+      list($interval, $multi) = explode('x', $interval);
+      list($start, $end) = explode('-', $interval);
+      if ($multi=='') {
+        $multi = 1;
+      }
+      if ($end=='') {
+        $end = $start;
+      }
+      for ($i=1; $i<=$multi; $i++) {
+        for ($j=$start; $j<=$end; $j++) {
+          $spawn = $this->objXmlDocument->map->spawns->addChild('spawn');
+          $spawn->addAttribute('id', 'spawn-'.$rank);
+          $spawn->addAttribute('src', 'x'.str_pad($j, 3, 0, STR_PAD_LEFT));
+          $spawn->addAttribute('rank', $rank);
+          $spawn->addAttribute('status', 'deck');
+          $rank++;
+        }
+      }
+    }
     // On sauvegarde les éventuels changements.
     $this->saveMissionFile();
+    // Et on mélange.
+    // Besoin de sauvegarder avant car l'action de remélange réouvre le fichier...
+    $args = array(
+      self::CST_AJAXACTION => 'updateLiveMission',
+      'uniqid'             => $_SESSION['zombieKey'],
+      'act'                => 'shuffleSpawn',
+    );
+    LiveMissionActions::dealWithStatic($args);
   }
 
   private function dealWithSetUpRule($metaValue)

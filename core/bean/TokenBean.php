@@ -10,6 +10,8 @@ if (!defined('ABSPATH')) {
  */
 class TokenBean extends LocalBean
 {
+  protected $urlDirLiveMissions = '/web/rsc/missions/live/';
+
   private $addClass = ' token';
   private $color;
   private $coordX;
@@ -196,6 +198,8 @@ class TokenBean extends LocalBean
     $strMenu .= $this->getLiMenuItem('Supprimer', 'pick', 'trash');
     $strMenu .= $this->getLiMenuSeparator();
     // On peut vouloir ajouter des Zombies.
+    $strMenu .= $this->getLiMenuItem('Piocher', 'drawSpawn', 'stack-overflow', ($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
+    $strMenu .= $this->getLiMenuItem('Mélanger', 'shuffleSpawn', 'recycle', ($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
     $args = array(($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
     return $strMenu . $this->getRender($this->urlMenuZombiesTemplate, $args);
   }
@@ -239,7 +243,7 @@ class TokenBean extends LocalBean
     $strMenu  ='<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-plus-circle"></i> <span class="menu-text">Ajouter</span> </button><menu class="menu">'.$subMenu.'</menu></li>';
     // On peut enlever des Zombies
     $argsLi['data-menu-action'] = 'pick';
-    $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
+    $subMenu  = $this->getBalise(self::TAG_LI, sprintf($strButton, 'Tous'), $argsLi);
     if ($this->quantite>1) {
       $subMenu .= $this->getLiMenuSeparator();
       for ($i=1; $i<min(6, $this->quantite); $i++) {
@@ -293,21 +297,27 @@ class TokenBean extends LocalBean
   }
   public function getTokenDetail()
   {
+    $fileName = PLUGIN_PATH.$this->urlDirLiveMissions.$_SESSION['zombieKey'].".mission.xml";
+    $this->objXmlDocument = simplexml_load_file($fileName);
+
+    // On récupère l'id et le Survivor associé
     $id = substr($this->id, 1);
     $Survivor = $this->SurvivorServices->selectSurvivor($id);
-    $skills = $this->chip['skills']['skill'];
+    // On récupère les Skills stockés dans le fichier
+    $skills = $this->objXmlDocument->xPath('//survivor[@id="'.$this->id.'"]/skills/skill');
     $strSkills = '';
     while (!empty($skills)) {
       $skill = array_shift($skills);
-      $id = $skill['@attributes']['id'];
+      $id = $skill->attributes()[self::FIELD_ID];
       list($sId, $skId) = explode('-', $id);
       $skillId = substr($skId, 2);
       $Skill = $this->SkillServices->selectSkill($skillId);
-      $level = strtolower($skill['@attributes']['level']);
-      $unlocked = ($skill['@attributes']['unlocked']==1);
-      $strSkills .= '<li id="'.$id.'" class="'.(!$unlocked ? 'disabled' : '').'"><span class="badge badge-'.$level.'-skill">'.$Skill->getName().'</span></li>';
-
+      $level = strtolower($skill->attributes()['level']);
+      $unlocked = ($skill->attributes()['unlocked']==1);
+      $spanBadge = $this->getBalise(self::TAG_SPAN, $Skill->getName(), array(self::ATTR_CLASS=>'badge badge-'.$level.'-skill'));
+      $strSkills .= $this->getBalise(self::TAG_LI, $spanBadge, array(self::ATTR_ID=>$id, self::ATTR_CLASS=>(!$unlocked ? 'disabled' : '')));
     }
+    // On enrichit le Template et on retourne l'ensemble.
     $args = array(
       // Le rang du Survivant dans la partie
       $this->id,

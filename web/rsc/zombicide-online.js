@@ -55,6 +55,9 @@ $hj(document).ready(function(){
   $hj('#page-mission-online').on('click', function(){
     $hj('.show-menu').removeClass('show-menu');
   });
+  $hj('.modal .close').on('click', function(){
+    $hj('.modal').hide();
+  });
 });
 
   $hj(window).resize(function(){
@@ -63,6 +66,7 @@ $hj(document).ready(function(){
 
 var lstElements = '';
 function updateLiveMissionXml(data) {
+  $hj('body').addClass('waiting');
   $hj.post(
     ajaxurl,
     data,
@@ -94,6 +98,12 @@ function updateLiveMissionXml(data) {
                 case 'portrait-new' :
                   $hj(element).insertBefore('#portrait-new');
                   addSidebarSurvivorKnownActions();
+                  return false;
+                break;
+                case 'modalBody' :
+                  $hj('#modalBody').html(element);
+                  $hj('#modalSpawn').show();
+                  return false;
                 break;
                 default :
                 // Mais sinon, on replace existant
@@ -115,6 +125,8 @@ function updateLiveMissionXml(data) {
     }
   ).done(
     function() {
+      $hj('body').removeClass('waiting');
+      $hj('body').css('cursor', '');
       console.log('updateLiveMissionXml Done');
     }
   );
@@ -162,16 +174,10 @@ function setChipAction(obj) {
   });
 
   if (obj.hasClass('zombie') || obj.hasClass('survivor')) {
-    obj.on('mousedown', function(){
-      $hj(this).css('cursor', 'grabbing');
-    }).draggable({
+    obj.draggable({
       containment: "#page-mission-online-tokens",
       scroll: false,
-      start: function(){
-        $hj(this).css('cursor', 'grabbing');
-      },
       stop: function(){
-        $hj(this).css('cursor', 'grab');
         var top = $hj(this).position().top / lowestRatio;
         var left = $hj(this).position().left / lowestRatio;
         var data = {
@@ -239,8 +245,6 @@ function setChipsAction() {
 
 function addSidebarSurvivorKnownActions() {
   $hj('#page-mission-online-sidebar-survivors img.known').unbind().click(function(event){
-    survivorRankClicked = $hj(this).data('rank');
-    console.log('Affichage Detail Survivant '+survivorRankClicked);
     $hj('#page-mission-online-sidebar-survivors-detail').css('top', '0');
     $hj('#page-mission-online-help a').removeClass('active');
   });
@@ -273,8 +277,6 @@ function addSidebarSurvivorUnknownActions() {
     posX = event.clientX;
     posY = event.clientY;
     $hj('#page-mission-online-survivor-reserve').css('left', posX-400).css('top', posY);
-    survivorRankClicked = $hj(this).data('rank');
-    console.log(survivorRankClicked);
   });
 }
 

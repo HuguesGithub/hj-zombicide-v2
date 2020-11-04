@@ -77,4 +77,7 @@
     <zombies maxid="0"/>
     <survivors/>
   </map>
+  <items/>
+  <spawns interval="1-12x2,49-60"/>
+  <tchats/>
 </mission>
