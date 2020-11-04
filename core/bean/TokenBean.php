@@ -301,21 +301,21 @@ class TokenBean extends LocalBean
     $this->objXmlDocument = simplexml_load_file($fileName);
 
     // On récupère l'id et le Survivor associé
-    $id = substr($this->id, 1);
-    $Survivor = $this->SurvivorServices->selectSurvivor($id);
+    $survivorId = substr($this->id, 1);
+    $Survivor = $this->SurvivorServices->selectSurvivor($survivorId);
     // On récupère les Skills stockés dans le fichier
     $skills = $this->objXmlDocument->xPath('//survivor[@id="'.$this->id.'"]/skills/skill');
     $strSkills = '';
     while (!empty($skills)) {
       $skill = array_shift($skills);
-      $id = $skill->attributes()[self::FIELD_ID];
-      list($sId, $skId) = explode('-', $id);
+      $skillId = $skill->attributes()[self::FIELD_ID];
+      list($sId, $skId) = explode('-', $skillId);
       $skillId = substr($skId, 2);
       $Skill = $this->SkillServices->selectSkill($skillId);
-      $level = strtolower($skill->attributes()['level']);
+      $skillLevel = strtolower($skill->attributes()['level']);
       $unlocked = ($skill->attributes()['unlocked']==1);
-      $spanBadge = $this->getBalise(self::TAG_SPAN, $Skill->getName(), array(self::ATTR_CLASS=>'badge badge-'.$level.'-skill'));
-      $strSkills .= $this->getBalise(self::TAG_LI, $spanBadge, array(self::ATTR_ID=>$id, self::ATTR_CLASS=>(!$unlocked ? 'disabled' : '')));
+      $spanBadge = $this->getBalise(self::TAG_SPAN, $Skill->getName(), array(self::ATTR_CLASS=>'badge badge-'.$skillLevel.'-skill'));
+      $strSkills .= $this->getBalise(self::TAG_LI, $spanBadge, array(self::ATTR_ID=>$skillId, self::ATTR_CLASS=>(!$unlocked ? 'disabled' : '')));
     }
     // On enrichit le Template et on retourne l'ensemble.
     $args = array(

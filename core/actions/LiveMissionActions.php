@@ -194,7 +194,19 @@ class LiveMissionActions extends LocalActions
 
 
 
-
+  private function getColorLevel($qte)
+  {
+    if ($qte>=43) {
+      $level = 'Red';
+    } elseif ($qte>=19) {
+      $level = 'Orange';
+    } elseif ($qte>=7) {
+      $level = 'Yellow';
+    } else {
+      $level = 'Blue';
+    }
+    return $level;
+  }
   private function updateSurvivor($cpt)
   {
     list($act, $type, $qte) = explode('-', $this->act);
@@ -202,15 +214,7 @@ class LiveMissionActions extends LocalActions
       case 'add' :
         if ($type=='xp') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] + $qte;
-          if ($qte>=43) {
-            $level = 'Red';
-          } elseif ($qte>=19) {
-            $level = 'Orange';
-          } elseif ($qte>=7) {
-            $level = 'Yellow';
-          } else {
-            $level = 'Blue';
-          }
+          $level = $this->getColorLevel($qte);
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['level'] = $level;
           $this->insertTchatMessage('XP modifiés');
@@ -223,15 +227,7 @@ class LiveMissionActions extends LocalActions
       case 'del' :
         if ($type=='xp') {
           $qte = $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] - 1;
-          if ($qte>=43) {
-            $level = 'Red';
-          } elseif ($qte>=19) {
-            $level = 'Orange';
-          } elseif ($qte>=7) {
-            $level = 'Yellow';
-          } else {
-            $level = 'Blue';
-          }
+          $level = $this->getColorLevel($qte);
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['experiencePoints'] = $qte;
           $this->objXmlDocument->map->survivors->survivor[$cpt]->attributes()['level'] = $level;
           $this->insertTchatMessage('XP modifiés');
@@ -428,7 +424,6 @@ class LiveMissionActions extends LocalActions
 
   private function insertTchatMessage($msg='', $author='Automat')
   {
-    //$Tchats = $this->objXmlDocument->xPath('//tchats');
     $Tchat = $this->objXmlDocument->tchats->addChild('tchat', $msg);
     $Tchat->addAttribute('timestamp', time());
     $Tchat->addAttribute('author', $author);
@@ -439,6 +434,5 @@ class LiveMissionActions extends LocalActions
 }
 
 function sort_trees($t1, $t2) {
-  //return strcmp($t1['rank']*1, $t2['rank']*1);
   return ($t1['rank']*1 > $t2['rank']*1);
 }
