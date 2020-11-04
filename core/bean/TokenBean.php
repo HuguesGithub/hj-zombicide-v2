@@ -205,7 +205,7 @@ class TokenBean extends LocalBean
   }
   private function getLiSubMenu($faClass, $label, $content)
   {
-    '<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-'.$faClass.'"></i> <span class="menu-text">'.$label.'</span> </button><menu class="menu">'.$content.'</menu></li>';
+    return '<li class="menu-item submenu"><button type="button" class="menu-btn"> <i class="fa fa-'.$faClass.'"></i> <span class="menu-text">'.$label.'</span> </button><menu class="menu">'.$content.'</menu></li>';
   }
   private function getSurvivorMenu()
   {
