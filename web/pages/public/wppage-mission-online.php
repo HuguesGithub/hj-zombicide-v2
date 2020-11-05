@@ -9,6 +9,11 @@
     <section id="page-mission-online-tokens" class="%1$s">
       %4$s
     </section>
+    <menu class="menu">
+      <li class="menu-item" data-menu-action="add-bruit-1">
+        <button type="button" class="menu-btn"><i class="fa fa-plus-circle"></i><span class="menu-text">Ajouter 1 Bruit</span></button>
+      </li>
+    </menu>
     <section id="page-mission-online-obj-rules">
       <div>%6$s</div>
       <div>%7$s</div>

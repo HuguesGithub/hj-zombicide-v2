@@ -48,7 +48,7 @@
       <zone coords=""/>
       <zone coords=""/>
     </zones>
-    <chips>
+    <chips maxid="24">
       <chip id="c01" type="Starting" coordX="975" coordY="475" orientation="north"/>
       <chip id="c02" type="Door" coordX="483" coordY="210" orientation="east" color="red" status="Closed"/>
       <chip id="c03" type="Door" coordX="483" coordY="385" orientation="east" color="red" status="Closed"/>

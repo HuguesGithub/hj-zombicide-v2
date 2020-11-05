@@ -77,6 +77,14 @@ class TokenBean extends LocalBean
   {
     $this->baliseContent = '';
     switch ($this->type) {
+      case 'Bruit' :
+        $this->width     = 55;
+        $this->height    = 50;
+        $this->type      = 'Bruit';
+        $this->addClass .= ' noise';
+        $this->name      = 'noise';
+        $this->baliseContent = $this->getBalise(self::TAG_DIV, $this->quantite, array(self::ATTR_CLASS=>'badge'));
+      break;
       case 'Door' :
         $this->width     = 56;
         $this->height    = 56;
@@ -231,6 +239,8 @@ class TokenBean extends LocalBean
     $strMenu .= $this->getLiMenuSeparator();
     return $strMenu . $this->getLiMenuItem('Supprimer', 'pick', 'trash');
   }
+  private function getBruitMenu()
+  { return $this->getZombieMenu(); }
   private function getZombieMenu()
   {
     $strButton = '<button type="button" class="menu-btn"> <span class="menu-text">%1$s</span> </button>';
@@ -263,6 +273,9 @@ class TokenBean extends LocalBean
   public function getTokenMenu()
   {
     switch ($this->type) {
+      case 'Bruit' :
+        $returned = $this->getBruitMenu();
+      break;
       case 'Door' :
         $returned = $this->getDoorMenu();
       break;

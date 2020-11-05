@@ -107,6 +107,32 @@ class LiveMissionActions extends LocalActions
       } elseif ($this->post['act']=='survivor') {
         // On va insérer un Survivant.
         return $this->insertSurvivor();
+      } else {
+        // On insère autre chose. Pour le moment, c'est forcément un Bruit
+
+        /////////////////////////////////////////////////////////
+        // On récupère l'id du prochain Chip à insérer.
+        $chips = $this->objXmlDocument->map->chips->attributes()['maxid'];
+        $maxId = $chips[0]+1;
+        // On met à jour l'id pour la prochaine insertion.
+        $this->objXmlDocument->map->chips->attributes()['maxid'] = $maxId;
+        /////////////////////////////////////////////////////////
+        $chip = $this->objXmlDocument->map->chips->addChild('chip');
+        $chip->addAttribute('id', 'c'.$maxId);
+        $chip->addAttribute('type', 'Bruit');
+        $chip->addAttribute('coordX', $this->post['coordx']);
+        $chip->addAttribute('coordY', $this->post['coordy']);
+        $chip->addAttribute('status', 'temp');
+        $chip->addAttribute('quantite', 1);
+
+        /////////////////////////////////////////////////////////
+        // On restitue le visuel
+        $TokenBean = new TokenBean($chip);
+        $returned = array(
+          array('c'.$maxId, $TokenBean->getTokenBalise()),
+          array('mc'.$maxId, $TokenBean->getTokenMenu()),
+        );
+        return $this->jsonString($returned, 'lstElements', true);
       }
     }
   }
@@ -332,10 +358,23 @@ class LiveMissionActions extends LocalActions
         foreach ($this->objXmlDocument->map->chips->chip as $chip) {
           if ($chip['id'][0]==$this->id) {
             $this->act = $this->post['act'];
+            list($act, $qte) = explode('-', $this->act);
             if ($this->act=='pick') {
               unset($this->objXmlDocument->map->chips->chip[$cpt]);
               $this->insertTchatMessage('Jeton supprimé');
               continue;
+            } elseif ($this->act=='move') {
+              $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['coordX'] = $this->post['left'];
+              $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['coordY'] = $this->post['top'];
+              continue;
+            } elseif ($act=='add') {
+              $qte = $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['quantite'] + $qte;
+              $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['quantite'] = $qte;
+              $this->insertTchatMessage('Bruit ajouté');
+            } elseif ($act=='del') {
+              $qte = $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['quantite'] - $qte;
+              $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['quantite'] = $qte;
+              $this->insertTchatMessage('Bruit retiré');
             }
             $newStatus = $this->getNewStatus($cpt);
             $this->objXmlDocument->map->chips->chip[$cpt]->attributes()['status'] = $newStatus;

@@ -53,8 +53,22 @@ $hj(document).ready(function(){
   }
 
   $hj('#page-mission-online').on('click', function(){
-    $hj('.show-menu').removeClass('show-menu');
+    hideMenus();
   });
+  $hj('#page-mission-online-tokens').on('contextmenu', function(event){
+    event.preventDefault();
+    hideMenus();
+    posX = event.clientX;
+    posY = event.clientY;
+    $hj(this).next().addClass('show-menu').css('left', posX).css('top', posY);
+    posX = event.clientX / lowestRatio;
+    posY = event.clientY / lowestRatio;
+    return false;
+  });
+
+  var element = document.getElementById("online-chat-content");
+  element.scrollIntoView(false);
+
   $hj('.modal .close').on('click', function(){
     $hj('.modal').hide();
   });
@@ -173,7 +187,7 @@ function setChipAction(obj) {
     return false;
   });
 
-  if (obj.hasClass('zombie') || obj.hasClass('survivor')) {
+  if (obj.hasClass('zombie') || obj.hasClass('survivor') || obj.hasClass('noise')) {
     obj.draggable({
       containment: "#page-mission-online-tokens",
       scroll: false,
@@ -307,7 +321,7 @@ function setSectionSizes() {
 }
 function setChipSizes(obj) {
   var type = obj.data('type');
-  if (type=='Objective' || type=='Spawn' || type=='Exit' || type=='Door' || type=='Survivor' || type=='Zombie') {
+  if (type=='Objective' || type=='Spawn' || type=='Exit' || type=='Door' || type=='Survivor' || type=='Zombie' || type=='Bruit') {
     posX   = lowestRatio * obj.data('coordx');
     posY   = lowestRatio * obj.data('coordy');
     var width  = lowestRatio * obj.data('width');

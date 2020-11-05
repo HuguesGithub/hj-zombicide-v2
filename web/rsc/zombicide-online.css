@@ -91,6 +91,7 @@ a:hover i {
       background-size: cover !important;
       position: absolute;
     }
+    .chip.token[data-type="Bruit"],
     .chip.token[data-type="Door"],
     .chip.token[data-type="Exit"],
     .chip.token[data-type="Objective"],
@@ -104,12 +105,16 @@ a:hover i {
       cursor: grab;
       max-width: 50px;
     }
+    .chip.noise div,
     .chip.zombie div {
       background-color: white;
       bottom: 10px;
       margin-left: 25%;
       min-width: 50%;
       position: relative;
+    }
+    .chip.noise div {
+      bottom: -15px;
     }
     .chip.zombie.Standard {
       border: 3px solid #868e96;
