@@ -30,6 +30,8 @@ class TokenBean extends LocalBean
   private $urlMenuZombiesTemplate = 'web/pages/public/fragments/menu-zombies-creation.php';
   private $urlOnlineDetailSurvivor = 'web/pages/public/fragments/online-detail-survivor.php';
 
+  private $arrTagColors = array(1=>'blue', 2=>'yellow', 3=>'orange', 4=>'red');
+
   /**
    * @param Expansion $Expansion
    */
@@ -73,14 +75,38 @@ class TokenBean extends LocalBean
     $this->init();
   }
 
+
+
+  public function getJsonModifications($id)
+  {
+    // On retourne Le Token et son menu
+    $args = array(
+      // On veut retourner le Tag mis à jour.
+      array($id, $this->getTokenBalise()),
+      // On veut retourner le Menu associé au Tag mis à jour.
+      array('m'.$id, $this->getTokenMenu()),
+    );
+    // Eventuellement, on ajoute pour certains trucs spéciaux.
+    if ($this->type=='Survivor') {
+      $args[] = array('portrait-'.$id, $this->getTokenPortrait());
+      $args[] = array('detail-survivor-'.$id, $this->getTokenDetail());
+    }
+    // Puis on retourne le tout
+    return $args;
+  }
+
+
+
+
+
+
   private function init()
   {
     $this->baliseContent = '';
     switch ($this->type) {
-      case 'Bruit' :
+      case 'Noise' :
         $this->width     = 55;
         $this->height    = 50;
-        $this->type      = 'Bruit';
         $this->addClass .= ' noise';
         $this->name      = 'noise';
         $this->baliseContent = $this->getBalise(self::TAG_DIV, $this->quantite, array(self::ATTR_CLASS=>'badge'));
@@ -166,7 +192,7 @@ class TokenBean extends LocalBean
 
   private function getLiMenuSeparator()
   { return $this->getBalise(self::TAG_LI, '', array(self::ATTR_CLASS=>'menu-separator')); }
-  private function getLiMenuItem($label, $act, $iCode, $disabled='')
+  private function getLiMenuItem($label, $act, $iCode, $disabled='', $type='')
   {
     $span   = $this->getBalise(self::TAG_SPAN, $label, array(self::ATTR_CLASS=>'menu-text'));
     $i = $this->getBalise(self::TAG_I, '', array(self::ATTR_CLASS=>'fa fa-'.$iCode));
@@ -176,6 +202,10 @@ class TokenBean extends LocalBean
       self::ATTR_ID      => $this->id,
       'data-menu-action' => $act
     );
+    if ($type!='') {
+      $argsLi['data-quantite'] = 1;
+      $argsLi['data-type'] = $type;
+    }
     return $this->getBalise(self::TAG_LI, $button, $argsLi);
   }
   private function getDoorMenu()
@@ -206,8 +236,8 @@ class TokenBean extends LocalBean
     $strMenu .= $this->getLiMenuItem('Supprimer', 'pick', 'trash');
     $strMenu .= $this->getLiMenuSeparator();
     // On peut vouloir ajouter des Zombies.
-    $strMenu .= $this->getLiMenuItem('Piocher', 'drawSpawn', 'stack-overflow', ($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
-    $strMenu .= $this->getLiMenuItem('Mélanger', 'shuffleSpawn', 'recycle', ($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
+    $strMenu .= $this->getLiMenuItem('Piocher', 'draw', 'stack-overflow', ($this->status=='Active' ? '' : ' '.self::CST_DISABLED), 'Spawn');
+    $strMenu .= $this->getLiMenuItem('Mélanger', 'shuffle', 'recycle', ($this->status=='Active' ? '' : ' '.self::CST_DISABLED), 'Spawn');
     $args = array(($this->status=='Active' ? '' : ' '.self::CST_DISABLED));
     return $strMenu . $this->getRender($this->urlMenuZombiesTemplate, $args);
   }
@@ -221,21 +251,23 @@ class TokenBean extends LocalBean
     $argsLi = array(
       self::ATTR_CLASS   => 'menu-item',
       self::ATTR_ID      => $this->id,
+      'data-menu-action' => 'add',
     );
     // On peut ajouter des Zombies
     $subMenu  = '';
     for ($i=1; $i<=5; $i++) {
-      $argsLi['data-menu-action'] = 'add-xp-'.$i;
+      $argsLi['data-quantite'] = $i;
+      $argsLi['data-type'] = 'xp';
       $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
     }
     $strMenu  = $this->getLiSubMenu('plus-circle', 'Ajouter XP', $subMenu);
-    $strMenu .= $this->getLiMenuItem('Retirer 1 XP', 'del-xp', 'minus-circle');
+    $strMenu .= $this->getLiMenuItem('Retirer 1 XP', 'del', 'minus-circle', '', 'xp');
     $strMenu .= $this->getLiMenuSeparator();
-    $strMenu .= $this->getLiMenuItem('Reinitialiser PA', 'init-pa', 'undo');
-    $strMenu .= $this->getLiMenuItem('Retirer 1 PA', 'del-pa', 'minus-circle');
+    $strMenu .= $this->getLiMenuItem('Ajouter 1 PA', 'add', 'plus-circle', '', 'pa');
+    $strMenu .= $this->getLiMenuItem('Retirer 1 PA', 'del', 'minus-circle', '', 'pa');
     $strMenu .= $this->getLiMenuSeparator();
-    $strMenu .= $this->getLiMenuItem('Ajouter 1 PV', 'add-pv', 'plus-circle');
-    $strMenu .= $this->getLiMenuItem('Retirer 1 PV', 'del-pv', 'minus-circle');
+    $strMenu .= $this->getLiMenuItem('Ajouter 1 PV', 'add', 'plus-circle', '', 'pv');
+    $strMenu .= $this->getLiMenuItem('Retirer 1 PV', 'del', 'minus-circle', '', 'pv');
     $strMenu .= $this->getLiMenuSeparator();
     return $strMenu . $this->getLiMenuItem('Supprimer', 'pick', 'trash');
   }
@@ -247,21 +279,27 @@ class TokenBean extends LocalBean
     $argsLi = array(
       self::ATTR_CLASS   => 'menu-item',
       self::ATTR_ID      => $this->id,
+      'data-menu-action' => 'add',
     );
     // On peut ajouter des Zombies
     $subMenu  = '';
+    // De 1 à 5
     for ($i=1; $i<=5; $i++) {
-      $argsLi['data-menu-action'] = 'add-'.$i;
+      $argsLi['data-quantite'] = $i;
       $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
     }
     $strMenu  = $this->getLiSubMenu('plus-circle', 'Ajouter', $subMenu);
     // On peut enlever des Zombies
+    // Tous d'un coup
     $argsLi['data-menu-action'] = 'pick';
+    unset($argsLi['quantite']);
     $subMenu  = $this->getBalise(self::TAG_LI, sprintf($strButton, 'Tous'), $argsLi);
+    // Ou de 1 à 5 ou 1 de moins que le nombre disponible.
+    $argsLi['data-menu-action'] = 'del';
     if ($this->quantite>1) {
       $subMenu .= $this->getLiMenuSeparator();
       for ($i=1; $i<min(6, $this->quantite); $i++) {
-        $argsLi['data-menu-action'] = 'del-'.$i;
+        $argsLi['data-quantite'] = $i;
         $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
       }
     }
@@ -273,7 +311,7 @@ class TokenBean extends LocalBean
   public function getTokenMenu()
   {
     switch ($this->type) {
-      case 'Bruit' :
+      case 'Noise' :
         $returned = $this->getBruitMenu();
       break;
       case 'Door' :
@@ -295,6 +333,7 @@ class TokenBean extends LocalBean
         $returned = $this->getSurvivorMenu();
       break;
       default :
+        $returned = 'Bad Type in getTokenMenu : ['.$this->type.'].';
       break;
     }
 
@@ -325,14 +364,23 @@ class TokenBean extends LocalBean
     $strSkills = '';
     while (!empty($skills)) {
       $skill = array_shift($skills);
-      $skillId = $skill->attributes()[self::FIELD_ID];
-      list($sId, $skId) = explode('-', $skillId);
-      $skillId = substr($skId, 2);
+      // On récupère l'id du Skill pour aller chercher le nom en base.
+      $skillId = $skill->attributes()[self::FIELD_SKILLID];
       $Skill = $this->SkillServices->selectSkill($skillId);
-      $skillLevel = strtolower($skill->attributes()['level']);
-      $unlocked = ($skill->attributes()['unlocked']==1);
-      $spanBadge = $this->getBalise(self::TAG_SPAN, $Skill->getName(), array(self::ATTR_CLASS=>'badge badge-'.$skillLevel.'-skill'));
-      $strSkills .= $this->getBalise(self::TAG_LI, $spanBadge, array(self::ATTR_ID=>$skillId, self::ATTR_CLASS=>(!$unlocked ? 'disabled' : '')));
+      // On récupère son Id
+      $nodeId = $skill->attributes()[self::FIELD_ID];
+      list(, $tagLevel) = explode('-', $nodeId);
+      $color = $this->arrTagColors[$tagLevel/10];
+      // On récupère le Status
+      $status = $skill->attributes()['status'];
+      // On construit les tags HTML
+      $spanBadge = $this->getBalise(self::TAG_SPAN, $Skill->getName(), array(self::ATTR_CLASS=>'badge badge-'.$color.'-skill'));
+      // Et on stack la liste de Skills
+      $argsLi = array(
+        self::ATTR_ID=>$nodeId,
+        self::ATTR_CLASS=>($status=='Unactive' ? 'disabled' : '')
+      );
+      $strSkills .= $this->getBalise(self::TAG_LI, $spanBadge, $argsLi);
     }
     // On enrichit le Template et on retourne l'ensemble.
     $args = array(

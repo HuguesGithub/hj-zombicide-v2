@@ -10,7 +10,7 @@
       %4$s
     </section>
     <menu class="menu">
-      <li class="menu-item" data-menu-action="add-bruit-1">
+      <li class="menu-item" data-menu-action="add" data-type="Noise">
         <button type="button" class="menu-btn"><i class="fa fa-plus-circle"></i><span class="menu-text">Ajouter 1 Bruit</span></button>
       </li>
     </menu>

@@ -158,10 +158,12 @@ function setChipMenuActions() {
       var uniqid = $hj('#page-mission-online').data('uniqid');
       var id     = $hj(this).attr('id');
       var act    = $hj(this).data('menu-action');
+      var qte    = $hj(this).data('quantite');
+      var type   = $hj(this).data('type');
       if (act=='' || act==undefined) {
         return false;
       }
-      var data   = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': uniqid, 'id': id, 'act': act, 'coordx': posX, 'coordy': posY};
+      var data   = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': uniqid, 'id': id, 'act': act, 'quantite': qte, 'type': type, 'coordx': posX, 'coordy': posY};
       updateLiveMissionXml(data);
 
       hideMenus();
@@ -278,9 +280,8 @@ function addSidebarSurvivorKnownActions() {
       'action': 'dealWithAjax',
       'ajaxAction': 'updateLiveMission',
       'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'act' : 'skill',
+      'act' : ($hj(this).hasClass('disabled') ? 'activate' : 'unactivate'),
       'id' : $hj(this).attr('id'),
-      'unlocked' : ($hj(this).hasClass('disabled') ? 1 : 0),
     };
     updateLiveMissionXml(data);
     $hj(this).toggleClass('disabled');
@@ -321,7 +322,7 @@ function setSectionSizes() {
 }
 function setChipSizes(obj) {
   var type = obj.data('type');
-  if (type=='Objective' || type=='Spawn' || type=='Exit' || type=='Door' || type=='Survivor' || type=='Zombie' || type=='Bruit') {
+  if (type=='Objective' || type=='Spawn' || type=='Exit' || type=='Door' || type=='Survivor' || type=='Zombie' || type=='Noise') {
     posX   = lowestRatio * obj.data('coordx');
     posY   = lowestRatio * obj.data('coordy');
     var width  = lowestRatio * obj.data('width');

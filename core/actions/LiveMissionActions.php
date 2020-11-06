@@ -64,6 +64,8 @@ class LiveMissionActions extends LocalActions
     ////////////////////////////////////////////////////////////////////////
     // On traite ensuite soit d'une insertion, soit d'une édition
     // On a potentiellement d'autres actions disponibles...
+    $returned = $this->tokenActionV2();
+    /*
     if (isset($this->post['act']) && $this->post['act']=='shuffleSpawn') {
       $this->dealWithSpawnShuffle();
     } elseif (isset($this->post['act']) && $this->post['act']=='drawSpawn') {
@@ -76,6 +78,7 @@ class LiveMissionActions extends LocalActions
       $this->id = $this->post['id'];
       $returned = $this->dealWithUpdateChip();
     }
+    */
     ////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////
 
@@ -88,13 +91,328 @@ class LiveMissionActions extends LocalActions
     }
   }
 
+  private function tokenActionV2()
+  {
+    $this->id   = $this->post['id'];
+    if ($this->id!='') {
+      $this->node = $this->objXmlDocument->xPath('//*[@id="'.$this->id.'"]')[0];
+    }
+    $qte  = $this->post['quantite'];
+    $type = $this->post['type'];
+    $posX = $this->post['left'];
+    $posY = $this->post['top'];
+
+    $needABean = false;
+    switch ($this->post['act']) {
+      case 'activate' :
+        $needABean = $this->activateAction();
+      break;
+      case 'add'      :
+        $needABean = $this->addAction($qte, $type);
+      break;
+      case 'close'    :
+        $needABean = $this->closeAction();
+      break;
+      case 'del'      :
+        $needABean = $this->deleteAction($qte, $type);
+      break;
+      case 'draw'     :
+        return $this->drawAction($type);
+      break;
+      case 'move'     :
+        $needABean = $this->moveAction($posX, $posY);
+      break;
+      case 'open'     :
+        $needABean = $this->openAction();
+      break;
+      case 'pick'     :
+        $this->pickAction();
+      break;
+      case 'reveal'   :
+        $needABean = $this->revealAction();
+      break;
+      case 'shuffle'  :
+        $this->shuffleAction($type);
+      break;
+      case 'unactivate' :
+        $needABean = $this->unactivateAction();
+      break;
+      default :
+      break;
+    }
+    if ($needABean) {
+      $TokenBean = new TokenBean($this->node);
+      $returned = $TokenBean->getJsonModifications($this->id);
+      return $this->jsonString($returned, 'lstElements', true);
+    }
+  }
+
+
+  private function shuffleAction($type)
+  {
+    // Spawn, Equipment
+    // TODO : Equipment à faire.
+    // On récupère toutes les cartes Invasions, puis on les mélange
+    $Spawns = $this->objXmlDocument->xpath('//spawns/spawn');
+    shuffle($Spawns);
+    // On les renumérote en les remettant dans la pioche
+    $rank = 1;
+    foreach ($Spawns as $Spawn) {
+      $Spawn->attributes()['rank'] = $rank;
+      $Spawn->attributes()['status'] = 'deck';
+      $rank++;
+    }
+    // On insère un message et on ne retourne rien.
+    $this->insertTchatMessage('Pioche Invasion mélangée');
+  }
+  private function drawAction($type)
+  {
+    // Spawn, Equipment
+    // TODO : Equipment à faire.
+    // On récupère toutes les cartes Invasions encore dans la pioche
+    $Spawns = $this->objXmlDocument->xPath('//spawns/spawn[@status="deck"]');
+    /*
+    if (empty($Spawns)) {
+      $this->dealWithSpawnShuffle();
+      $Spawns = $this->objXmlDocument->xPath('//spawns/spawn[@status="deck"]');
+    }
+    */
+    // On trie par ordre croissant et on récupère le premier élément.
+    usort($Spawns, 'sort_trees');
+    $Spawn = $Spawns[0];
+    // On le défausse, on le trace, puis on retourne le visuel
+    $Spawn->attributes()['status'] = 'discard';
+    $this->insertTchatMessage('1 Carte Invasion piochée');
+    //
+    $Bean = new LocalBean();
+    $returned = array(
+      array("modalBody", $Bean->getBalise(self::TAG_IMG, '', array(self::ATTR_SRC=>$this->urlDirSpawns.$Spawn->attributes()['src'].'-thumb.jpg'))),
+    );
+    return $this->jsonString($returned, 'lstElements', true);
+  }
+  private function moveAction($posX, $posY)
+  {
+    // Zombie, Noise, Survivor
+    $this->node->attributes()['coordX'] = $posX;
+    $this->node->attributes()['coordY'] = $posY;
+    $this->insertTchatMessage($this->node->attributes()['type'].' déplacé');
+    return true;
+  }
+  private function pickAction()
+  {
+    switch (substr($this->id, 0, 1)) {
+      case 'c' :
+        // Objective, Noise
+        $Elements = $this->objXmlDocument->map->chips->chip;
+      break;
+      case 'z' :
+        // Zombie
+        $Elements = $this->objXmlDocument->map->zombies->zombie;
+      break;
+      case 's' :
+        // Survivor
+        $Elements = $this->objXmlDocument->map->survivors->survivor;
+      break;
+      default :
+        $this->insertTchatMessage('Suppression échouée ['.$this->id.'].');
+        $Elements = array();
+      break;
+    }
+    $cpt = 0;
+    foreach ($Elements as $element) {
+      if ($element['id'][0]==$this->id) {
+        $this->insertTchatMessage($element->attributes()['type'].' supprimé');
+        unset($Elements[$cpt]);
+      }
+      $cpt++;
+    }
+  }
+
+  private function insertAction($type)
+  {
+    // Zombie, Bruit.
+    $createId = true;
+    switch ($type) {
+      case 'Noise' :
+          /////////////////////////////////////////////////////////
+          // On récupère l'id du prochain Token à insérer.
+          $chips = $this->objXmlDocument->xPath('//chips')[0];
+          $maxId = $chips->attributes()['maxid']+1;
+          $chips->attributes()['maxid'] = $maxId;
+          /////////////////////////////////////////////////////////
+          // On ajoute un nouveau Token au fichier XML
+          $this->id = 'c'.$maxId;
+          $chip = $this->objXmlDocument->xPath('//chips')[0]->addChild('chip');
+          $chip->addAttribute('id', $this->id);
+          $chip->addAttribute('type', 'Noise');
+          $chip->addAttribute('coordX', $this->post['coordx']);
+          $chip->addAttribute('coordY', $this->post['coordy']);
+          $chip->addAttribute('quantite', 1);
+          $this->node = $chip;
+          /////////////////////////////////////////////////////////
+          $msg = '1 Bruit ajouté.';
+      break;
+      default      :
+        // Dans le cas des Zombies, c'est un peu plus complexe...
+        $patternZombie = '/z(Walker|Runner|Fatty|Abomination)(Standard)/';
+        if (preg_match($patternZombie, $type, $matches)) {
+          /////////////////////////////////////////////////////////
+          // On récupère l'id du prochain Zombie à insérer.
+          $zombies = $this->objXmlDocument->xPath('//zombies')[0];
+          $maxId = $zombies->attributes()['maxid']+1;
+          $zombies->attributes()['maxid'] = $maxId;
+          /////////////////////////////////////////////////////////
+          // On ajoute un nouveau Zombie au fichier XML
+          $this->id = 'z'.$maxId;
+          $zombie = $this->objXmlDocument->xPath('//zombies')[0]->addChild('zombie');
+          $zombie->addAttribute('id', $this->id);
+          $zombie->addAttribute('type', 'Zombie');
+          $zombie->addAttribute('src', $type);
+          $zombie->addAttribute('coordX', $this->post['coordx']);
+          $zombie->addAttribute('coordY', $this->post['coordy']);
+          $zombie->addAttribute('quantite', 1);
+          $this->node = $zombie;
+          /////////////////////////////////////////////////////////
+          $msg = '1 '.$matches[1].' '.$matches[2].' ajouté.';
+        } else {
+          $createId = false;
+          $msg = 'Tentative création Zombie foirée : '.$type.'.';
+        }
+      break;
+    }
+    $this->insertTchatMessage($msg);
+    return $createId;
+  }
+  private function addAction($qte, $type)
+  {
+    // Si l'id n'est pas défini, c'est probablement une insertion.
+    if ($this->id=='') {
+      return $this->insertAction($type);
+    }
+    // Pour les PA, PV & XP, on a passé un $type. Mais le type du node est Survivor.
+    $arrTypes = array('pa'=>'actionPoints', 'pv'=>'hitPoints', 'xp'=>'experiencePoints');
+    // Zombie, Noise, Survivor (XP, PV & PA).
+    $matchId = true;
+    switch ($this->node->attributes()['type']) {
+      case 'Noise' :
+        $oldQte = $this->node->attributes()['quantite'];
+        $this->node->attributes()['quantite'] = $oldQte + $qte;
+        $msg = $qte.' Bruit(s) ajouté(s).';
+      break;
+      case 'Zombie' :
+        $oldQte = $this->node->attributes()['quantite'];
+        $this->node->attributes()['quantite'] = $oldQte + $qte;
+        $msg = $qte.' Zombie(s) ajouté(s).';
+      break;
+      case 'Survivor' :
+        $oldQte = $this->node->attributes()[$arrTypes[$type]];
+        $this->node->attributes()[$arrTypes[$type]] = $oldQte + $qte;
+        $msg = $qte.' '.$type.' ajouté(s).';
+      break;
+      default       :
+        $msg = 'Tentative insertion foirée.';
+        $matchId = false;
+      break;
+    }
+    $this->insertTchatMessage($msg);
+    return $matchId;
+  }
+
+  private function deleteAction($qte, $type)
+  {
+    // Pour les PA, PV & XP, on a passé un $type. Mais le type du node est Survivor.
+    $arrTypes = array('pa'=>'actionPoints', 'pv'=>'hitPoints', 'xp'=>'experiencePoints');
+    // Zombie, Noise, Survivor (XP, PV & PA).
+    $matchId = true;
+    switch ($this->node->attributes()['type']) {
+      case 'Noise' :
+        $oldQte = $this->node->attributes()['quantite'];
+        $this->node->attributes()['quantite'] = $oldQte - $qte;
+        $msg = $qte.' Bruit(s) retiré(s).';
+      break;
+      case 'Zombie' :
+        $oldQte = $this->node->attributes()['quantite'];
+        $this->node->attributes()['quantite'] = $oldQte - $qte;
+        $msg = $qte.' Zombie(s) retiré(s).';
+      break;
+      case 'Survivor' :
+        $oldQte = $this->node->attributes()[$arrTypes[$type]];
+        $this->node->attributes()[$arrTypes[$type]] = $oldQte - $qte;
+        $msg = $qte.' '.$type.' retiré(s).';
+      break;
+      default       :
+        $msg = 'Tentative suppression foirée.';
+        $matchId = false;
+      break;
+    }
+    $this->insertTchatMessage($msg);
+    return $matchId;
+  }
+
+  private function revealAction()
+  {
+    // Objectif
+    $this->node->attributes()['status'] = 'Unactive';
+    $this->insertTchatMessage('Objectif révélé');
+    return true;
+  }
+
+  private function openCloseMutualAction($newStatus, $label)
+  {
+    // Door
+    $this->node->attributes()['status'] = $newStatus;
+    $this->insertTchatMessage('Porte '.$label);
+    return true;
+  }
+  private function openAction()
+  { return $this->openCloseMutualAction('Opened', 'ouverte'); }
+  private function closeAction()
+  { return $this->openCloseMutualAction('Closed', 'fermée'); }
+
+  private function activateUnactivateMutualAction($newStatus, $label)
+  {
+    // Spawn, Exit ou Skill
+    $matchId = true;
+    $this->node->attributes()['status'] = $newStatus;
+    switch ($this->node->attributes()['type']) {
+      case 'Exit'  :
+        $msg = 'Zone de Sortie '.$label;
+      break;
+      case 'Skill' :
+        $msg = 'Compétence '.$label;
+      break;
+      case 'Spawn' :
+        $msg = 'Zone de Spawn '.$label;
+      break;
+      default      :
+        $msg = ucfirst($label).' envisagée, mais id ['.$this->id.'] ne trouve pas de cible.';
+        $matchId = false;
+      break;
+    }
+    $this->insertTchatMessage($msg);
+    return $matchId;
+  }
+  private function unactivateAction()
+  { return $this->activateUnactivateMutualAction('Unactive', 'désactivée'); }
+  private function activateAction()
+  { return $this->activateUnactivateMutualAction('Active', 'activée'); }
+
+
+
+
+
+
+
+
+
+
   private function formatErrorMessage($msgError)
   {
     // TODO
     return "[[$msgError]]";
 
   }
-
+/*
   private function dealWithInsertChip()
   {
     ////////////////////////////////////////////////////////////////////////
@@ -191,9 +509,10 @@ class LiveMissionActions extends LocalActions
     while (!empty($SurvivorSkills)) {
       $SurvivorSkill = array_shift($SurvivorSkills);
       $skill = $skills->addChild('skill');
-      $skill->addAttribute('id', $this->post['survivorId'].'-sk'.$SurvivorSkill->getSkillId());
-      $skill->addAttribute('level', $SurvivorSkill->getBean()->getColor());
-      $skill->addAttribute('unlocked', ($SurvivorSkill->getTagLevelId()<20 ? 1 : 0));
+      $skill->addAttribute('id', $this->post['survivorId'].'-'.$SurvivorSkill->getTagLevelId());
+      $skill->addAttribute('skillId', $SurvivorSkill->getSkillId());
+      $skill->addAttribute('status', ($SurvivorSkill->getTagLevelId()<20 ? 'Active' : 'Unactive'));
+      $skill->addAttribute('type', 'Skill');
     }
     $survivor->addChild('items');
     ///////////////////////////////////////////////////////
@@ -210,14 +529,6 @@ class LiveMissionActions extends LocalActions
     );
     return $this->jsonString($returned, 'lstElements', true);
   }
-
-
-
-
-
-
-
-
 
 
   private function getColorLevel($qte)
@@ -348,7 +659,6 @@ class LiveMissionActions extends LocalActions
       break;
     }
   }
-
   private function dealWithUpdateChip()
   {
     $returned = '';
@@ -427,8 +737,6 @@ class LiveMissionActions extends LocalActions
     }
     return $returned;
   }
-
-
   private function dealWithSpawnShuffle()
   {
     $Spawns = $this->objXmlDocument->xpath('//spawns/spawn');
@@ -441,7 +749,6 @@ class LiveMissionActions extends LocalActions
     }
     $this->insertTchatMessage('Pioche Invasion mélangée');
   }
-
   private function dealWithSpawnDraw()
   {
     $Spawns = $this->objXmlDocument->xPath('//spawns/spawn[@status="deck"]');
@@ -460,15 +767,13 @@ class LiveMissionActions extends LocalActions
     );
     return $this->jsonString($returned, 'lstElements', true);
   }
-
+*/
   private function insertTchatMessage($msg='', $author='Automat')
   {
     $Tchat = $this->objXmlDocument->tchats->addChild('tchat', $msg);
     $Tchat->addAttribute('timestamp', time());
     $Tchat->addAttribute('author', $author);
   }
-
-
 
 }
 

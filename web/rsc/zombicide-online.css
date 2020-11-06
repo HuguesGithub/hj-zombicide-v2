@@ -91,13 +91,15 @@ a:hover i {
       background-size: cover !important;
       position: absolute;
     }
-    .chip.token[data-type="Bruit"],
     .chip.token[data-type="Door"],
     .chip.token[data-type="Exit"],
     .chip.token[data-type="Objective"],
     .chip.token[data-type="Spawn"],
     #page-mission-online-survivor-reserve .chip.survivor {
       cursor: pointer;
+    }
+    .chip.token[data-type="Noise"] {
+      cursor: grab;
     }
     .chip.survivor,
     .chip.zombie {
