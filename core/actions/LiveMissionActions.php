@@ -83,6 +83,17 @@ class LiveMissionActions extends LocalActions
     ////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////
+    // Et si on en profitait pour purger les Tchats un peu vieux... de l'automate uniquement
+    $purgeLimit = time()-1*24*60*60;
+    $Tchats = $this->objXmlDocument->xPath('//tchat[@timestamp<"'.$purgeLimit.'" and @author="Automat"]');
+    // On parcourt la liste des logs à supprimer.
+    foreach ($Tchats as $Tchat) {
+      // Et on les supprime un à un.
+      unset($Tchat[0]);
+    }
+    ////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////
     // On sauvegarde les modifications du fichier.
     $this->objXmlDocument->asXML($fileName);
