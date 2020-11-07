@@ -5,6 +5,15 @@ $hj(document).ready(function(){
   // Pour le moment ces données sont fixes. Elles pourraient être fonction du profil dans un deuxième temps.
   setSectionSizes();
 
+  $hj('#cgu').click(function(){
+    $hj('#validCGU').toggleClass('disabled');
+  });
+  $hj('#validCGU').click(function(){
+    if (!$hj(this).hasClass('disabled')) {
+      $hj('#formLogin > div').toggle();
+    }
+  });
+
   $hj('.chip').each(function(){
     setChipSizes($hj(this));
   });
@@ -67,10 +76,23 @@ $hj(document).ready(function(){
   });
 
   var element = document.getElementById("online-chat-content");
-  element.scrollIntoView(false);
+  if (element!=undefined) {
+    element.scrollIntoView(false);
+  }
 
   $hj('.modal .close').on('click', function(){
     $hj('.modal').hide();
+  });
+
+  if ($hj('#online-chat-content').length!=0) {
+    tchatRefreshTimer = setInterval(sendTchatMsg, 30000);
+  }
+
+  $hj('#initSpawnDeck').click(function(){
+    var uniqid   = $hj('#page-mission-online').data('uniqid');
+    var interval = $hj('#newSpawnDeck').val();
+    var data   = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': uniqid, 'act': 'init', 'type': 'Spawn', 'interval': interval};
+    updateLiveMissionXml(data);
   });
 });
 
@@ -97,8 +119,11 @@ function updateLiveMissionXml(data) {
             if ($hj('#'+id).length==0) {
               // On a des exception
               switch (id) {
-                case 'detail-new' :
+                case 'detail-survivor-new' :
                   $hj('#page-mission-online-sidebar-survivors-detail').append(element);
+                break;
+                case 'tchat-new' :
+                  $hj('#online-chat-content').append(element);
                 break;
                 default :
                 // Ajoute Nouveau.
@@ -189,7 +214,7 @@ function setChipAction(obj) {
     return false;
   });
 
-  if (obj.hasClass('zombie') || obj.hasClass('survivor') || obj.hasClass('noise')) {
+  if ((obj.hasClass('zombie') || obj.hasClass('survivor') || obj.hasClass('noise')) && !obj.hasClass('non-draggable')) {
     obj.draggable({
       containment: "#page-mission-online-tokens",
       scroll: false,
@@ -240,8 +265,8 @@ function setChipsAction() {
       'action': 'dealWithAjax',
       'ajaxAction': 'updateLiveMission',
       'uniqid': $hj('#page-mission-online').data('uniqid'),
-      'act' : 'survivor',
-      'rank': survivorRankClicked,
+      'act' : 'add',
+      'type' : 'Survivor',
       'survivorId' : $hj(this).data('survivorid')
     };
     updateLiveMissionXml(data);
@@ -268,6 +293,7 @@ function addSidebarSurvivorKnownActions() {
     $hj('#page-mission-online-obj-rules').css('top', '-105%');
     $hj('#page-mission-online-help-website').css('top', '-105%');
     $hj('#page-mission-online-sidebar-survivors-detail').css('top', '-105%');
+    $hj('#page-mission-online-setup').css('top', '-105%');
 
     $hj(this).siblings().removeClass('active');
     $hj(this).addClass('active');
@@ -321,6 +347,9 @@ function setSectionSizes() {
   $hj('#page-mission-online-sidebar').width(sidebarWidth);
 }
 function setChipSizes(obj) {
+  if (!obj.hasClass('chip')) {
+    return false;
+  }
   var type = obj.data('type');
   if (type=='Objective' || type=='Spawn' || type=='Exit' || type=='Door' || type=='Survivor' || type=='Zombie' || type=='Noise') {
     posX   = lowestRatio * obj.data('coordx');
@@ -334,7 +363,22 @@ function setChipSizes(obj) {
   obj.css('top', posY);
 }
 
-
+var tchatRefreshTimer = null;
+function sendTchatMsg() {
+  var tsTreshold = $hj('#online-chat-content li:last-child').data('timestamp');
+  var data = {
+    'action': 'dealWithAjax',
+    'ajaxAction': 'updateLiveMission',
+    'uniqid': $hj('#page-mission-online').data('uniqid'),
+    'act' : 'tchat',
+    'author' : '',
+    'tsTreshold' : tsTreshold,
+    'msg' : '',
+  };
+  updateLiveMissionXml(data);
+  clearTimeout(tchatRefreshTimer);
+  tchatRefreshTimer = setInterval(sendTchatMsg, 30000);
+}
 
 
 

@@ -75,6 +75,12 @@
       <chip id="c24" type="Exit" coordX="1410" coordY="475" orientation="east" status="Unactive"/>
     </chips>
     <zombies maxid="0"/>
+	<pools>
+		<pool type="zWalkerStandard" max="40" current="0"/>
+		<pool type="zFattyStandard" max="16" current="0"/>
+		<pool type="zRunnerStandard" max="16" current="0"/>
+		<pool type="zAbominationStandard" max="1" current="0"/>
+	</pools>
     <survivors/>
   </map>
   <items/>

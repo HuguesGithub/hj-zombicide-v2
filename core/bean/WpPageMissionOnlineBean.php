@@ -15,6 +15,7 @@ class WpPageMissionOnlineBean extends WpPageBean
   protected $urlLoginTemplate   = 'web/pages/public/wppage-mission-online-login.php';
   protected $urlTemplate        = 'web/pages/public/wppage-mission-online.php';
   protected $urlTchatMsgTpl     = 'web/pages/public/fragments/tchat-message.php';
+  protected $urlSectionSetup    = 'web/pages/public/fragments/online-section-setup.php';
   protected $xmlSuffixe         = '.mission.xml';
   /**
    * Class Constructor
@@ -132,13 +133,42 @@ class WpPageMissionOnlineBean extends WpPageBean
       $this->getLstDetails(),
       // Le Tchat - 10
       $this->getLstTchats(),
+      // Le contenu de l'onglet SetUp - 11
+      $this->getMissionSetup(),
     );
     return $this->getRender($this->urlTemplate, $args);
   }
 
-  private function getLstTchats()
+  private function getMissionSetup()
   {
-    $Tchats = $this->objXmlDocument->xPath('//tchat');
+    $Spawns = $this->objXmlDocument->xPath('//spawns')[0];
+    $Pools  = $this->objXmlDocument->xPath('//pools/pool');
+
+    $lstPools = '';
+    foreach ($Pools as $Pool) {
+      $innerDiv = $this->getBalise(self::TAG_DIV, $Pool->attributes()['current'].' / '.$Pool->attributes()['max'], array(self::ATTR_CLASS=>'badge'));
+      $img = $this->getBalise(self::TAG_IMG, '', array(self::ATTR_SRC=>'/wp-content/plugins/hj-zombicide/web/rsc/img/zombies/'.$Pool->attributes()['type'].'.png'));
+      $outerDiv = $this->getBalise(self::TAG_DIV, $img.$innerDiv, array(self::ATTR_CLASS=>'chip token zombie Standard non-draggable'));
+      $lstPools .= $this->getBalise(self::TAG_LI, $outerDiv);
+    }
+
+    $args = array(
+      // Spawn actuel - 1
+      $Spawns->attributes()['interval'],
+      // Etat de la réserve de Zombies - 2
+      $lstPools,
+    );
+    return $this->getRender($this->urlSectionSetup, $args);
+  }
+
+  public function getLstTchats($tsTreshold='')
+  {
+    if ($tsTreshold=='') {
+      $Tchats = $this->objXmlDocument->xPath('//tchat');
+    } else {
+      $this->openFile();
+      $Tchats = $this->objXmlDocument->xPath('//tchat[@timestamp>"'.$tsTreshold.'"]');
+    }
     usort($Tchats, 'sort_trees');
     $lstMsgs = '';
     $prevTs = '';
@@ -146,7 +176,8 @@ class WpPageMissionOnlineBean extends WpPageBean
       $Tchat = array_shift($Tchats);
       $author = $Tchat->attributes()['author'];
       $ts = $Tchat->attributes()['timestamp']*1;
-      if ($prevTs=='' || date('d', $ts)!=date('d', $prevTs)) {
+      // On insère un Tag pour séparer les messages des différentes journées.
+      if ($prevTs!='' && date('d', $ts)!=date('d', $prevTs)) {
         $liClass = 'clearfix';
         $msgDataClass = ' message changeDate';
         $msgDataContent  = date('d m Y', $ts);
@@ -157,10 +188,11 @@ class WpPageMissionOnlineBean extends WpPageBean
           $msgDataContent,
           $msgClass,
           '',
+          $ts,
         );
         $lstMsgs .= $this->getRender($this->urlTchatMsgTpl, $args);
       }
-
+      // Selon que l'auteur est Automat, le user courant ou un autre, le visuel change
       if ($author=='Automat') {
         $liClass = 'clearfix';
         $msgDataClass = '';
@@ -185,6 +217,7 @@ class WpPageMissionOnlineBean extends WpPageBean
         $msgDataContent,
         $msgClass,
         $Tchat[0],
+        $ts,
       );
       $lstMsgs .= $this->getRender($this->urlTchatMsgTpl, $args);
       $prevTs = $ts;

@@ -19,29 +19,71 @@
       <div>%7$s</div>
     </section>
     <section id="page-mission-online-help-website">
-      <dl>
-        <dt><i class="fa fa-caret-right"></i> Mécanique</dt>
-        <dd>Aucun contrôle de cohérence n'est effectué dans vos Actions. Aussi vous pouvez déplacer un Survivant derrière une porte fermée par exemple. Vous êtes le garant de l'application des règles.<br>Il y a cependant quelques petits contrôles ergonomiques bénins. Par exemple, l'action pour ouvrir une porte n'est pas disponible sur une porte ouverte.</dd>
-        <dt><i class="fa fa-caret-right"></i> Objectifs</dt>
-        <dd>Cliquez avec le bouton droit sur un Objectif pour afficher le menu contextuel. Vous pouvez révéler un Objectif (pour les Objectifs rouges parmi lesquels un Objectif de couleur peut se cacher) non révélé ou prendre un Objectif révélé.</dd>
-        <dt><i class="fa fa-caret-right"></i> Portes</dt>
-        <dd>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ouvrir ou fermer une porte.</dd>
-        <dt><i class="fa fa-caret-right"></i> Zone d'invasion</dt>
-        <dd>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez activer ou désactiver une Zone d'invasion. Vous pouvez même la supprimer. De plus, sur une Zone d'invasion activ, vous pouvez placer des Zombies Standards.</dd>
-        <dt><i class="fa fa-caret-right"></i> Zombies</dt>
-        <dd>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ajouter ou supprimer des Zombies. En maintenant le clic gauche, vous pouvez déplacer un Zombie.</dd>
-        <dt><i class="fa fa-caret-right"></i> Survivants</dt>
-        <dd>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ajouter ou retirer des points d'expérience, d'action ou de vie. Vous pouvez même supprimer un Survivant. En maintenant le clic gauche, vous pouvez déplacer un Survivant.</dd>
+      <ul>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Mécanique</header>
+            <p>Aucun contrôle de cohérence n'est effectué dans vos Actions. Aussi vous pouvez déplacer un Survivant derrière une porte fermée par exemple. Vous êtes le garant de l'application des règles.<br>Il y a cependant quelques petits contrôles ergonomiques bénins. Par exemple, l'action pour ouvrir une porte n'est pas disponible sur une porte ouverte.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Objectifs</header>
+            <p>Cliquez avec le bouton droit sur un Objectif pour afficher le menu contextuel. Vous pouvez révéler un Objectif (pour les Objectifs rouges parmi lesquels un Objectif de couleur peut se cacher) non révélé ou prendre un Objectif révélé.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Portes</header>
+            <p>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ouvrir ou fermer une porte.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Zone d'invasion</header>
+            <p>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez activer ou désactiver une Zone d'invasion. Vous pouvez même la supprimer. De plus, sur une Zone d'invasion activ, vous pouvez placer des Zombies Standards.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Zombies</header>
+            <p>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ajouter ou supprimer des Zombies. En maintenant le clic gauche, vous pouvez déplacer un Zombie.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Survivants</header>
+            <p>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ajouter ou retirer des points d'expérience, d'action ou de vie. Vous pouvez même supprimer un Survivant. En maintenant le clic gauche, vous pouvez déplacer un Survivant.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Bruits</header>
+            <p>Cliquez avec le bouton droit pour afficher le menu contextuel. Vous pouvez ajouter ou supprimer des Bruits. En maintenant le clic gauche, vous pouvez déplacer un Bruit. Pour placer un Bruit, cliquer n'importe où sur la Map.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Barre Latérale - Portraits</header>
+            <p>Cliquer sur le Portrait inconnu permet d'ajouter un nouveau Survivant. Cliquer sur un Portrait de Survivant permet d'afficher l'écran d'informations des Survivants. On y retrouve pour chaque Survivant, son portrait, son nom, ses points d'expérience, d'action et de vie. On y retrouve aussi ses Compétences débloquées, ou non.<br>Cliquer sur une Compétence permet d'en changer le statut.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Barre Latérale - Icones en bas à droite</header>
+            <p>Les 3 icones permettent d'afficher respectivement, de gauche à droite, la Map, les Objectifs et Règles Spéciales de la Mission, cette aide de jeu.</p>
+          </div>
+        </li>
+        <li class="objRule hasTooltip">
+          <div class="tooltip">
+            <header>Barre Latérale - en haut à dtoire</header>
+            <p>La chaîne de caractère (ici <strong>%5$s</strong>) est celle à conserver pour reprendre la même partie, ou inviter des personnes à rejoindre cette partie (attention, pour le moment aucun droit ni aucune synchronisation automatique). Le premier icone permet de copier ce code, le deuxième de quitter la partie.</p>
+          </div>
+        </li>
 
-        <dt><i class="fa fa-caret-right"></i> Barre Latérale - Portraits</dt>
-        <dd>Cliquer sur le Portrait inconnu permet d'ajouter un nouveau Survivant. Cliquer sur un Portrait de Survivant permet d'afficher l'écran d'informations des Survivants. On y retrouve pour chaque Survivant, son portrait, son nom, ses points d'expérience, d'action et de vie. On y retrouve aussi ses Compétences débloquées, ou non.<br>Cliquer sur une Compétence permet d'en changer le statut.</dd>
-        <dt><i class="fa fa-caret-right"></i> Barre Latérale - Icones en bas à droite</dt>
-        <dd>Les 3 icones permettent d'afficher respectivement, de gauche à droite, la Map, les Objectifs et Règles Spéciales de la Mission, cette aide de jeu.</dd>
-        <dt><i class="fa fa-caret-right"></i> Barre Latérale - en haut à dtoire</dt>
-        <dd>La chaîne de caractère (ici <strong>%5$s</strong>) est celle à conserver pour reprendre la même partie, ou inviter des personnes à rejoindre cette partie (attention, pour le moment aucun droit ni aucune synchronisation automatique). Le premier icone permet de copier ce code, le deuxième de quitter la partie.</dd>
-
-      </dl>
+      </ul>
     </section>
+    <section id="page-mission-online-setup">%11$s</section>
     <section id="page-mission-online-sidebar-survivors-detail">%9$s</section>
   </section>
   <section>
@@ -76,6 +118,7 @@
     <section id="page-mission-online-help">
       <nav class="nav nav-pills nav-fill" aria-label="Raccourcis">
         <a class="nav-item nav-link active" href="#"><i class="fa fa-map-o"></i></a>
+        <a class="nav-item nav-link" href="#" data-target="#page-mission-online-setup"><i class="fa fa-cog"></i></a>
         <a class="nav-item nav-link" href="#" data-target="#page-mission-online-obj-rules"><i class="fa fa-book"></i></a>
         <a class="nav-item nav-link" href="#" data-target="#page-mission-online-help-website"><i class="fa fa-question-circle"></i></a>
       </nav>

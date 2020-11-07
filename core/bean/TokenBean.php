@@ -77,7 +77,7 @@ class TokenBean extends LocalBean
 
 
 
-  public function getJsonModifications($id)
+  public function getJsonModifications($id, $bln_create)
   {
     // On retourne Le Token et son menu
     $args = array(
@@ -88,8 +88,8 @@ class TokenBean extends LocalBean
     );
     // Eventuellement, on ajoute pour certains trucs spéciaux.
     if ($this->type=='Survivor') {
-      $args[] = array('portrait-'.$id, $this->getTokenPortrait());
-      $args[] = array('detail-survivor-'.$id, $this->getTokenDetail());
+      $args[] = array('portrait-'.($bln_create ? 'new' : $id), $this->getTokenPortrait());
+      $args[] = array('detail-survivor-'.($bln_create ? 'new' : $id), $this->getTokenDetail());
     }
     // Puis on retourne le tout
     return $args;
@@ -261,13 +261,13 @@ class TokenBean extends LocalBean
       $subMenu .= $this->getBalise(self::TAG_LI, sprintf($strButton, $i), $argsLi);
     }
     $strMenu  = $this->getLiSubMenu('plus-circle', 'Ajouter XP', $subMenu);
-    $strMenu .= $this->getLiMenuItem('Retirer 1 XP', 'del', 'minus-circle', '', 'xp');
+    $strMenu .= $this->getLiMenuItem('Retirer 1 XP', 'del', 'minus-circle', ($this->experiencePoints!=0 ? '' : ' '.self::CST_DISABLED), 'xp');
     $strMenu .= $this->getLiMenuSeparator();
     $strMenu .= $this->getLiMenuItem('Ajouter 1 PA', 'add', 'plus-circle', '', 'pa');
-    $strMenu .= $this->getLiMenuItem('Retirer 1 PA', 'del', 'minus-circle', '', 'pa');
+    $strMenu .= $this->getLiMenuItem('Retirer 1 PA', 'del', 'minus-circle', ($this->actionPoints!=0 ? '' : ' '.self::CST_DISABLED), 'pa');
     $strMenu .= $this->getLiMenuSeparator();
     $strMenu .= $this->getLiMenuItem('Ajouter 1 PV', 'add', 'plus-circle', '', 'pv');
-    $strMenu .= $this->getLiMenuItem('Retirer 1 PV', 'del', 'minus-circle', '', 'pv');
+    $strMenu .= $this->getLiMenuItem('Retirer 1 PV', 'del', 'minus-circle', ($this->hitPoints!=0 ? '' : ' '.self::CST_DISABLED), 'pv');
     $strMenu .= $this->getLiMenuSeparator();
     return $strMenu . $this->getLiMenuItem('Supprimer', 'pick', 'trash');
   }

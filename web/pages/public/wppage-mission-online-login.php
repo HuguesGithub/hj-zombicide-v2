@@ -5,6 +5,21 @@
       <form id="formLogin" method="post" action="#">
         <div class="form-group">
           <div class="btn-group-vertical mb-3" role="group">
+            <p>
+              Je certifie posséder au moins une Saison Stand-Alone de Zombicide Moderne et pouvoir ainsi profiter de cette application.<br><br>
+              Je reconnais avoir connaissance du fait que cette application n'est pas un produit officiel, qu'il n'est qu'en version Bêta et qu'il peut contenir des bugs.
+            </p>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="cgu" name="cgu">
+              <span class="form-check-label" for="cgu">Cocher pour validation</span>
+            </div>
+            <div type="button" class="btn btn-primary btn-expansion-group disabled" id="validCGU">
+              <span><i class="far fa-check-circle"></i></span> Valider
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="display:none;">
+          <div class="btn-group-vertical mb-3" role="group">
             <div type="button" class="btn btn-expansion btn-dark"><span><i class="fa %4$s"></i></span> Partie Sauvegardée</div>
             <input type="radio" class="hidden" name="radioChoice" value="old"/>
             <div class="input-group">

@@ -12,17 +12,6 @@ class MissionOnline extends WpPostRelais
 {
   protected $urlDirLiveMissions = 'web/rsc/missions/live/';
 
-  private function openMissionFile()
-  {
-    $this->fileId = $_SESSION['zombieKey'];
-    $this->fileName = PLUGIN_PATH.$this->urlDirLiveMissions.$this->fileId.".mission.xml";
-    $this->objXmlDocument = simplexml_load_file($this->fileName);
-  }
-  private function saveMissionFile()
-  {
-    $this->objXmlDocument->asXML($this->fileName);
-  }
-
   public function __construct($Mission=null)
   {
     parent::__construct();
@@ -38,6 +27,18 @@ class MissionOnline extends WpPostRelais
     $this->Mission = $Mission;
     $this->WpPost  = $Mission->getWpPost();
   }
+
+  private function openMissionFile()
+  {
+    $this->fileId = $_SESSION['zombieKey'];
+    $this->fileName = PLUGIN_PATH.$this->urlDirLiveMissions.$this->fileId.".mission.xml";
+    $this->objXmlDocument = simplexml_load_file($this->fileName);
+  }
+  private function saveMissionFile()
+  {
+    $this->objXmlDocument->asXML($this->fileName);
+  }
+
 
 
   public function setUp()
@@ -78,16 +79,34 @@ class MissionOnline extends WpPostRelais
     $args = array(
       self::CST_AJAXACTION => 'updateLiveMission',
       'uniqid'             => $_SESSION['zombieKey'],
-      'act'                => 'shuffleSpawn',
+      'act'                => 'shuffle',
+      'type'               => 'Spawn',
     );
     LiveMissionActions::dealWithStatic($args);
   }
 
-  private function setUpSpawns()
+  public function deleteSpawns()
   {
-    // On doit aussi gérer la création de cartes Invasion.
-    // Pour ça, on doit récupérer la valeur du champ interval.
+    // On doit supprimer tous les Spawns.
+    $Spawns = $this->objXmlDocument->xpath('//spawns');
+    // On récupère l'intervalle actuel.
     $interval = $this->objXmlDocument->xpath('//spawns')[0]->attributes()['interval'];
+    // On vire le noeud Spawns
+    unset($Spawns);
+    // Et on recrée le nouveau, avec le bon intervalle.
+    $Spawns = $this->objXmlDocument->addChild('spawns');
+    $Spawns->attributes()['interval', $interval);
+  }
+  public function setUpSpawns($interval='')
+  {
+    // Si l'intervalle n'est pas défini, on va le chercher dans le fichier.
+    if ($interval=='') {
+      $interval = $this->objXmlDocument->xpath('//spawns')[0]->attributes()['interval'];
+    } else {
+      // S'il est défini, on va le sauvegarder dans le fichier.
+      $this->objXmlDocument->xpath('//spawns')[0]->attributes()['interval'] = $interval;
+    }
+
     $intervals = explode(',', $interval);
     $rank = 1;
     foreach ($intervals as $interval) {
@@ -101,7 +120,7 @@ class MissionOnline extends WpPostRelais
       }
       for ($i=1; $i<=$multi; $i++) {
         for ($j=$start; $j<=$end; $j++) {
-          $spawn = $this->objXmlDocument->map->spawns->addChild('spawn');
+          $spawn = $this->objXmlDocument->spawns->addChild('spawn');
           $spawn->addAttribute('id', 'spawn-'.$rank);
           $spawn->addAttribute('src', 'x'.str_pad($j, 3, 0, STR_PAD_LEFT));
           $spawn->addAttribute('rank', $rank);

@@ -231,6 +231,7 @@ a:hover i {
 
 #page-mission-online-obj-rules,
 #page-mission-online-help-website,
+#page-mission-online-setup,
 #page-mission-online-sidebar-survivors-detail {
   background: #ff9307;
   height: 100%;
@@ -245,6 +246,7 @@ a:hover i {
   padding: 10px;
 }
 
+#page-mission-online-setup .panel-body > div,
 #page-mission-online-sidebar-survivors-detail .panel-body > div {
   background: #303030;
   border-radius: 10px;
@@ -287,6 +289,23 @@ a:hover i {
 }
 #page-mission-online-sidebar-survivors-detail .card-slot i {
   margin-top: 50%;
+}
+
+#page-mission-online-setup .chip {
+  position: initial;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 25px;
+}
+#page-mission-online-setup .chip div {
+  width: 100%;
+  margin-left:0;
+}
+
+#page-mission-online-setup li {
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 /*
