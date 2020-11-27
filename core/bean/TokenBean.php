@@ -370,15 +370,15 @@ class TokenBean extends LocalBean
       // On récupère son Id
       $nodeId = $skill->attributes()[self::FIELD_ID];
       list(, $tagLevel) = explode('-', $nodeId);
-      $color = $this->arrTagColors[$tagLevel/10];
+      $skillColor = $this->arrTagColors[$tagLevel/10];
       // On récupère le Status
-      $status = $skill->attributes()['status'];
+      $skillStatus = $skill->attributes()['status'];
       // On construit les tags HTML
-      $spanBadge = $this->getBalise(self::TAG_SPAN, $Skill->getName(), array(self::ATTR_CLASS=>'badge badge-'.$color.'-skill'));
+      $spanBadge = $this->getBalise(self::TAG_SPAN, $Skill->getName(), array(self::ATTR_CLASS=>'badge badge-'.$skillColor.'-skill'));
       // Et on stack la liste de Skills
       $argsLi = array(
         self::ATTR_ID=>$nodeId,
-        self::ATTR_CLASS=>($status=='Unactive' ? 'disabled' : '')
+        self::ATTR_CLASS=>($skillStatus=='Unactive' ? 'disabled' : '')
       );
       $strSkills .= $this->getBalise(self::TAG_LI, $spanBadge, $argsLi);
     }

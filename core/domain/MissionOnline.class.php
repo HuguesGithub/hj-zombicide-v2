@@ -17,6 +17,7 @@ class MissionOnline extends WpPostRelais
     parent::__construct();
     $this->MissionServices = new MissionServices();
     $this->WpPostServices = new WpPostServices();
+    $this->EquipmentExpansionServices = new EquipmentExpansionServices();
 
     if ($Mission==null) {
       $this->openMissionFile();
@@ -72,6 +73,7 @@ class MissionOnline extends WpPostRelais
       }
     }
     $this->setUpSpawns();
+    $this->setUpItems();
     // On sauvegarde les éventuels changements.
     $this->saveMissionFile();
     // Et on mélange.
@@ -82,6 +84,9 @@ class MissionOnline extends WpPostRelais
       'act'                => 'shuffle',
       'type'               => 'Spawn',
     );
+    LiveMissionActions::dealWithStatic($args);
+    // Besoin de sauvegarder avant car l'action de remélange réouvre le fichier...
+    $args['type']          = 'Item';
     LiveMissionActions::dealWithStatic($args);
   }
 
@@ -95,7 +100,7 @@ class MissionOnline extends WpPostRelais
     unset($Spawns);
     // Et on recrée le nouveau, avec le bon intervalle.
     $Spawns = $this->objXmlDocument->addChild('spawns');
-    $Spawns->attributes()['interval', $interval);
+    $Spawns->attributes()['interval'] = $interval;
   }
   public function setUpSpawns($interval='')
   {
@@ -127,6 +132,34 @@ class MissionOnline extends WpPostRelais
           $spawn->addAttribute('status', 'deck');
           $rank++;
         }
+      }
+    }
+  }
+  public function setUpItems()
+  {
+    $season = $this->objXmlDocument->xpath('//items')[0]->attributes()['season'];
+    $ItemExpansions = $this->EquipmentExpansionServices->getEquipmentExpansionsWithFilters(array(self::FIELD_EXPANSIONID=>$season));
+    $rank = 1;
+    while (!empty($ItemExpansions)) {
+      $ItemExpansion = array_shift($ItemExpansions);
+      $qte = $ItemExpansion->getQuantity();
+      $Item = $ItemExpansion->getEquipment();
+
+      for ($i=0; $i<$qte; $i++) {
+        $item = $this->objXmlDocument->items->addChild('item');
+        $item->addAttribute('id', 'item-'.$rank);
+        $item->addAttribute('src', str_pad($Item->getId(), 3, 0, STR_PAD_LEFT).str_pad($season, 2, 0, STR_PAD_LEFT));
+        $item->addAttribute('rank', $rank);
+        if ($Item->isStarter()) {
+          $item->addAttribute('status', 'start');
+        } elseif ($Item->isPimp()) {
+          $item->addAttribute('status', 'pimp');
+        } elseif ($Item->hasKeyword('Composite')) {
+          $item->addAttribute('status', 'combo');
+        } else {
+          $item->addAttribute('status', 'deck');
+        }
+        $rank++;
       }
     }
   }

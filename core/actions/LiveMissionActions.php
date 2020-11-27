@@ -22,6 +22,7 @@ class LiveMissionActions extends LocalActions
     parent::__construct();
     $this->post = $post;
     $this->SurvivorServices = new SurvivorServices();
+    $this->EquipmentExpansionServices = new EquipmentExpansionServices();
   }
   /**
    * Point d'entrée des méthodes statiques.
@@ -114,10 +115,12 @@ class LiveMissionActions extends LocalActions
         $needABean = $this->deleteAction($qte, $type);
       break;
       case 'draw'     :
-        return $this->drawAction($type);
+        $returned = $this->drawAction($type);
+        $needABean = false;
       break;
       case 'init'     :
-        return $this->initAction($type);
+        $returned = $this->initAction($type);
+        $needABean = false;
       break;
       case 'move'     :
         $needABean = $this->moveAction($posX, $posY);
@@ -135,7 +138,8 @@ class LiveMissionActions extends LocalActions
         $this->shuffleAction($type);
       break;
       case 'tchat'  :
-        return $this->tchatAction();
+        $returned = $this->tchatAction();
+        $needABean = false;
       break;
       case 'unactivate' :
         $needABean = $this->unactivateAction();
@@ -147,12 +151,16 @@ class LiveMissionActions extends LocalActions
       $TokenBean = new TokenBean($this->node);
       $returned = $TokenBean->getJsonModifications($this->id, $bln_create);
       return $this->jsonString($returned, 'lstElements', true);
+    } else {
+      return $returned;
     }
   }
 
   private function initAction($type)
   {
     switch ($type) {
+      case 'Item'  :
+      break;
       case 'Spawn' :
         // On doit supprimer tous les Spawns.
         $Spawns = $this->objXmlDocument->xPath('//spawns/spawn');
@@ -212,6 +220,22 @@ class LiveMissionActions extends LocalActions
     // Spawn, Equipment
     // TODO : Equipment à faire.
     switch ($type) {
+      case 'Item'  :
+        // On récupère toutes les cartes Items, puis on les mélange
+        $Items = $this->objXmlDocument->xpath('//items/item');
+        shuffle($Items);
+        // On les renumérote en les remettant dans la pioche
+        $rank = 1;
+        foreach ($Items as $Item) {
+          $Item->attributes()['rank'] = $rank;
+          if ($Item->attributes()['status']=='discard') {
+            $Item->attributes()['status'] = 'deck';
+          }
+          $rank++;
+        }
+        // On insère un message et on ne retourne rien.
+        $this->insertTchatMessage('Pioche Equipment mélangée');
+      break;
       case 'Spawn' :
         // On récupère toutes les cartes Invasions, puis on les mélange
         $Spawns = $this->objXmlDocument->xpath('//spawns/spawn');

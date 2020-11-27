@@ -1,6 +1,6 @@
       <h5>Cartes Equipement</h5>
       <div class="panel-body">
-        <div>TODO</div>
+        <div></div>
       </div>
       <h5>Cartes Invasions</h5>
       <div class="panel-body">

@@ -94,6 +94,12 @@ $hj(document).ready(function(){
     var data   = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': uniqid, 'act': 'init', 'type': 'Spawn', 'interval': interval};
     updateLiveMissionXml(data);
   });
+
+  $hj('#initItemDeck').click(function(){
+    var uniqid   = $hj('#page-mission-online').data('uniqid');
+    var data   = {'action': 'dealWithAjax', 'ajaxAction': 'updateLiveMission', 'uniqid': uniqid, 'act': 'init', 'type': 'Item'};
+    updateLiveMissionXml(data);
+  });
 });
 
   $hj(window).resize(function(){

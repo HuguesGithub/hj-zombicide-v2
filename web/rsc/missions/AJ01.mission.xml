@@ -83,7 +83,7 @@
 	</pools>
     <survivors/>
   </map>
-  <items/>
+  <items season="23"/>
   <spawns interval="1-12x2,49-60"/>
   <tchats/>
 </mission>
